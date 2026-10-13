@@ -1069,7 +1069,7 @@ Afterward, try explaining in your own words:
 
 Completing Section 9 finishes this tutorial exercise.
 Research use requires further checks of sampling coverage, statistical uncertainties, and agreement between reweighting and direct generation.
-Confirm the model version, EFT truncation, and width conventions with your supervisor before using it for research.
+Before using this workflow for research, check and document the model version, EFT truncation, and width conventions.
 
 ## 12. Versions and references
 

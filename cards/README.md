@@ -33,7 +33,7 @@ SMEFTsim_U35_MwScheme_UFO-massless_Hvlvl
 | `UFO` | An event-generator model format | MadGraph reads parameters, vertices, and related information from it |
 | `massless_Hvlvl` | The process-specific restriction supplied with this tutorial | Simplifies settings such as light-particle masses while retaining the EFT vertices needed for the exercise |
 
-The alternative `alphaScheme` uses $\alpha_{\rm em},m_Z,G_F$. Changing schemes requires more than changing a filename: observables, parameter relations, and EFT input shifts must be handled consistently. For research, choose the flavor model and input scheme according to the physics question and your supervisor's requirements.
+The alternative `alphaScheme` uses $\alpha_{\rm em},m_Z,G_F$. Changing schemes requires more than changing a filename: observables, parameter relations, and EFT input shifts must be handled consistently. For research, choose the flavor model and input scheme according to the physics question, and document the model assumptions.
 
 ### 7.2 A restriction is different from a parameter card
 

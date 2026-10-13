@@ -39,7 +39,7 @@ SMEFTsim_U35_MwScheme_UFO-massless_Hvlvl
 
 另一输入方案 `alphaScheme` 使用 $\alpha_{\rm em},m_Z,G_F$。
 换输入方案不是单纯改文件名：可观测量、参数关系和 EFT input shifts 的处理必须一致。
-研究任务使用哪一 flavor 和输入方案，应按实际物理问题与导师要求确定。
+对于研究应用，应根据具体物理问题选择 flavor 与电弱输入方案，并记录相应的模型假设。
 
 ### 7.2 Restriction 与参数卡不同
 
