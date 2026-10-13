@@ -1,0 +1,5 @@
+# MadGraph dependency subset; requirements-linux.txt defines the unified environment.
+# NumPy 1.26 retains the legacy f2py build interface used by MG 2.9.
+six==1.17.0
+numpy==1.26.4
+setuptools==69.5.1

@@ -1,0 +1,5 @@
+numpy==1.26.4
+pip==22.0.2
+root==0.1a12
+setuptools==69.5.1
+six==1.17.0

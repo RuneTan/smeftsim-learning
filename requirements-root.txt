@@ -1,0 +1,4 @@
+# ROOT dependency subset; requirements-linux.txt defines the unified environment.
+# Official Linux PyPI distribution (alpha packaging), bundles ROOT 6.40.00.
+ROOT==0.1a12
+numpy==1.26.4

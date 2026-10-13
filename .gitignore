@@ -1,0 +1,39 @@
+.venv/
+.venv-linux/
+.venv-root/
+reference/*
+!reference/README*.md
+outputs/*
+!outputs/README*.md
+work/*
+!work/README*.md
+!work/Material/
+work/Material/*
+!work/Material/README*.md
+!work/Material/pyroot_python3/
+work/Material/pyroot_python3/*
+!work/Material/pyroot_python3/README*.md
+__pycache__/
+vm/*
+!vm/README*.md
+# Third-party downloads are restored from the pinned sources in handbook.md.
+tools/*
+!tools/README*.md
+tutorial/
+# Keep generated data and local logs out of the teaching repository.
+*.lhe
+*.lhe.gz
+*.root
+*.log
+*.vhdx
+*.zip
+*.tar.gz
+# Publish only the selected local teaching sample.
+!examples/reweighted/events.lhe.gz
+!examples/reweighted/histograms.root
+# Credentials must stay local, including the user-supplied classic PAT file.
+Personal access tokens(classic).txt
+**/Personal access tokens(classic).txt
+*access*tokens*.txt
+.env
+.env.*

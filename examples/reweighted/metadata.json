@@ -1,0 +1,201 @@
+{
+  "process": "h > e- ve~ mu+ vm",
+  "model": "SMEFTsim_U35_MwScheme_UFO-massless_Hvlvl",
+  "SMEFTsim_version": "3.0.2",
+  "MadGraph_version": "2.9.27",
+  "events": 2000,
+  "run_card_nevents": "2000",
+  "iseed": "12363",
+  "source_run": "Hvlvl_SM_manual/Events/training_sm_2000",
+  "base_parameters": "SM Wilson coefficients zero; LambdaSMEFT=1000 GeV; author massless_Hvlvl restriction and widths",
+  "reweight_points": "one coefficient at a time, value 1; process orders defined by the three upstream reweight cards",
+  "weight_labels": [
+    "cHbox",
+    "cHW",
+    "cHl3",
+    "cll1",
+    "cHbox_sq",
+    "cHW_sq",
+    "cHl3_sq",
+    "cll1_sq",
+    "cHl3_propW",
+    "cHq3_propW",
+    "cll1_propW"
+  ],
+  "SM_mean_weight_GeV": 1.0068799999999857e-05,
+  "reweight_mean_weights_GeV": {
+    "cHbox": 1.2208239000000007e-06,
+    "cHW": -9.143447313928496e-07,
+    "cHl3": -2.3005604371999993e-06,
+    "cll1": 1.8312358000000447e-06,
+    "cHbox_sq": 3.700567499999899e-08,
+    "cHW_sq": 2.8254054604182828e-08,
+    "cHl3_sq": 1.32290824541e-07,
+    "cll1_sq": 8.32627699999999e-08,
+    "cHl3_propW": 7.756986836388489e-07,
+    "cHq3_propW": -7.756986836388489e-07,
+    "cll1_propW": -5.817740122488997e-07
+  },
+  "ROOT_histograms": 48,
+  "event_weight_check": "all eleven labels finite in every event",
+  "scope": "teaching example; no independent direct-generation closure or complete uncertainty validation",
+  "source_repository": "https://github.com/IlariaBrivio/SMEFTsim_tutorial_June23",
+  "source_commit": "92ffde994d7c0d90554ee629cc477ee171c76b84",
+  "files": {
+    "events.lhe.gz": {
+      "bytes": 446458,
+      "sha256": "e81d8fa2beee7adb069adfa006040756049f4b47aba5362936a8fe6d5441b2e4"
+    },
+    "histograms.root": {
+      "bytes": 31537,
+      "sha256": "f7706027afc7e1c6ee5cc8757112b9773488683da2511aca7e6aaebcc0ce3419"
+    },
+    "plot_mll.pdf": {
+      "bytes": 16938,
+      "sha256": "58c9cd725b1a437e9c46961d49d96d60f17aa7526fc42d6cc2df255448cd1ac6"
+    },
+    "plot_mmv.pdf": {
+      "bytes": 17266,
+      "sha256": "033c9638395d214d9b1e4d845848c33822a5b39d47dda26e61d02d33082539b5"
+    },
+    "plot_pTl1.pdf": {
+      "bytes": 16714,
+      "sha256": "024d55d95b087d528f7ed11d886a168bf4c501305c84e29384f0db98104128d5"
+    },
+    "plot_pTmu.pdf": {
+      "bytes": 16506,
+      "sha256": "0d63439d435313424f573338170244f81a59710e83c32116b5fe80a2d2a1e80d"
+    }
+  },
+  "public_LHE_format": "Analysis-only LHE export; generator banner and embedded card templates omitted; init and event records unchanged",
+  "original_compressed_LHE_sha256": "8de44097f4cc94ca8652968c7c21ca97039bbec57cec6f6826f98064d3132c3e",
+  "original_compressed_LHE_bytes": 451806,
+  "numerical_parameter_blocks": {
+    "MASS": {
+      "5": 4.18,
+      "6": 172.76,
+      "15": 1.777,
+      "23": 91.1876,
+      "25": 125.09,
+      "1": 0.0,
+      "2": 0.0,
+      "3": 0.0,
+      "4": 0.0,
+      "11": 0.0,
+      "12": 0.0,
+      "13": 0.0,
+      "14": 0.0,
+      "16": 0.0,
+      "21": 0.0,
+      "22": 0.0,
+      "9000005": 91.1876,
+      "9000006": 80.387,
+      "9000007": 172.76,
+      "9000008": 125.09,
+      "24": 80.387
+    },
+    "SMEFT": {
+      "4": 0.0,
+      "7": 0.0,
+      "22": 0.0,
+      "25": 0.0,
+      "30": 0.0
+    },
+    "SMEFTCUTOFF": {
+      "1": 1000.0
+    },
+    "SMINPUTS": {
+      "1": 80.387,
+      "2": 1.166379e-05,
+      "3": 0.1179
+    },
+    "YUKAWA": {
+      "5": 4.18,
+      "6": 172.76,
+      "15": 1.777
+    },
+    "QNUMBERS": {
+      "1": 0.0,
+      "2": 1.0,
+      "3": 1.0,
+      "4": 0.0
+    }
+  },
+  "decay_widths_GeV": {
+    "6": 1.33,
+    "23": 2.4952,
+    "24": 2.085,
+    "25": 0.00407,
+    "1": 0.0,
+    "2": 0.0,
+    "3": 0.0,
+    "4": 0.0,
+    "5": 0.0,
+    "11": 0.0,
+    "12": 0.0,
+    "13": 0.0,
+    "14": 0.0,
+    "15": 0.0,
+    "16": 0.0,
+    "21": 0.0,
+    "22": 0.0,
+    "9000005": 2.4952,
+    "9000006": 2.085,
+    "9000007": 1.33,
+    "9000008": 0.00407
+  },
+  "run_settings": {
+    "run_tag": "tag_1",
+    "nevents": "2000",
+    "iseed": "12363",
+    "lpp1": "1",
+    "lpp2": "1",
+    "ebeam1": "6500.0",
+    "ebeam2": "6500.0",
+    "pdlabel": "nn23lo1",
+    "lhaid": "230000",
+    "fixed_ren_scale": "False",
+    "fixed_fac_scale": "False",
+    "scale": "91.188",
+    "dsqrt_q2fact1": "91.188",
+    "dsqrt_q2fact2": "91.188",
+    "dynamical_scale_choice": "-1",
+    "scalefact": "1.0",
+    "gridpack": "False",
+    "time_of_flight": "-1.0",
+    "event_norm": "average",
+    "nhel": "0",
+    "bias_module": "None",
+    "bias_parameters": "{}",
+    "bwcutoff": "15.0",
+    "ptl": "0.0",
+    "misset": "0.0",
+    "ptlmax": "-1.0",
+    "missetmax": "-1.0",
+    "pt_min_pdg": "{}",
+    "pt_max_pdg": "{}",
+    "etal": "-1.0",
+    "etalmin": "0.0",
+    "eta_min_pdg": "{}",
+    "eta_max_pdg": "{}",
+    "drll": "0.0",
+    "drllmax": "-1.0",
+    "mmll": "0.0",
+    "mmllmax": "-1.0",
+    "mxx_min_pdg": "{}",
+    "mxx_only_part_antipart": "{'default': False}",
+    "mmnl": "0.0",
+    "mmnlmax": "-1.0",
+    "ptllmin": "0.0",
+    "ptllmax": "-1.0",
+    "xptl": "0.0",
+    "ptl1min": "0.0",
+    "ptl2min": "0.0",
+    "ptl1max": "-1.0",
+    "ptl2max": "-1.0",
+    "maxjetflavor": "4",
+    "use_syst": "False",
+    "systematics_program": "systematics",
+    "0.5,1,2', '--muf=0.5,1,2', '--pdf=errorset'] = systematics_arguments": "['--mur"
+  }
+}

@@ -1,0 +1,6 @@
+# Unified project-local Linux environment for MadGraph and PyROOT.
+# Pin NumPy/setuptools for MG 2.9 f2py; ROOT uses the same Python 3.10.
+six==1.17.0
+numpy==1.26.4
+setuptools==69.5.1
+ROOT==0.1a12
