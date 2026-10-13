@@ -12,9 +12,8 @@ Only this guide is published; installers, images and the virtual disk are ignore
 | `downloads` | Windows WSL installer, Ubuntu rootfs image and verification material |
 | `SMEFTsim/ext4.vhdx` | The entire dedicated Linux disk, including its environment, generator, processes and events |
 
-Do not delete `ext4.vhdx` as an ordinary cache file. Uploading it is not required.
-Copy selected results to `examples` or commit ordinary files, as explained in the
-[publishing guide](../docs/publishing/README.md).
+Do not delete `ext4.vhdx` as an ordinary cache file: it contains the entire Linux installation.
+To locate event files and plots, see the [output directory guide](../outputs/README.md).
 
 The example installation uses WSL2 Ubuntu 22.04, distribution name `SMEFTsim` and Linux user `smeft`.
 On a new machine, start with Microsoft's

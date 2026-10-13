@@ -21,7 +21,7 @@ On a new machine, first follow the [fresh-clone setup guide](docs/setup/README.m
 | [Process cards](cards/README.md) | Model import, restrictions and NP/NPprop orders |
 | [Helper scripts](scripts/README.md) | What each script does and which environment it uses |
 | [Local reweighted example](examples/reweighted/README.md) | 2,000 events, 11 extra weights, ROOT histograms and PDFs |
-| [Publishing and licensing](docs/publishing/README.md) | Attribution, upstream licenses and publishing from WSL |
+| [Sources and licenses](THIRD_PARTY_NOTICES.md) | Component provenance and license information |
 
 ![Reweighted distribution from this project's own sample](docs/figures/rw_mmv.png)
 
@@ -48,7 +48,7 @@ These notes are an independent learning aid. Model, generator and tutorial credi
 this project does not imply endorsement by those projects or contributors.
 For scientific publications, follow the citation requirements of the tools you use.
 
-## Publication and license scope
+## Included files and licenses
 
 - The locally generated example is in `examples/reweighted`. Its versions, parameters and checksums are recorded in `metadata.json`.
 - The public LHE is an analysis export: numerical initialization data, events and weights are preserved, while full software and card-template headers are omitted. The original run remains local.
@@ -56,6 +56,6 @@ For scientific publications, follow the citation requirements of the tools you u
 - No explicit license was identified for the independent tutorial scripts. Local Python 3 copies remain usable but are excluded from Git.
 - The parameter index uses the MIT-licensed SMEFTsim model; upstream license texts are retained in [licenses](licenses/README.md).
 
-Attribution does not replace permission. See [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
+Component sources and license information are recorded in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
 Project-owned documentation and helper scripts do not yet have a project-wide reuse license.
 Upstream licenses are not automatically licenses for this entire repository.

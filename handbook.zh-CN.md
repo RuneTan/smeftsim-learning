@@ -31,7 +31,7 @@
 7. [选择模型与理解过程命令](#7-选择模型与理解过程命令)
 8. [亲手生成一个 SM 样本](#8-亲手生成一个-sm-样本)
 9. [重加权与 ROOT 绘图](#9-重加权与-root-绘图)
-10. [保存结果与分享项目](#10-保存结果与分享项目)
+10. [保存与复现结果](#10-保存与复现结果)
 11. [学习节奏与掌握标准](#11-学习节奏与掌握标准)
 12. [版本与参考资料](#12-版本与参考资料)
 
@@ -135,7 +135,7 @@ Windows 全局 Python 不用于这条流程。隔离细节见 [vm/README.md](vm/
 |---|---|
 | 辅助脚本 | [scripts/README.md](scripts/README.zh-CN.md) |
 | 过程卡与阶数 | [cards/README.md](cards/README.zh-CN.md) |
-| 物理、参数、图与发布说明 | [docs/README.md](docs/README.zh-CN.md) |
+| 物理、参数、图与终端入门 | [docs/README.md](docs/README.zh-CN.md) |
 | 自己生成的教学示例 | [examples/README.md](examples/README.zh-CN.md) |
 | 本地工作区 | [work/README.md](work/README.zh-CN.md) |
 | 可重新生成的输出 | [outputs/README.md](outputs/README.zh-CN.md) |
@@ -1024,7 +1024,7 @@ LHE 中保存的额外权重已经包含生成器归一化，作者分析器再�
 
 **本章完成：** 已得到作者卡对应的多线图。完成这一节即可结束主要教学流程。
 
-## 10. 保存结果与分享项目
+## 10. 保存与复现结果
 
 ### 10.1 日常操作速查
 
@@ -1036,11 +1036,10 @@ LHE 中保存的额外权重已经包含生成器归一化，作者分析器再�
 保存原始压缩 LHE、卡、banner、版本、参数、种子、实际事件数和重要图。
 本次已整理示例见 [examples/reweighted/metadata.json](examples/reweighted/metadata.json)。
 
-### 10.3 哪些文件放到 GitHub
+### 10.3 分享可复现的结果
 
-根 [README](README.zh-CN.md) 集中列出全部来源与致谢。
-[发布说明](docs/publishing/README.zh-CN.md) 解释许可边界、从 WSL 复制文件和 Git 提交步骤。
-上传的是普通文件，不是整个 WSL 虚拟磁盘。
+分享一张图时，应同时提供输入数据或获取方式、卡片和参数设置、软件版本、事件数、随机种子与分析命令，并说明图的单位和归一化方式。
+[示例元数据](examples/reweighted/metadata.json) 展示这些记录；[示例说明](examples/reweighted/README.zh-CN.md) 给出了重新分析和绘图的步骤。
 
 ### 10.4 整理本地输出
 

@@ -13,7 +13,7 @@ pinned commit `92ffde994d7c0d90554ee629cc477ee171c76b84`.
 The current working copies contain only the changes needed for Python 3: expand tabs, convert Python 2 syntax, and replace `file()` with `open()`.
 
 No explicit license was found for the upstream tutorial. The two `.py` files therefore remain local and are ignored by Git.
-This explanation and the conversion instructions are shared with the teaching repository. Confirm permission with Ilaria Brivio before redistributing the copies themselves.
+This teaching repository includes the explanation and conversion instructions; the script copies are obtained locally from the linked tutorial.
 
 ## Prepare your own copies on a new machine
 

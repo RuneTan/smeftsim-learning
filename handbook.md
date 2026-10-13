@@ -29,7 +29,7 @@ This repository shares teaching documents, configuration, images and selected ge
 7. [Choose the model and understand process commands](#7-choose-the-model-and-understand-process-commands)
 8. [Generate your own SM sample](#8-generate-your-own-sm-sample)
 9. [Reweighting and ROOT plots](#9-reweighting-and-root-plots)
-10. [Save results and share the project](#10-save-results-and-share-the-project)
+10. [Save and reproduce results](#10-save-and-reproduce-results)
 11. [Learning schedule and completion criteria](#11-learning-schedule-and-completion-criteria)
 12. [Versions and references](#12-versions-and-references)
 
@@ -135,7 +135,7 @@ The global Windows Python installation is not used in this workflow. See [vm/REA
 |---|---|
 | Helper scripts | [scripts/README.md](scripts/README.md) |
 | Process cards and order selection | [cards/README.md](cards/README.md) |
-| Physics, parameters, figures, and publishing guidance | [docs/README.md](docs/README.md) |
+| Physics, parameters, figures, and terminal basics | [docs/README.md](docs/README.md) |
 | Teaching examples generated in this project | [examples/README.md](examples/README.md) |
 | Local working files | [work/README.md](work/README.md) |
 | Regenerable outputs | [outputs/README.md](outputs/README.md) |
@@ -1025,7 +1025,7 @@ and [muon transverse momentum](docs/figures/rw_pTmu.png).
 
 **Section complete:** you have the multi-curve plots corresponding to the authors' cards. This completes the main tutorial workflow.
 
-## 10. Save results and share the project
+## 10. Save and reproduce results
 
 ### 10.1 Quick reference for routine operations
 
@@ -1037,11 +1037,10 @@ To redraw the saved output, use [examples/reweighted](examples/reweighted/README
 Keep the original compressed LHE file, cards, banner, versions, parameters, seed, actual event count, and important plots.
 See [examples/reweighted/metadata.json](examples/reweighted/metadata.json) for the saved example's records.
 
-### 10.3 Which files belong on GitHub?
+### 10.3 Share a reproducible result
 
-The root [README](README.md) lists all sources and acknowledgments.
-The [publishing guide](docs/publishing/README.md) explains license boundaries, copying files from WSL, and Git commit steps.
-Upload ordinary files rather than the entire WSL virtual disk.
+When sharing a plot, include its input data or acquisition instructions, cards and parameter settings, software versions, event count, seed, and analysis commands. State the units and normalization used for each plot.
+The [example metadata](examples/reweighted/metadata.json) illustrates these records, and the [example guide](examples/reweighted/README.md) shows how to reanalyze and replot the supplied files.
 
 ### 10.4 Organize local outputs
 

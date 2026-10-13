@@ -2,7 +2,7 @@
 
 [English](THIRD_PARTY_NOTICES.md) | [简体中文](THIRD_PARTY_NOTICES.zh-CN.md)
 
-Checked on 2026-10-13. This file records provenance and publication boundaries;
+Checked on 2026-10-13. This file records component sources and license information;
 it does not replace an upstream license.
 
 ## SMEFTsim model and parameter material
@@ -22,14 +22,13 @@ Source: [SMEFTsim_tutorial_June23](https://github.com/IlariaBrivio/SMEFTsim_tuto
 commit `92ffde994d7c0d90554ee629cc477ee171c76b84`.
 
 The processes, cards, restriction, analyzer and plotting method follow this tutorial.
-No LICENSE file was identified in the pinned local checkout, and the GitHub API license field was null.
+No LICENSE file was identified in the pinned tutorial checkout.
 The MIT license of the SMEFTsim model is not assumed to license the independent tutorial scripts.
 
 Local tutorial downloads and author-derived Python files under `work/Material` are excluded from Git.
 Compatibility changes consist of tab expansion, Python 2 syntax conversion, `file()` to `open()`
 and the Python 3 interpreter line. Restoration instructions are shared in the
 [working-copy guide](work/Material/pyroot_python3/README.md).
-Confirm the author's permission before redistributing the tutorial copies.
 
 ## MadGraph and ROOT
 
@@ -50,7 +49,6 @@ Its numerical initialization block, event records and weights are preserved.
 The original local run remains unchanged; its checksum and input settings are recorded in `metadata.json`.
 
 The PDF and PNG plots use the upstream plotting method and are attributed accordingly.
-Program output and source code have different licensing scopes.
 This notice does not claim that the software, model or plotting algorithm was created here.
 It does not imply upstream endorsement, independent closure or full research validation.
 
@@ -59,4 +57,3 @@ It does not imply upstream endorsement, independent closure or full research val
 The bilingual notes and helper entry points are this project's contribution.
 No project-wide reuse license has yet been selected.
 This notice does not relicense third-party content.
-See the [publishing guide](docs/publishing/README.md).

@@ -12,9 +12,8 @@
 | `downloads` | Windows WSL 安装包、Ubuntu rootfs 和校验材料 |
 | `SMEFTsim/ext4.vhdx` | 整个专用 Linux 的磁盘，包括 `.venv`、生成器、过程和事件 |
 
-`ext4.vhdx` 不能作为普通缓存删除，也不需要上传 GitHub。
-要分享 Linux 中某个结果，复制该文件到 `examples` 或直接提交文件，
-见 [发布步骤](../docs/publishing/README.zh-CN.md)。
+`ext4.vhdx` 包含整个 Linux 安装，不能作为普通缓存删除。
+事件文件和图的位置见 [输出目录说明](../outputs/README.zh-CN.md)。
 
 当前采用 WSL2 Ubuntu 22.04，发行版名 `SMEFTsim`，Linux 用户 `smeft`。
 新电脑可先参考

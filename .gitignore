@@ -31,6 +31,8 @@ tutorial/
 # Publish only the selected local teaching sample.
 !examples/reweighted/events.lhe.gz
 !examples/reweighted/histograms.root
+# Local maintenance notes are not part of the teaching repository.
+/.maintainer-notes/
 # Credentials must stay local, including the user-supplied classic PAT file.
 Personal access tokens(classic).txt
 **/Personal access tokens(classic).txt

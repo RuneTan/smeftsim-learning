@@ -13,6 +13,5 @@
 | [model](model/README.zh-CN.md) | SMEFTsim 功能、软件链、Notebook 的用途 |
 | [parameters](parameters/README.zh-CN.md) | UFO 参数、默认值依据与完整索引 |
 | [figures](figures/README.zh-CN.md) | 自己生成的 SM 与重加权示例图 |
-| [publishing](publishing/README.zh-CN.md) | 许可、署名、Windows/WSL 的 GitHub 提交流程 |
 
 返回 [主手册](../handbook.zh-CN.md)。
