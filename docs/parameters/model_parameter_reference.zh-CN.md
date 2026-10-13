@@ -2,10 +2,12 @@
 
 [English](model_parameter_reference.md) | [简体中文](model_parameter_reference.zh-CN.md)
 
+输入卡来源：[Ilaria Brivio 的 2023 年 6 月 SMEFTsim 教程](https://github.com/IlariaBrivio/SMEFTsim_tutorial_June23)；比较使用 `restrict_massless_Hvlvl.dat` 和 `param_card_Hvlvl.dat`。
+
 从 `tutorial/Material/SMEFTsim_U35_MwScheme_UFO/parameters.py` 静态读取；版本 v3.0.2。
 共 201 项：118 个 external、83 个 internal。
 
-此表比较原始 UFO 默认值、作者 restriction 与作者参数卡，不修改它们。
+此表比较原始 UFO 默认值、教程 restriction 与 `param_card_Hvlvl.dat`，不修改它们。
 参数卡未列出某项，不等于值为零：它可能在导入时已被固定、合并或由公式计算。
 参数合并与最后采用的数值以导入后的 MadGraph 模型及 run banner 为准。
 restriction 中的 0/1 可固定参数，相等值也可能使参数合并；不要把 restriction 非零值当作测量结果。
@@ -16,7 +18,7 @@ restriction 中的 0/1 可固定参数，相等值也可能使参数合并；不
 
 ### CKMBLOCK
 
-| 参数 | 编号 | UFO 默认值 | 教程 restriction | 作者参数卡中列出的值 |
+| 参数 | 编号 | UFO 默认值 | 教程 restriction | `param_card_Hvlvl.dat` 中列出的值 |
 |---|---:|---:|---:|---:|
 | [CKMlambda](https://github.com/IlariaBrivio/SMEFTsim_tutorial_June23/blob/92ffde994d7c0d90554ee629cc477ee171c76b84/Material/SMEFTsim_U35_MwScheme_UFO/parameters.py#L20) | 2 | 0.2265 | 0.0 | 未列出 |
 | [CKMA](https://github.com/IlariaBrivio/SMEFTsim_tutorial_June23/blob/92ffde994d7c0d90554ee629cc477ee171c76b84/Material/SMEFTsim_U35_MwScheme_UFO/parameters.py#L28) | 3 | 0.79 | 0.0 | 未列出 |
@@ -25,7 +27,7 @@ restriction 中的 0/1 可固定参数，相等值也可能使参数合并；不
 
 ### SMEFT
 
-| 参数 | 编号 | UFO 默认值 | 教程 restriction | 作者参数卡中列出的值 |
+| 参数 | 编号 | UFO 默认值 | 教程 restriction | `param_card_Hvlvl.dat` 中列出的值 |
 |---|---:|---:|---:|---:|
 | [cG](https://github.com/IlariaBrivio/SMEFTsim_tutorial_June23/blob/92ffde994d7c0d90554ee629cc477ee171c76b84/Material/SMEFTsim_U35_MwScheme_UFO/parameters.py#L52) | 1 | 0 | 0.0 | 未列出 |
 | [cW](https://github.com/IlariaBrivio/SMEFTsim_tutorial_June23/blob/92ffde994d7c0d90554ee629cc477ee171c76b84/Material/SMEFTsim_U35_MwScheme_UFO/parameters.py#L60) | 2 | 0 | 0.0 | 未列出 |
@@ -90,7 +92,7 @@ restriction 中的 0/1 可固定参数，相等值也可能使参数合并；不
 
 ### SMEFTcpv
 
-| 参数 | 编号 | UFO 默认值 | 教程 restriction | 作者参数卡中列出的值 |
+| 参数 | 编号 | UFO 默认值 | 教程 restriction | `param_card_Hvlvl.dat` 中列出的值 |
 |---|---:|---:|---:|---:|
 | [cGtil](https://github.com/IlariaBrivio/SMEFTsim_tutorial_June23/blob/92ffde994d7c0d90554ee629cc477ee171c76b84/Material/SMEFTsim_U35_MwScheme_UFO/parameters.py#L532) | 1 | 0 | 0.0 | 未列出 |
 | [cWtil](https://github.com/IlariaBrivio/SMEFTsim_tutorial_June23/blob/92ffde994d7c0d90554ee629cc477ee171c76b84/Material/SMEFTsim_U35_MwScheme_UFO/parameters.py#L540) | 2 | 0 | 0.0 | 未列出 |
@@ -120,13 +122,13 @@ restriction 中的 0/1 可固定参数，相等值也可能使参数合并；不
 
 ### SMEFTcutoff
 
-| 参数 | 编号 | UFO 默认值 | 教程 restriction | 作者参数卡中列出的值 |
+| 参数 | 编号 | UFO 默认值 | 教程 restriction | `param_card_Hvlvl.dat` 中列出的值 |
 |---|---:|---:|---:|---:|
 | [LambdaSMEFT](https://github.com/IlariaBrivio/SMEFTsim_tutorial_June23/blob/92ffde994d7c0d90554ee629cc477ee171c76b84/Material/SMEFTsim_U35_MwScheme_UFO/parameters.py#L732) | 1 | 1000 | 1000.0 | 1000.0 |
 
 ### SMINPUTS
 
-| 参数 | 编号 | UFO 默认值 | 教程 restriction | 作者参数卡中列出的值 |
+| 参数 | 编号 | UFO 默认值 | 教程 restriction | `param_card_Hvlvl.dat` 中列出的值 |
 |---|---:|---:|---:|---:|
 | [MW](https://github.com/IlariaBrivio/SMEFTsim_tutorial_June23/blob/92ffde994d7c0d90554ee629cc477ee171c76b84/Material/SMEFTsim_U35_MwScheme_UFO/parameters.py#L740) | 1 | 80.387 | 80.387 | 80.387 |
 | [Gf](https://github.com/IlariaBrivio/SMEFTsim_tutorial_June23/blob/92ffde994d7c0d90554ee629cc477ee171c76b84/Material/SMEFTsim_U35_MwScheme_UFO/parameters.py#L748) | 2 | 1.1663787e-05 | 1.166379e-05 | 1.166379e-05 |
@@ -134,13 +136,13 @@ restriction 中的 0/1 可固定参数，相等值也可能使参数合并；不
 
 ### SWITCHES
 
-| 参数 | 编号 | UFO 默认值 | 教程 restriction | 作者参数卡中列出的值 |
+| 参数 | 编号 | UFO 默认值 | 教程 restriction | `param_card_Hvlvl.dat` 中列出的值 |
 |---|---:|---:|---:|---:|
 | [linearPropCorrections](https://github.com/IlariaBrivio/SMEFTsim_tutorial_June23/blob/92ffde994d7c0d90554ee629cc477ee171c76b84/Material/SMEFTsim_U35_MwScheme_UFO/parameters.py#L764) | 1 | 0 | 1.0 | 未列出 |
 
 ### YUKAWA
 
-| 参数 | 编号 | UFO 默认值 | 教程 restriction | 作者参数卡中列出的值 |
+| 参数 | 编号 | UFO 默认值 | 教程 restriction | `param_card_Hvlvl.dat` 中列出的值 |
 |---|---:|---:|---:|---:|
 | [ymdo](https://github.com/IlariaBrivio/SMEFTsim_tutorial_June23/blob/92ffde994d7c0d90554ee629cc477ee171c76b84/Material/SMEFTsim_U35_MwScheme_UFO/parameters.py#L772) | 1 | 0.00467 | 0.0 | 未列出 |
 | [ymup](https://github.com/IlariaBrivio/SMEFTsim_tutorial_June23/blob/92ffde994d7c0d90554ee629cc477ee171c76b84/Material/SMEFTsim_U35_MwScheme_UFO/parameters.py#L780) | 2 | 0.00216 | 0.0 | 未列出 |
@@ -154,7 +156,7 @@ restriction 中的 0/1 可固定参数，相等值也可能使参数合并；不
 
 ### MASS
 
-| 参数 | 编号 | UFO 默认值 | 教程 restriction | 作者参数卡中列出的值 |
+| 参数 | 编号 | UFO 默认值 | 教程 restriction | `param_card_Hvlvl.dat` 中列出的值 |
 |---|---:|---:|---:|---:|
 | [MZ](https://github.com/IlariaBrivio/SMEFTsim_tutorial_June23/blob/92ffde994d7c0d90554ee629cc477ee171c76b84/Material/SMEFTsim_U35_MwScheme_UFO/parameters.py#L844) | 23 | 91.1876 | 91.1876 | 91.1876 |
 | [Me](https://github.com/IlariaBrivio/SMEFTsim_tutorial_June23/blob/92ffde994d7c0d90554ee629cc477ee171c76b84/Material/SMEFTsim_U35_MwScheme_UFO/parameters.py#L852) | 11 | 0.000511 | 0.0 | 0.0 |
@@ -170,7 +172,7 @@ restriction 中的 0/1 可固定参数，相等值也可能使参数合并；不
 
 ### DECAY
 
-| 参数 | 编号 | UFO 默认值 | 教程 restriction | 作者参数卡中列出的值 |
+| 参数 | 编号 | UFO 默认值 | 教程 restriction | `param_card_Hvlvl.dat` 中列出的值 |
 |---|---:|---:|---:|---:|
 | [WZ](https://github.com/IlariaBrivio/SMEFTsim_tutorial_June23/blob/92ffde994d7c0d90554ee629cc477ee171c76b84/Material/SMEFTsim_U35_MwScheme_UFO/parameters.py#L932) | 23 | 2.4952 | 2.4952 | 2.4952 |
 | [WW](https://github.com/IlariaBrivio/SMEFTsim_tutorial_June23/blob/92ffde994d7c0d90554ee629cc477ee171c76b84/Material/SMEFTsim_U35_MwScheme_UFO/parameters.py#L940) | 24 | 2.085 | 2.085 | 2.085 |

@@ -2,6 +2,8 @@
 
 [English](README.md) | [简体中文](README.zh-CN.md)
 
+下文的模型设定和配套输入卡来自 [Ilaria Brivio 的 2023 年 6 月 SMEFTsim 教程](https://github.com/IlariaBrivio/SMEFTsim_tutorial_June23)；本目录的 `.mg5` 命令文件为本学习项目整理。
+
 本目录中的 `.mg5` 是交给 MadGraph 的命令文件，不是运行卡或参数卡。
 
 | 文件 | 做什么 | 是否生成事件 |
@@ -13,8 +15,7 @@
 `run_generator.sh` 从正确的 `work/Material` 目录调用这些卡。
 `generate` 选择矩阵元，`output` 导出代码；真正积分和事件生成在过程的 `generate_events` 阶段。
 
-作者的 `param_card_Hvlvl.dat`、`run_card_Hvlvl.dat` 和 `reweight_card_*.dat` 来自
-[上游教程](https://github.com/IlariaBrivio/SMEFTsim_tutorial_June23)，下载后在本地
+配套输入文件包括 `param_card_Hvlvl.dat`、`run_card_Hvlvl.dat` 和 `reweight_card_*.dat`，下载后在本地
 `work/Material` 使用。不要把本目录的过程卡与那些文件混淆。
 
 本项目的过程选项沿用原教程。下面集中解释模型、restriction 与阶数，
@@ -34,7 +35,7 @@ SMEFTsim_U35_MwScheme_UFO-massless_Hvlvl
 | `U35` | $U(3)^5$ 味对称假设 | 约束不同代之间的系数关系 |
 | `MwScheme` | 以 $m_W,m_Z,G_F$ 为电弱输入 | 决定哪些量作为输入、哪些关系含 EFT 修正 |
 | `UFO` | 生成器模型格式 | MadGraph 从这里读取参数、顶点等 |
-| `massless_Hvlvl` | 作者为这个例子提供的 restriction | 简化轻粒子质量等设定，保留练习用的 EFT 顶点 |
+| `massless_Hvlvl` | 本教程配套的过程 restriction | 简化轻粒子质量等设定，保留练习用的 EFT 顶点 |
 
 另一输入方案 `alphaScheme` 使用 $\alpha_{\rm em},m_Z,G_F$。
 换输入方案不是单纯改文件名：可观测量、参数关系和 EFT input shifts 的处理必须一致。
@@ -45,9 +46,9 @@ SMEFTsim_U35_MwScheme_UFO-massless_Hvlvl
 Restriction 在**导入模型**时简化模型。若这时把某个系数限制为零，相关顶点可能被移除，
 之后再在输出参数卡里把系数调大也恢复不了这些顶点。
 
-作者的 `restrict_massless_Hvlvl.dat` 使用某些非零系数来保留本例需要的顶点。
+`restrict_massless_Hvlvl.dat` 使用某些非零系数来保留本例需要的顶点。
 这些导入时的数值并不是你最终想生成的物理点。
-过程导出后，把作者的 `param_card_Hvlvl.dat` 复制到输出的 `Cards/param_card.dat`，
+过程导出后，把 `param_card_Hvlvl.dat` 复制到输出的 `Cards/param_card.dat`，
 再选择系数。这份参数卡把本例可调的 EFT 系数置零，作为 SM 起点。
 
 教程 UFO 的导入语法来自 Python 2。过程卡已允许 MadGraph 在**工作副本**中转换为 Python 3 语法。
@@ -183,8 +184,8 @@ generate h > e- ve~ mu+ vm SMHLOOP=0 NP=0 NPprop=2 NPprop^2==2
 该功能还要求模型允许 dummy 耦合、`linearPropCorrections` 为非零。
 **本教程已经准备好这两项**：`coupling_orders.py` 中 `NPprop.expansion_order=99`，
 `restrict_massless_Hvlvl.dat` 把 `linearPropCorrections=1` 固定在导入模型时。
-所以作者参数卡不再单独列出这个开关，不需要你补一个 `SWITCHES` block。
-其他官方 UFO 的默认开关可能为 0，不能只复制这一条过程命令就假定已启用。
+所以参数卡 `param_card_Hvlvl.dat` 不再单独列出这个开关，不需要你补一个 `SWITCHES` block。
+其他 SMEFTsim UFO 版本的默认开关可能为 0，不能只复制这一条过程命令就假定已启用。
 
 #### 回到教程的四个样本
 
@@ -199,6 +200,6 @@ generate h > e- ve~ mu+ vm SMHLOOP=0 NP=0 NPprop=2 NPprop^2==2
 若选择额外加入普通维六平方，则再加入那个样本。
 平方项不自动包含所有 $1/\Lambda^4$ 项，见第 2.4 节。
 不要随意添加 `Auto` 宽度计算：若同时启用显式传播子修正，可能混入或重复某些效应。
-本教程先保持作者给定的宽度处理约定。
+本练习先保持 `param_card_Hvlvl.dat` 中的宽度数值与处理约定。
 语法与实现可核对 [SMEFTsim 手册的 Usage in MadGraph 与 Propagator corrections 部分](https://arxiv.org/html/2012.11343v3)
-和 [作者教程命令](https://github.com/IlariaBrivio/SMEFTsim_tutorial_June23#running-mg-and-looking-at-diagrams)。
+和 [2023 年教程命令](https://github.com/IlariaBrivio/SMEFTsim_tutorial_June23#running-mg-and-looking-at-diagrams)。

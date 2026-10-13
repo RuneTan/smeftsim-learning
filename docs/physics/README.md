@@ -2,6 +2,8 @@
 
 [English](README.md) | [简体中文](README.zh-CN.md)
 
+The exercise settings referenced below follow [Ilaria Brivio's June 2023 SMEFTsim tutorial](https://github.com/IlariaBrivio/SMEFTsim_tutorial_June23); the model and theory references are listed in the [project README](../../README.md#sources-and-acknowledgments).
+
 You can begin the exercises before studying the full theory. Return to the relevant section when a model choice or a plot raises a question.
 
 - Warsaw basis and derivatives in field strengths: section 2.3.
@@ -170,7 +172,7 @@ The “five” in `U35` refers to five fermion multiplets: left-handed quarks $q
 
 The difference between `U35` and `MFV` depends on which Yukawa structures are retained. Do not reduce it to “no flavor change” versus “arbitrary flavor change.” Also, SMEFTsim's `top` and `topU3l` implementations set the CKM matrix to the identity, neglecting quark mixing. Check this approximation if your question depends on CKM effects or flavor change.
 
-**What should you choose for this exercise?** Use the authors' `U35` choice first, so the parameter definitions match the reference results. If you later want to test whether electron and muon couplings differ, the `U35` parameter `cHl3` does not provide that freedom. Choose an appropriate flavor structure and check the coefficient conversion. A more general model is not automatically more suitable; the choice should express your research hypothesis.
+**What should you choose for this exercise?** Use the tutorial's `U35` choice first, so the parameter definitions match the reference results. If you later want to test whether electron and muon couplings differ, the `U35` parameter `cHl3` does not provide that freedom. Choose an appropriate flavor structure and check the coefficient conversion. A more general model is not automatically more suitable; the choice should express your research hypothesis.
 
 ### 2.6 Scheme: which measurements determine the electroweak parameters?
 
@@ -207,7 +209,7 @@ $v_T$ is the Higgs vacuum expectation value in SMEFT, and $\Delta G_F$ is a dime
 
 **How should you compare schemes?** The two schemes are different parameterizations of the same theory. Predictions should agree to the calculated accuracy when the inputs describe the same physical point, the parameters are converted consistently, and the perturbative/EFT orders match. Fixing two separate sets of experimental central values and simply copying coefficient values between them may not compare the same physical point. Finite-order truncation and omitted higher-order corrections can also produce differences. Fixing $m_W$ in `MwScheme` does not eliminate SMEFT corrections to W interactions or the W width.
 
-Thus, **the basis supplies coordinates; the flavor choice restricts allowed flavor structures; the input scheme specifies the measurements used to determine parameters.** This exercise uses `U35 + MwScheme` to match the authors' setup, rather than to claim that this combination suits every study. The `massless_Hvlvl` part of the model name is a separate, process-specific restriction; see the [process-card guide](../../cards/README.md).
+Thus, **the basis supplies coordinates; the flavor choice restricts allowed flavor structures; the input scheme specifies the measurements used to determine parameters.** This exercise uses `U35 + MwScheme` to match the reference calculation, rather than to claim that this combination suits every study. The `massless_Hvlvl` part of the model name is a separate, process-specific restriction; see the [process-card guide](../../cards/README.md).
 
 ### 2.7 Differential widths: distributing a decay channel's rate over kinematic regions
 
@@ -259,7 +261,7 @@ $$
 
 If $X$ is in GeV, $d\Gamma_f/dX$ has units GeV/GeV, whereas the normalized shape $p(X\mid f)$ has units $\mathrm{GeV}^{-1}$. Check whether a plot shows the width per bin or a differential width after division by the bin width.
 
-This project uses the authors' ROOT analysis script, which normalizes by the total event count and does not divide again by the bin width. The current plotted bin content is therefore the bin's partial width $\Delta\Gamma_{f,k}$. Divide by $\Delta X_k$ to obtain the bin-averaged differential width. For weighted samples, sum the weights rather than simply counting events.
+This project uses `lhe_analyzer.py`, which normalizes by the total event count and does not divide again by the bin width. The current plotted bin content is therefore the bin's partial width $\Delta\Gamma_{f,k}$. Divide by $\Delta X_k$ to obtain the bin-averaged differential width. For weighted samples, sum the weights rather than simply counting events.
 
 #### Optional: how this connects to the matrix element
 

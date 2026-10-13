@@ -2,7 +2,7 @@
 
 [English](handbook.md) | [简体中文](handbook.zh-CN.md)
 
-These practical notes follow the authors' 2023 tutorial. The learning sequence is:
+These practical notes follow [Ilaria Brivio's June 2023 SMEFTsim tutorial](https://github.com/IlariaBrivio/SMEFTsim_tutorial_June23). The learning sequence is:
 **understand SMEFT → read the reference plots → generate and plot your own SM sample → compare EFT contributions through reweighting.**
 
 This handbook uses the Linux project's shared `.venv` environment and ROOT.
@@ -213,7 +213,7 @@ See the [software guide](docs/model/README.md#33-state-the-calculations-scope-ex
 ### 3.4 What is the official Mathematica notebook for?
 
 The notebook is used to derive Feynman rules and develop the model. You do not need to run it first if you already have the UFO.
-[Notebook purpose and the two workflows](docs/model/README.md#34-what-the-official-mathematica-notebooks-do).
+[Notebook purpose and the two workflows](docs/model/README.md#34-what-the-smeftsim-mathematica-notebooks-do).
 
 ## 4. Environment isolation and file locations
 

@@ -8,14 +8,14 @@ This example comes from the `Hvlvl_SM_manual` run used in handbook Chapter 9:
 | File | Contents |
 |---|---|
 | `events.lhe.gz` | Analysis-only LHE export with the original initialization values, event records, SM weights and 11 extra weights |
-| `histograms.root` | The 48 histograms produced by the upstream analyzer |
-| `plot_mll.pdf`, `plot_mmv.pdf`, `plot_pTl1.pdf`, `plot_pTmu.pdf` | Four PDFs produced using the upstream plotting script |
+| `histograms.root` | The 48 histograms produced by `lhe_analyzer.py` |
+| `plot_mll.pdf`, `plot_mmv.pdf`, `plot_pTl1.pdf`, `plot_pTmu.pdf` | Four PDFs produced using `plot_histos.py` |
 | [metadata.json](metadata.json) | Actual event count, seed, versions, parameter values, run settings, mean weights and file checksums |
 
 The actual sample contains **2,000 events**, with seed **12363**.
 These values were read from the original run card; they need not match the handbook's illustrative seed.
 
-The interference, squared and propagator weights were calculated using the three upstream cards.
+The interference, squared and propagator weights were calculated using `reweight_card_int.dat`, `reweight_card_squares.dat` and `reweight_card_propW.dat`.
 Each target point switches on one coefficient with value 1, with `LambdaSMEFT=1000 GeV`.
 All 11 weights are present and finite in every event.
 These checks do not establish closure against independent event generation or a complete uncertainty analysis.
@@ -60,5 +60,5 @@ Include both before pressing Enter. The output should contain 48 histograms.
 See the [handbook](../../handbook.md) for weight and normalization conventions.
 
 Source: [Ilaria Brivio's 2023 tutorial](https://github.com/IlariaBrivio/SMEFTsim_tutorial_June23).
-The sample was generated locally; the software, model, process setup and plotting method remain
-attributed to their upstream authors.
+The sample was generated locally. Its input cards and plotting method follow the linked tutorial;
+model and generator credits are listed in the [project README](../../README.md#sources-and-acknowledgments).

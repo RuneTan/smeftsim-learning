@@ -2,11 +2,11 @@
 
 [English](README.md) | [简体中文](README.zh-CN.md)
 
-本目录存放参数解释，以及从教程 UFO 和作者卡静态整理的参考表。
+本目录存放 SMEFTsim v3.0.2 的参数解释和静态参考表。Restriction 与输入卡数值来自 [Ilaria Brivio 的 2023 年 6 月 SMEFTsim 教程](https://github.com/IlariaBrivio/SMEFTsim_tutorial_June23) 中的 `restrict_massless_Hvlvl.dat` 和 `param_card_Hvlvl.dat`。
 
 | 文件 | 内容 |
 |---|---|
-| [model_parameter_reference.md](model_parameter_reference.zh-CN.md) | 按 block 列出参数、模型默认值、restriction 和作者参数卡值 |
+| [model_parameter_reference.md](model_parameter_reference.zh-CN.md) | 按 block 列出参数、模型默认值、restriction 和 `param_card_Hvlvl.dat` 的值 |
 | [model_parameters.json](model_parameters.json) | 完整机器可读参数声明与公式 |
 
 它们不是已经求值的 MadGraph 模型，也不代替一次 run 的 banner。
@@ -32,7 +32,7 @@ UFO 不只是参数表，它是生成器可以读取的模型描述：
 原始教程 UFO v3.0.2 的 `parameters.py` 共定义 201 项：118 个 `external`，83 个 `internal`。
 这是**导入 restriction 之前**的计数，不是本衰变需要调整的参数数量，也不是独立 EFT 算子数量。
 完整索引见 [model_parameter_reference.md](model_parameter_reference.zh-CN.md)，
-逐项列出名称、默认值、作者 restriction 值与参数卡中的值；长公式和机器可读数据在
+逐项列出名称、默认值、教程 restriction 值与参数卡中的值；长公式和机器可读数据在
 [model_parameters.json](model_parameters.json)。
 
 | 类别 | 本 UFO 中的内容 | 怎样使用 |
@@ -56,7 +56,7 @@ $\hat v=(\sqrt2 G_F)^{-1/2}$、$g_s=\sqrt{4\pi\alpha_s}$，
 
 #### 当前需要你确认哪些值
 
-先保持作者的 SM 输入与宽度，以便复现参考结果。每次练习主要确认：
+先保持 `param_card_Hvlvl.dat` 中的 SM 输入与宽度，以便复现参考结果。每次练习主要确认：
 
 1. 模型、flavor、scheme、restriction，以及第 7.3 节的过程阶数选项。
 2. 研究的 Wilson 系数及其他保留系数的数值；SM 起点把它们设为零。
@@ -79,7 +79,7 @@ $\hat v=(\sqrt2 G_F)^{-1/2}$、$g_s=\sqrt{4\pi\alpha_s}$，
   轻粒子质量为零是本教程的近似，传播子开关是计算方法选择。
 
 特别是 restriction 中的 `cHbox=0.2`、`cHW=0.3`、`cHl3=0.5`、`cHq3=0.6`、`cll1=0.7`，
-用于保留并区分顶点，不是拟合结论。作者参数卡随后把这五个系数设为零，作为 SM 起点。
+用于保留并区分顶点，不是拟合结论。`param_card_Hvlvl.dat` 随后把这五个系数设为零，作为 SM 起点。
 先导入 restriction，再使用参数卡，最后以每个 run 的 banner 核对最终设定。
 不要直接修改原始 UFO 的 `parameters.py` 来替代参数卡设置。
 参数定义与来源见 [实用手册的 Parameter definitions 附录](https://arxiv.org/html/2012.11343v3)。

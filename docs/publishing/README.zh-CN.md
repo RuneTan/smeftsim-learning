@@ -15,18 +15,16 @@
 | 来源 | 核对结果 | 当前发布方式 |
 |---|---|---|
 | [SMEFTsim v3.0.2](https://github.com/SMEFTsim/SMEFTsim/blob/v3.0.2/LICENSE) | MIT | 参数资料注明来源并附原许可；模型源码本地下载 |
-| MadGraph 2.9.27 的 `madgraph/LICENSE` | 改写自 Illinois/NCSA；需保留通知，禁止借作者名义背书 | 程序本地下载，附原许可作为示例来源记录 |
+| MadGraph 2.9.27 的 `madgraph/LICENSE` | 改写自 Illinois/NCSA；需保留通知，禁止借 MadTeam 或贡献者名义背书 | 程序本地下载，附原许可作为示例来源记录 |
 | [ROOT](https://root.cern/about/license/) | LGPL 2.1 或更新版本；部分组件另有许可 | 仅作为本地依赖，不上传环境和二进制 |
-| [2023 教程](https://github.com/IlariaBrivio/SMEFTsim_tutorial_June23) | 固定副本未找到 LICENSE，GitHub API 许可字段为 null | 教程源码、卡副本和 Python 3 副本不发布；从上游下载 |
+| [Ilaria Brivio 的 2023 年教程](https://github.com/IlariaBrivio/SMEFTsim_tutorial_June23) | 固定副本未找到 LICENSE，GitHub API 许可字段为 null | 教程源码、卡副本和 Python 3 副本不发布；从上游下载 |
 
-“未找到许可”是当前核对结果，不是断言作者永远不允许分享。
-不要把模型主项目的 MIT 自动套用到教程的独立分析与绘图脚本。
+不要把 SMEFTsim 模型项目的 MIT 自动套用到教程的独立分析与绘图脚本。
 
-**什么时候询问作者？** 如果希望把教程脚本、修改后的 Python 3 副本、
-教程卡或文字材料直接放进自己的公开仓库，建议先确认授权范围及采用的许可。
+**教程文件的再分发许可：** 如果希望把教程脚本、修改后的 Python 3 副本、
+教程卡或文字材料直接放进自己的公开仓库，应先向 Ilaria Brivio 确认授权范围及采用的许可。
 可说明这是教学复现、保留署名、只做 Python 3 必需转换，并列出希望再分发的文件。
 当前整理后的发布范围不包含这些副本，因此没有把邮件回复当作完成本地整理的前提。
-没有替你给作者发送邮件。
 
 自己的数值结果不因使用一个程序就自动继承该程序的代码许可。
 输出中若复制了程序文本或上游素材，则仍应分别核对；
@@ -72,7 +70,7 @@ cp /home/smeft/smeftsim/work/Material/Hvlvl_SM_manual/Events/training_sm_2000/un
 
 以下步骤解释手动发布流程。已经初始化并上传的仓库跳过初始化步骤，使用现有 `origin`。
 先在 GitHub 网站创建自己的空仓库，不勾选自动生成 README、LICENSE 或 .gitignore。
-[GitHub 官方步骤](https://docs.github.com/en/migrations/importing-source-code/using-the-command-line-to-import-source-code/adding-locally-hosted-code-to-github)
+[GitHub 仓库导入说明](https://docs.github.com/en/migrations/importing-source-code/using-the-command-line-to-import-source-code/adding-locally-hosted-code-to-github)
 采用相同的本地仓库流程。
 
 ### A. 创建本地 Git 仓库
@@ -102,7 +100,7 @@ git ls-files
 ```
 
 应看到 README、handbook、docs、脚本、过程卡、许可证和 curated examples。
-不应看到 `.venv`、`ext4.vhdx`、第三方源码、作者 Python 副本或大量运行日志。
+不应看到 `.venv`、`ext4.vhdx`、第三方源码、教程分析脚本的 Python 3 副本或大量运行日志。
 `.gitignore` 已为这组示例的 LHE/ROOT 设置明确例外。
 若以前曾跟踪过忽略文件，忽略规则不会自动让它们退出 Git，需先整理跟踪列表。
 

@@ -8,5 +8,5 @@
 - 图的含义见 [docs/figures](../docs/figures/README.zh-CN.md)。
 - 文件来源和哈希见 `reweighted/metadata.json`。
 
-它与上游 `reference` 不同：`reference` 是作者已有结果；
+它与上游 `reference` 不同：`reference` 存放 Ilaria Brivio 的 2023 年教程参考结果，见 [目录说明](../reference/README.zh-CN.md)；
 `examples` 是本项目本地生成的结果，可以随教学仓库分享。

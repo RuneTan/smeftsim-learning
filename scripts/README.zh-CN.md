@@ -2,10 +2,12 @@
 
 [English](README.md) | [简体中文](README.zh-CN.md)
 
+这些辅助入口读取或复制的教程文件来自 [Ilaria Brivio 的 2023 年 6 月 SMEFTsim 教程](https://github.com/IlariaBrivio/SMEFTsim_tutorial_June23)。
+
 新电脑请从 [首次克隆配置说明](../docs/setup/README.zh-CN.md) 开始。
 
 这里存放本项目编写的环境、启动和检查入口，不是 SMEFTsim 模型本身。
-主学习路线仍是手动设置卡、回答 MadGraph 菜单、调用作者分析器与 ROOT。
+主学习路线仍是手动设置卡、回答 MadGraph 菜单、调用 `lhe_analyzer.py` 与 ROOT。
 
 ## 当前主线
 
@@ -13,11 +15,11 @@
 |---|---|---|---|
 | `enter-linux.ps1` | Windows PowerShell | 进入名称为 `SMEFTsim` 的 WSL，用户 `smeft` | 日常进入环境 |
 | `setup_linux.sh` | Linux Bash | 检查系统工具，在单独 Linux 目标目录准备源码与统一 `.venv` | 初始环境准备 |
-| `prepare_work.py` | 项目 Python | 将作者材料复制到 `work/Material`；已有文件保留，整理 shell 换行 | 生成器入口自动调用 |
+| `prepare_work.py` | 项目 Python | 将教程材料复制到 `work/Material`；已有文件保留，整理 shell 换行 | 生成器入口自动调用 |
 | `run_generator.sh` | Linux Bash | 激活项目环境；按阶段调用 MadGraph；拒绝覆盖已有过程并检查日志 | `check_model`、`generate_sm`、`generate_eft` |
 | `validate_generated.py` | 项目 Python | 检查事件、末态、有限权重、四动量与归一化，写出 JSON | 专用 2,000 事件教程 smoke 样本检查 |
 | `validate_smoke.sh` | Linux Bash | 小样本生成与单项重加权检查；已有 smoke run 时复用 | 环境检查，不是课程主线 |
-| `inspect_parameters.py` | Python | 静态读取 UFO 参数与作者卡，生成索引 | 需要刷新参数资料时 |
+| `inspect_parameters.py` | Python | 静态读取 UFO 参数与教程输入卡，生成索引 | 需要刷新参数资料时 |
 
 ## Windows 安装入口
 

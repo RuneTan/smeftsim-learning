@@ -2,10 +2,12 @@
 
 [English](README.md) | [简体中文](README.zh-CN.md)
 
+The tutorial files read or copied by these helpers come from [Ilaria Brivio's June 2023 SMEFTsim tutorial](https://github.com/IlariaBrivio/SMEFTsim_tutorial_June23).
+
 For a new machine, use the [fresh-clone setup guide](../docs/setup/README.md).
 
 This directory contains this project's environment, launch, and validation helpers. The SMEFTsim model is obtained separately.
-The main learning route still involves editing cards by hand, responding to MadGraph menus, and calling the author's analyzer and ROOT.
+The main learning route still involves editing cards by hand, responding to MadGraph menus, and calling `lhe_analyzer.py` and ROOT.
 
 ## Current workflow
 
@@ -13,11 +15,11 @@ The main learning route still involves editing cards by hand, responding to MadG
 |---|---|---|---|
 | `enter-linux.ps1` | Windows PowerShell | Enter the WSL distribution named `SMEFTsim` as user `smeft` | Daily access to the environment |
 | `setup_linux.sh` | Linux Bash | Check system tools and prepare source files and the unified `.venv` in a separate Linux project directory | Initial environment setup |
-| `prepare_work.py` | Project Python | Copy the author's materials into `work/Material`, preserve existing files, and normalize shell-script line endings | Called automatically by the generator helper |
+| `prepare_work.py` | Project Python | Copy tutorial materials into `work/Material`, preserve existing files, and normalize shell-script line endings | Called automatically by the generator helper |
 | `run_generator.sh` | Linux Bash | Activate the project environment, run MadGraph by stage, refuse to overwrite existing process directories, and inspect logs | `check_model`, `generate_sm`, and `generate_eft` |
 | `validate_generated.py` | Project Python | Check events, final states, finite weights, four-momenta, and normalization; write a JSON report | Validation of the dedicated 2,000-event tutorial smoke sample |
 | `validate_smoke.sh` | Linux Bash | Check small-sample generation and one reweighting contribution; reuse an existing smoke run when available | Environment validation; outside the main lesson |
-| `inspect_parameters.py` | Python | Read UFO parameters and the author's cards statically to generate an index | Refreshing the parameter reference |
+| `inspect_parameters.py` | Python | Read UFO parameters and the tutorial input cards statically to generate an index | Refreshing the parameter reference |
 
 ## Windows installation helpers
 

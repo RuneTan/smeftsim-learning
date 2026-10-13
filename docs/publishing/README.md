@@ -17,16 +17,14 @@ Checked on 2026-10-13:
 | [SMEFTsim v3.0.2](https://github.com/SMEFTsim/SMEFTsim/blob/v3.0.2/LICENSE) | MIT | Attribute the parameter reference and retain the license; download model source locally |
 | MadGraph 2.9.27, `madgraph/LICENSE` | Adapted from Illinois/NCSA; retain notices and do not imply endorsement | Download locally; retain its license as a record of the example's source |
 | [ROOT](https://root.cern/about/license/) | LGPL 2.1 or later; some components have other licenses | Local dependency only; environments and binaries are excluded |
-| [2023 tutorial](https://github.com/IlariaBrivio/SMEFTsim_tutorial_June23) | No LICENSE found in the pinned copy; GitHub API license field was null | Download upstream; tutorial source, card copies and Python 3 script copies are excluded |
+| [Ilaria Brivio's 2023 tutorial](https://github.com/IlariaBrivio/SMEFTsim_tutorial_June23) | No LICENSE found in the pinned copy; GitHub API license field was null | Download upstream; tutorial source, card copies and Python 3 script copies are excluded |
 
-“No license found” describes this check; it does not assert that the author would never permit sharing.
-Do not apply the model project's MIT license automatically to the independent tutorial scripts.
+Do not apply SMEFTsim's MIT license automatically to the independent tutorial scripts.
 
-**When should you contact the author?** Before redistributing tutorial scripts, modified Python 3 copies,
-tutorial cards or text, confirm the scope of permission and the applicable license.
+**Sharing tutorial files:** before redistributing tutorial scripts, modified Python 3 copies,
+tutorial cards or text, ask Ilaria Brivio to confirm the scope of permission and the applicable license.
 Explain the teaching purpose, attribution and minimal Python 3 conversion, and list the files you wish to share.
 The current publication scope excludes those copies, so publishing these notes does not depend on an email reply.
-No email has been sent on your behalf.
 
 Numerical results do not automatically inherit a program's source-code license merely because the program generated them.
 Embedded program text or upstream material still needs separate consideration.
@@ -75,7 +73,7 @@ There is no need to move all documents and dependencies back into Linux.
 
 The commands below explain manual publication. For a new project, first create an empty GitHub repository
 without automatically adding README, LICENSE or `.gitignore`.
-[GitHub's official instructions](https://docs.github.com/en/migrations/importing-source-code/using-the-command-line-to-import-source-code/adding-locally-hosted-code-to-github)
+[GitHub's repository-import instructions](https://docs.github.com/en/migrations/importing-source-code/using-the-command-line-to-import-source-code/adding-locally-hosted-code-to-github)
 describe the same workflow. For a repository already published, skip initialization and use its existing `origin`.
 
 ### A. Initialize a local repository

@@ -4,7 +4,7 @@
 
 在**新电脑**开始阅读[主手册](../../handbook.zh-CN.md)前，先按本说明准备环境。已有环境已经能够生成事件并导入 ROOT 时，继续使用它，跳过这里的安装步骤。
 
-公开仓库包含教材、辅助脚本和选定的示例，不包含虚拟磁盘、虚拟环境、MadGraph、上游教程下载材料或作者分析脚本。以下步骤从上游取得本地依赖，并自行准备分析脚本，不把作者代码副本再次发布。
+公开仓库包含教材、辅助脚本和选定的示例，不包含虚拟磁盘、虚拟环境、MadGraph、上游教程下载材料或[Ilaria Brivio 的 2023 年 6 月 SMEFTsim 教程](https://github.com/IlariaBrivio/SMEFTsim_tutorial_June23) 的分析脚本。以下步骤从上游取得本地依赖，并自行准备分析脚本，不再次发布教程代码副本。
 
 ## 1. 起点与两个目录
 
@@ -99,7 +99,7 @@ gfortran --version
 
 ## 5. 生成本地 Python 3 分析副本
 
-新克隆的公开仓库只提供分析目录的说明，**不提供其中的两个 `.py` 文件**。在调用分析器或绘图脚本前，先从刚下载的作者原文件生成工作副本。
+新克隆的公开仓库只提供分析目录的说明，**不提供其中的两个 `.py` 文件**。在调用分析器或绘图脚本前，先从刚下载的教程文件生成工作副本。
 
 **以下转换命令仅在两个工作脚本尚不存在时执行。** 从已激活环境的运行目录 `~/smeftsim` 逐条输入：
 
@@ -113,7 +113,7 @@ sed -i '1s|^#!/usr/bin/env python$|#!/usr/bin/env python3|' work/Material/pyroot
 python -m py_compile work/Material/pyroot_python3/lhe_analyzer.py work/Material/pyroot_python3/plot_histos.py
 ```
 
-`>` 把内容写入新工作副本，是命令的一部分。`tutorial/Material` 的作者原文件不变。转换只处理 Python 3 兼容：展开缩进、转换旧语法、将 `file()` 替换为 `open()`、更新解释器行。Python 3.10 提供这里使用的 `lib2to3`，Python 3.14 已不提供。
+`>` 把内容写入新工作副本，是命令的一部分。`tutorial/Material` 中的教程原文件不变。转换只处理 Python 3 兼容：展开缩进、转换旧语法、将 `file()` 替换为 `open()`、更新解释器行。Python 3.10 提供这里使用的 `lib2to3`，Python 3.14 已不提供。
 
 最后一条命令检查语法，正常情况下没有输出。详细解释见[工作副本说明](../../work/Material/pyroot_python3/README.zh-CN.md)。
 
@@ -131,7 +131,7 @@ ls -lh examples/reweighted/events.lhe.gz examples/reweighted/histograms.root
 
 教材仍在 `~/smeftsim-source` 或 GitHub 上阅读，运行命令则在 `~/smeftsim` 执行。现在可以按[示例重新分析与绘图说明](../../examples/reweighted/README.zh-CN.md)操作。
 
-## 7. 准备可选的作者参考结果
+## 7. 准备可选的 2023 年教程参考结果
 
 若要执行手册第 6 节，将本地下载的结果压缩包解压到**源码工作区**，保留已解压文件：
 

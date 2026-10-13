@@ -1,8 +1,8 @@
-# Upstream reference results
+# Reference results from the 2023 tutorial
 
 [English](README.md) | [简体中文](README.zh-CN.md)
 
-This local directory holds the author's results extracted from
+This local directory holds the reference results supplied with [Ilaria Brivio's June 2023 SMEFTsim tutorial](https://github.com/IlariaBrivio/SMEFTsim_tutorial_June23), extracted from
 `SMEFTsim_tutorial_results.zip`: compressed LHE files, ROOT histograms and reference PDFs.
 
 These are upstream results, not the locally generated [examples](../examples/README.md).
@@ -10,8 +10,7 @@ The reference archive remains local; only this directory guide is included in Gi
 
 ## Where to find the ROOT files
 
-The supplied reference package contains the author's ROOT files.
-On the example Windows installation they are under:
+On the example Windows installation, the reference ROOT files are under:
 
 ```text
 smeftsim/reference/Results/Root_files/
@@ -27,10 +26,10 @@ smeftsim/reference/Results/Root_files/
 **The reference plot's multiple curves mainly come from different weight histograms in one SM ROOT file.**
 The three direct EFT files serve separate consistency checks; merging them is not required to draw the reference plot.
 The installation check reconstructed 92 histograms from the four upstream LHE files and compared their bin contents.
-Freshly generated samples have statistical fluctuations and need not match the author's bins exactly.
+Freshly generated samples have statistical fluctuations and need not match the reference bins exactly.
 The compressed reference LHE files are under `Results/Hvlvl_*/Events/run_01`.
 
-Different official resources serve different purposes: the 2023 tutorial's result archive is separate
+These resources serve different purposes: the 2023 tutorial's result archive is separate
 from [SMEFTsim UFO validation](https://github.com/SMEFTsim/UFO-validation).
 Use the result archive corresponding to this exercise rather than expecting every UFO model to ship
 with this particular ROOT sample.

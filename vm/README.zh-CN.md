@@ -18,7 +18,7 @@
 
 当前采用 WSL2 Ubuntu 22.04，发行版名 `SMEFTsim`，Linux 用户 `smeft`。
 新电脑可先参考
-[WSL 安装说明](https://learn.microsoft.com/en-us/windows/wsl/install)、
+[Microsoft WSL 安装说明](https://learn.microsoft.com/en-us/windows/wsl/install)、
 [导入自定义发行版](https://learn.microsoft.com/en-us/windows/wsl/use-custom-distro)，
 再准备 Python 3.10、`python3-venv`、`python3-dev`、`gcc`、`gfortran`、`make`、`git`、`perl`。
 当前脚本要求这些前提，不是从空机器自动安装所有资源的发布包。
@@ -48,11 +48,11 @@ Linux 的系统包会安装在这个专用 Ubuntu 内，不是 Windows 的全局
 ```text
 smeftsim/
 ├── handbook.md                  本手册
-├── tutorial/                    作者原始材料
+├── tutorial/                    下载的 2023 年教程材料
 ├── tools/MG5_aMC_v2_9_27/        已下载的生成器源码
 ├── cards/                       可复用的过程定义
 ├── scripts/                     安装、启动、分析和校验入口
-├── reference/Results/           作者已有参考结果
+├── reference/Results/           2023 年教程参考结果
 ├── docs/figures/                可随教学文档分享的示例 PNG
 ├── outputs/                     本地运行数据、ROOT 与图
 └── vm/                          安装包、镜像与项目虚拟磁盘

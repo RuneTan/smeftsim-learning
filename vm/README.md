@@ -17,7 +17,7 @@ Copy selected results to `examples` or commit ordinary files, as explained in th
 [publishing guide](../docs/publishing/README.md).
 
 The example installation uses WSL2 Ubuntu 22.04, distribution name `SMEFTsim` and Linux user `smeft`.
-On a new machine, start with the official
+On a new machine, start with Microsoft's
 [WSL installation instructions](https://learn.microsoft.com/en-us/windows/wsl/install) and
 [custom-distribution import guide](https://learn.microsoft.com/en-us/windows/wsl/use-custom-distro).
 Prepare Python 3.10, `python3-venv`, `python3-dev`, `gcc`, `gfortran`, `make`, `git` and `perl`.

@@ -8,14 +8,14 @@
 | 文件 | 做什么 |
 |---|---|
 | `events.lhe.gz` | 分析用 LHE 导出，保留原始初始化数值、事件、SM 权重和 11 个额外权重 |
-| `histograms.root` | 作者分析器生成的 48 个直方图 |
-| `plot_mll.pdf`、`plot_mmv.pdf`、`plot_pTl1.pdf`、`plot_pTmu.pdf` | 你调用作者绘图脚本得到的四张 PDF |
+| `histograms.root` | `lhe_analyzer.py` 生成的 48 个直方图 |
+| `plot_mll.pdf`、`plot_mmv.pdf`、`plot_pTl1.pdf`、`plot_pTmu.pdf` | 调用 `plot_histos.py` 得到的四张 PDF |
 | [metadata.json](metadata.json) | 实际事件数、随机种子、版本、参数、运行设置、权重均值和文件哈希 |
 
 实际事件数是 **2,000**，实际种子是 **12363**。它们从原始 run card 读取，
 不能根据主手册的示例种子推断。
 
-线性、平方、传播子权重分别由上游三张卡产生；各参数点一次只打开一个系数并设为 1，
+线性、平方、传播子权重分别由 `reweight_card_int.dat`、`reweight_card_squares.dat` 和 `reweight_card_propW.dat` 产生；各参数点一次只打开一个系数并设为 1，
 `LambdaSMEFT=1000 GeV`。11 个权重在全部事件中存在且有限。
 这些是基本数据检查，不是独立直接生成的 closure 验证，也没有完整统计误差处理。
 
@@ -52,4 +52,4 @@ python work/Material/pyroot_python3/lhe_analyzer.py outputs/example_reweighted/e
 输出应有 48 个直方图；权重和归一化含义见 [主手册](../../handbook.zh-CN.md)。
 
 来源：[Ilaria Brivio 的 2023 年教程](https://github.com/IlariaBrivio/SMEFTsim_tutorial_June23)。
-数据在本机生成，软件、模型、过程设定和绘图方法按上游署名。
+数据在本机生成；输入卡和绘图方法采用上述教程，模型与生成器的署名见 [项目 README](../../README.zh-CN.md#来源与致谢)。

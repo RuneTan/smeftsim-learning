@@ -4,7 +4,7 @@
 
 Use this guide on a **new machine** before starting the [handbook](../../handbook.md). If your existing environment already generates events and imports ROOT, keep it and skip this setup.
 
-The public repository contains teaching notes, helper scripts, and a selected example. It does not contain a virtual disk, a virtual environment, MadGraph, the tutorial download, or the author's analysis scripts. The steps below obtain those dependencies locally and prepare the analysis scripts without redistributing them.
+The public repository contains teaching notes, helper scripts, and a selected example. It does not contain a virtual disk, a virtual environment, MadGraph, the tutorial download, or analysis scripts from [Ilaria Brivio's June 2023 SMEFTsim tutorial](https://github.com/IlariaBrivio/SMEFTsim_tutorial_June23). The steps below obtain those dependencies locally and prepare the analysis scripts without redistributing them.
 
 ## 1. Starting requirements and the two directories
 

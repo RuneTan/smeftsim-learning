@@ -4,7 +4,7 @@
 
 新电脑先完成 [首次克隆配置说明](docs/setup/README.zh-CN.md)，再执行本手册的运行步骤。
 
-这是一份基于作者 2023 年教程的实践笔记，学习目标是：
+这是一份基于[Ilaria Brivio 的 2023 年 6 月 SMEFTsim 教程](https://github.com/IlariaBrivio/SMEFTsim_tutorial_June23)的实践笔记，学习目标是：
 **理解 SMEFT → 读参考图 → 生成自己的 SM 样本并画图 → 用重加权比较 EFT 贡献。**
 
 本手册使用 Linux 项目的统一 `.venv` 环境和 ROOT。
@@ -214,7 +214,7 @@ SMEFTsim 提供 FeynRules/UFO 模型，供生成器计算；它不独立产生�
 ### 3.4 官方 Mathematica Notebook 用来做什么
 
 Notebook 用于解析费曼规则和模型开发；已有 UFO 时不需要先运行它。
-[Notebook 用途与两条工作路径](docs/model/README.zh-CN.md#34-官方-mathematica-notebook-用来做什么)。
+[Notebook 用途与两条工作路径](docs/model/README.zh-CN.md#34-smeftsim-的-mathematica-notebook-用来做什么)。
 
 ## 4. 环境隔离与文件位置
 

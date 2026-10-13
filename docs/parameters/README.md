@@ -2,11 +2,11 @@
 
 [English](README.md) | [简体中文](README.zh-CN.md)
 
-This directory contains parameter explanations and a static reference compiled from the tutorial UFO and the author's cards.
+This directory contains explanations and a static parameter reference for SMEFTsim v3.0.2. Restriction and input-card values come from `restrict_massless_Hvlvl.dat` and `param_card_Hvlvl.dat` in [Ilaria Brivio's June 2023 SMEFTsim tutorial](https://github.com/IlariaBrivio/SMEFTsim_tutorial_June23).
 
 | File | Contents |
 |---|---|
-| [model_parameter_reference.md](model_parameter_reference.md) | Parameters by block, model defaults, restriction values, and the author's parameter-card values |
+| [model_parameter_reference.md](model_parameter_reference.md) | Parameters by block, model defaults, restriction values, and values in `param_card_Hvlvl.dat` |
 | [model_parameters.json](model_parameters.json) | Complete machine-readable parameter declarations and formulas |
 
 These files describe static declarations. They are not an evaluated MadGraph model and do not replace a run's banner.
@@ -31,7 +31,7 @@ A UFO describes a model in a format the generator can read. Its files cover more
 
 The original tutorial UFO v3.0.2 defines 201 parameters in `parameters.py`: 118 `external` and 83 `internal`.
 These are counts **before importing a restriction**. They are neither the number of parameters to adjust for this decay nor the number of independent EFT operators.
-See [model_parameter_reference.md](model_parameter_reference.md) for every parameter's name, default, tutorial restriction value, and value listed in the author's parameter card.
+See [model_parameter_reference.md](model_parameter_reference.md) for every parameter's name, default, tutorial restriction value, and value listed in `param_card_Hvlvl.dat`.
 Long formulas and machine-readable declarations are available in
 [model_parameters.json](model_parameters.json).
 
@@ -56,7 +56,7 @@ Keep default values, internal formulas, and independently adjustable inputs dist
 
 #### Which values should you check now?
 
-Initially retain the author's SM inputs and widths to reproduce the reference results. For each exercise, mainly check:
+Initially retain the SM inputs and widths in `param_card_Hvlvl.dat` to reproduce the reference results. For each exercise, mainly check:
 
 1. The model, flavor assumptions, input scheme, restriction, and the process-order choices in Section 7.3.
 2. The Wilson coefficients being studied and the values of the other retained coefficients; set them to zero for the SM starting point.
@@ -79,7 +79,7 @@ Although `cHq3` is a quark operator coefficient, it can affect this leptonic pro
   Zero light-particle masses are an approximation in this tutorial, and the propagator switch chooses a calculation method.
 
 In particular, `cHbox=0.2`, `cHW=0.3`, `cHl3=0.5`, `cHq3=0.6`, and `cll1=0.7` in the restriction
-retain and distinguish vertices; they are not fit results. The author's parameter card subsequently sets these five coefficients to zero for the SM starting point.
+retain and distinguish vertices; they are not fit results. `param_card_Hvlvl.dat` subsequently sets these five coefficients to zero for the SM starting point.
 Import the restriction first, apply the parameter card, and finally check the resulting settings in each run's banner.
 Use parameter cards for configuration instead of directly editing the original UFO's `parameters.py`.
 See the [Parameter definitions appendix in the practical guide](https://arxiv.org/html/2012.11343v3) for definitions and sources.

@@ -24,8 +24,8 @@ On a new machine, first follow the [fresh-clone setup guide](docs/setup/README.m
 
 ![Reweighted distribution from this project's own sample](docs/figures/rw_mmv.png)
 
-The figure uses locally generated events and the upstream plotting logic.
-The upstream axis labels are retained. This process measures a decay width;
+The figure uses locally generated events and `plot_histos.py` from Ilaria Brivio's 2023 tutorial.
+The script's original axis labels are retained. This process measures a decay width;
 the old `pb` label is explained in the [figure guide](docs/figures/README.md).
 
 ## Sources and acknowledgments
@@ -43,9 +43,9 @@ the old `pb` label is explained in the [figure guide](docs/figures/README.md).
 | [PDG Kinematics](https://pdg.lbl.gov/2025/reviews/rpp2025-rev-kinematics.pdf) | Particle Data Group | Widths, phase space and kinematics |
 | [Microsoft WSL](https://learn.microsoft.com/en-us/windows/wsl/install) | Microsoft | Dedicated Linux environment |
 
-These notes are a learning aid. The original models, tutorial and algorithms remain attributed
-to their authors. This is an independent project and does not imply endorsement.
-For scientific publications, cite the papers requested by the upstream projects.
+These notes are an independent learning aid. Model, generator and tutorial credits are listed above;
+this project does not imply endorsement by those projects or contributors.
+For scientific publications, follow the citation requirements of the tools you use.
 
 ## Publication and license scope
 

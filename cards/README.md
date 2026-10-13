@@ -2,6 +2,8 @@
 
 [English](README.md) | [简体中文](README.zh-CN.md)
 
+The model settings and supplied input cards discussed here follow [Ilaria Brivio's June 2023 SMEFTsim tutorial](https://github.com/IlariaBrivio/SMEFTsim_tutorial_June23). The `.mg5` command files in this directory were prepared for this learning project.
+
 The `.mg5` files in this directory contain commands for MadGraph. They are process cards, rather than run cards or parameter cards.
 
 | File | Purpose | Generates events? |
@@ -12,7 +14,7 @@ The `.mg5` files in this directory contain commands for MadGraph. They are proce
 
 `run_generator.sh` calls these cards from the required `work/Material` directory. `generate` selects the matrix element; `output` exports its code. Numerical integration and event generation happen later, when the process's `generate_events` command runs.
 
-The authors' `param_card_Hvlvl.dat`, `run_card_Hvlvl.dat`, and `reweight_card_*.dat` come from the [upstream tutorial](https://github.com/IlariaBrivio/SMEFTsim_tutorial_June23). After download, they are used locally in `work/Material`. Distinguish those files from the process cards in this directory.
+The supplied input files are `param_card_Hvlvl.dat`, `run_card_Hvlvl.dat`, and `reweight_card_*.dat`. After download, they are used locally in `work/Material`. Distinguish those files from the process cards in this directory.
 
 The process settings follow the original tutorial. The explanations below cover the model, restriction, and coupling orders; the handbook refers here for these details.
 
@@ -29,7 +31,7 @@ SMEFTsim_U35_MwScheme_UFO-massless_Hvlvl
 | `U35` | A $U(3)^5$ flavor-symmetry assumption | Constrains the relationships between coefficients for different generations |
 | `MwScheme` | Uses $m_W,m_Z,G_F$ as electroweak inputs | Determines which quantities are inputs and which parameter relations contain EFT corrections |
 | `UFO` | An event-generator model format | MadGraph reads parameters, vertices, and related information from it |
-| `massless_Hvlvl` | The restriction supplied by the authors for this example | Simplifies settings such as light-particle masses while retaining the EFT vertices needed for the exercise |
+| `massless_Hvlvl` | The process-specific restriction supplied with this tutorial | Simplifies settings such as light-particle masses while retaining the EFT vertices needed for the exercise |
 
 The alternative `alphaScheme` uses $\alpha_{\rm em},m_Z,G_F$. Changing schemes requires more than changing a filename: observables, parameter relations, and EFT input shifts must be handled consistently. For research, choose the flavor model and input scheme according to the physics question and your supervisor's requirements.
 
@@ -37,7 +39,7 @@ The alternative `alphaScheme` uses $\alpha_{\rm em},m_Z,G_F$. Changing schemes r
 
 A restriction simplifies the model **when it is imported**. If a coefficient is restricted to zero at this stage, its vertices may be removed. Increasing the coefficient later in the exported parameter card cannot restore those vertices.
 
-The authors' `restrict_massless_Hvlvl.dat` uses some nonzero coefficients to retain the vertices needed for this example. Those import-time values are not the physical point you ultimately intend to generate. After exporting the process, copy the authors' `param_card_Hvlvl.dat` to its `Cards/param_card.dat`, then set the desired coefficients. This parameter card sets the adjustable EFT coefficients in the example to zero, providing an SM starting point.
+`restrict_massless_Hvlvl.dat` uses some nonzero coefficients to retain the vertices needed for this example. Those import-time values are not the physical point you ultimately intend to generate. After exporting the process, copy `param_card_Hvlvl.dat` to its `Cards/param_card.dat`, then set the desired coefficients. This parameter card sets the adjustable EFT coefficients in the example to zero, providing an SM starting point.
 
 The tutorial UFO uses Python 2 import syntax. The process cards allow MadGraph to convert the **working copy** to Python 3 syntax. The original model in `tutorial` is retained; the local working copy has been converted, imported, and used successfully to generate new events.
 
@@ -136,7 +138,7 @@ generate h > e- ve~ mu+ vm SMHLOOP=0 NP=0 NPprop=2 NPprop^2==2
 
 `NP=0` excludes ordinary EFT vertices and input-parameter insertions; propagator corrections use the separate `NPprop` mechanism. `NPprop=2` sets the upper bound at amplitude level, allowing the ordinary SM amplitude and an amplitude with one auxiliary propagator. `NPprop^2==2` then selects only their interference. It retains neither the SM baseline nor $|\mathcal M_P|^2$.
 
-This feature also requires the model to allow dummy couplings and set `linearPropCorrections` to a nonzero value. **Both are already configured in this tutorial:** `coupling_orders.py` sets `NPprop.expansion_order=99`, and `restrict_massless_Hvlvl.dat` fixes `linearPropCorrections=1` when the model is imported. The authors' parameter card therefore does not list this switch separately; you do not need to add a `SWITCHES` block. Other official UFOs may default to 0, so copying this process command alone does not establish that the feature is enabled.
+This feature also requires the model to allow dummy couplings and set `linearPropCorrections` to a nonzero value. **Both are already configured in this tutorial:** `coupling_orders.py` sets `NPprop.expansion_order=99`, and `restrict_massless_Hvlvl.dat` fixes `linearPropCorrections=1` when the model is imported. The parameter card therefore does not list this switch separately; you do not need to add a `SWITCHES` block. Other SMEFTsim UFO variants may default to 0, so copying this process command alone does not establish that the feature is enabled.
 
 #### The tutorial's four samples
 
@@ -149,6 +151,6 @@ This feature also requires the model to allow dummy couplings and set `linearPro
 
 These samples isolate different contributions. To construct the tutorial's linear prediction, combine the SM baseline, ordinary interference, and propagator interference. If you also choose to retain the ordinary dimension-six squared term, add that sample. The squared term does not include every contribution at $1/\Lambda^4$; see [section 2.4 of the physics guide](../docs/physics/README.md).
 
-Do not add `Auto` width calculations without checking the convention: when explicit propagator corrections are enabled, doing so may mix in or double-count some effects. Follow the authors' supplied width treatment for this tutorial.
+Do not add `Auto` width calculations without checking the convention: when explicit propagator corrections are enabled, doing so may mix in or double-count some effects. Keep the width values and treatment specified in `param_card_Hvlvl.dat` for this exercise.
 
-Check the syntax and implementation against the Usage in MadGraph and Propagator corrections sections of the [SMEFTsim manual](https://arxiv.org/html/2012.11343v3) and the [authors' tutorial commands](https://github.com/IlariaBrivio/SMEFTsim_tutorial_June23#running-mg-and-looking-at-diagrams).
+Check the syntax and implementation against the Usage in MadGraph and Propagator corrections sections of the [SMEFTsim manual](https://arxiv.org/html/2012.11343v3) and the [2023 tutorial commands](https://github.com/IlariaBrivio/SMEFTsim_tutorial_June23#running-mg-and-looking-at-diagrams).

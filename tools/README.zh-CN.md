@@ -19,7 +19,7 @@ git clone https://github.com/mg5amcnlo/mg5amcnlo.git tools/MG5_aMC_v2_9_27
 git -C tools/MG5_aMC_v2_9_27 checkout eb76cab72b8d44aac7162ac7221ac08a4384a169
 ```
 
-`tutorial` 在项目根目录，保留原作者 README。
+`tutorial` 在项目根目录，保留下载的教程 README。
 Linux 的 `setup_linux.sh` 从固定源码重新检出以恢复符号链接。
 本地 MadGraph 核心许可是改写自 Illinois/NCSA 的许可；
 第三方 vendor 组件可能采用不同许可，不能用一句全项目 MIT 覆盖它们。

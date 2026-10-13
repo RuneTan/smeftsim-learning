@@ -21,7 +21,7 @@ git clone https://github.com/mg5amcnlo/mg5amcnlo.git tools/MG5_aMC_v2_9_27
 git -C tools/MG5_aMC_v2_9_27 checkout eb76cab72b8d44aac7162ac7221ac08a4384a169
 ```
 
-`tutorial` is a sibling directory at the project root. Keep the author's README there.
+`tutorial` is a sibling directory at the project root. Keep the downloaded tutorial README there.
 The Linux `setup_linux.sh` checks out the pinned source again to restore symbolic links.
 These downloads are not a complete installation of the Linux environment.
 

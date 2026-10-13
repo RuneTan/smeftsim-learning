@@ -8,7 +8,7 @@ This guide explains what the model package provides, how MadGraph and ROOT fit i
 
 ### 3.1 What the package contains
 
-According to the [official website](https://smeftsim.github.io/) and the [practical guide](https://arxiv.org/abs/2012.11343), SMEFTsim provides FeynRules source files and exported UFO models for automated SMEFT calculations.
+According to the [SMEFTsim website](https://smeftsim.github.io/) and the [practical guide](https://arxiv.org/abs/2012.11343), SMEFTsim provides FeynRules source files and exported UFO models for automated SMEFT calculations.
 
 - Load the FeynRules source in Mathematica to study the Lagrangian and derive Feynman rules.
 - A UFO is a model format read by event generators. It contains particles, parameters, vertices, coupling orders, and related model information.
@@ -39,9 +39,9 @@ Some SM loop-induced Higgs interactions in SMEFTsim use approximations such as t
 
 A successful software run establishes that the configuration can execute. Interpreting its physics still requires checking the model assumptions, EFT truncation, parameter card, integration uncertainty, and reference samples. A simulated distribution is not automatically the same as a real-data distribution.
 
-### 3.4 What the official Mathematica notebooks do
+### 3.4 What the SMEFTsim Mathematica notebooks do
 
-The main project's [Mathematica_notebooks directory](https://github.com/SMEFTsim/SMEFTsim/tree/main/Mathematica_notebooks) is separate from the downloaded 2023 MadGraph tutorial. The current tutorial copy contains no `.nb` files. The official documentation describes two uses:
+The SMEFTsim model repository's [Mathematica_notebooks directory](https://github.com/SMEFTsim/SMEFTsim/tree/main/Mathematica_notebooks) is separate from the downloaded 2023 MadGraph tutorial. The current tutorial copy contains no `.nb` files. The SMEFTsim repository README describes two uses:
 
 | Notebook | Purpose | Needed for this exercise? |
 |---|---|---|
@@ -50,7 +50,7 @@ The main project's [Mathematica_notebooks directory](https://github.com/SMEFTsim
 
 The first notebook helps answer questions such as “Which vertices does this operator in the Lagrangian produce?” For example, use FeynRules to inspect the rules involving `cHW` and compare their momentum structures with the SM vertices. This is useful for analytical study, model checks, and changes to the source Lagrangian. To pass a modified model to an event generator, export the corresponding UFO through FeynRules.
 
-The second notebook mainly serves as a resource containing rules that have already been computed. The official instructions recommend calling `NotebookEvaluate["SMEFTsim_SMHloop_FRs.nb"]` as shown in the first notebook, rather than opening the whole file to inspect its many cells. Its presence does not mean that the UFO automatically performs a complete one-loop SMEFT calculation.
+The second notebook mainly serves as a resource containing rules that have already been computed. The SMEFTsim repository README recommends calling `NotebookEvaluate["SMEFTsim_SMHloop_FRs.nb"]` as shown in the first notebook, rather than opening the whole file to inspect its many cells. Its presence does not mean that the UFO automatically performs a complete one-loop SMEFT calculation.
 
 The two workflows are:
 
@@ -59,11 +59,11 @@ flowchart LR
     A[SMEFT Lagrangian .fr] --> B[Mathematica with FeynRules]
     B --> C[Analytical Feynman rules]
     B --> D[Export UFO]
-    E[UFO exported by the authors] --> F[MadGraph]
+    E[Pre-exported SMEFTsim UFO] --> F[MadGraph]
     D --> F
     F --> G[Matrix elements and events]
 ```
 
-This tutorial follows “UFO exported by the authors → MadGraph.” Study the notebook/FeynRules workflow later when you want to trace a vertex back to its source. That workflow requires a separate FeynRules setup; this project has not installed it into the global Windows environment.
+This tutorial follows “Pre-exported SMEFTsim UFO → MadGraph.” Study the notebook/FeynRules workflow later when you want to trace a vertex back to its source. That workflow requires a separate FeynRules setup; this project has not installed it into the global Windows environment.
 
-See the [official README](https://github.com/SMEFTsim/SMEFTsim#installation-and-usage) for the documented purposes of these files.
+See the [SMEFTsim repository README](https://github.com/SMEFTsim/SMEFTsim#installation-and-usage) for the documented purposes of these files.

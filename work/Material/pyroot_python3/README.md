@@ -5,16 +5,15 @@
 | Script | Input | Output | Purpose |
 |---|---|---|---|
 | `lhe_analyzer.py` | Two arguments: input LHE and output ROOT file | Four histograms for each weight | Read four-momenta, fill bins, and normalize by the event count |
-| `plot_histos.py` | One argument: input ROOT file | Four `plot_*.pdf` files | Follow the author's rules to plot the SM plus individual contributions, with ratios to the SM |
+| `plot_histos.py` | One argument: input ROOT file | Four `plot_*.pdf` files | Plot the SM plus individual contributions, with ratios to the SM |
 
-Original author: Ilaria Brivio, in
+Source: Ilaria Brivio's
 [SMEFTsim_tutorial_June23](https://github.com/IlariaBrivio/SMEFTsim_tutorial_June23),
 pinned commit `92ffde994d7c0d90554ee629cc477ee171c76b84`.
 The current working copies contain only the changes needed for Python 3: expand tabs, convert Python 2 syntax, and replace `file()` with `open()`.
 
 No explicit license was found for the upstream tutorial. The two `.py` files therefore remain local and are ignored by Git.
-This explanation and the conversion instructions are shared with the teaching repository. Confirm permission with the author before redistributing the copies themselves.
-Credit the analysis algorithms to the original author.
+This explanation and the conversion instructions are shared with the teaching repository. Confirm permission with Ilaria Brivio before redistributing the copies themselves.
 
 ## Prepare your own copies on a new machine
 

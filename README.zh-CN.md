@@ -23,8 +23,8 @@
 
 ![本项目自己的重加权示例](docs/figures/rw_mmv.png)
 
-图来自本项目生成的事件和作者绘图逻辑，保留作者轴标签。
-本例是衰变宽度，作者旧 `pb` 标签的解释见 [图的说明](docs/figures/README.zh-CN.md)。
+图来自本项目生成的事件，使用 Ilaria Brivio 的 2023 年教程中的 `plot_histos.py` 绘制。
+图中保留该脚本的轴标签；本例是衰变宽度，旧 `pb` 标签的解释见 [图的说明](docs/figures/README.zh-CN.md)。
 
 ## 来源与致谢
 
@@ -41,14 +41,14 @@
 | [PDG Kinematics](https://pdg.lbl.gov/2025/reviews/rpp2025-rev-kinematics.pdf) | Particle Data Group | 宽度、相空间与运动学定义 |
 | [Microsoft WSL](https://learn.microsoft.com/en-us/windows/wsl/install) | Microsoft | 专用 Linux 运行环境 |
 
-理论笔记是学习性整理；原模型、原教程与算法归原作者。
-本项目不是官方教程，也不代表原作者背书。用于科学论文时，按上游要求引用相关论文。
+模型、生成器和教程的署名见上表。这是独立的学习整理，不代表所列项目或贡献者背书。
+用于科学论文时，请按所使用工具的要求引用相关论文。
 
 ## 文件与许可边界
 
 - 自己生成的示例放在 `examples/reweighted`；数据来源、参数和校验值在 `metadata.json`。
 - 公开 LHE 是分析用导出：保留数值初始化、事件和权重，省略完整软件与卡片模板 header；原始 run 仍保留本地。
-- 第三方程序、环境和作者下载材料留在本地，从上游获取，不随本仓库发布。
+- 第三方程序、环境和下载的教程材料留在本地，从上游获取，不随本仓库发布。
 - 教程仓库未找到明确许可；其 Python 3 副本继续本地使用，但由 Git 忽略规则排除。
 - 参数索引引用 MIT 许可的 SMEFTsim 模型，许可文本保存在 [licenses](licenses/README.zh-CN.md)。
 

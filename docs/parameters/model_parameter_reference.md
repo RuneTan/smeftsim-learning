@@ -2,10 +2,12 @@
 
 [English](model_parameter_reference.md) | [简体中文](model_parameter_reference.zh-CN.md)
 
+Input-card source: [Ilaria Brivio's June 2023 SMEFTsim tutorial](https://github.com/IlariaBrivio/SMEFTsim_tutorial_June23); the comparison uses `restrict_massless_Hvlvl.dat` and `param_card_Hvlvl.dat`.
+
 Read statically from `tutorial/Material/SMEFTsim_U35_MwScheme_UFO/parameters.py`, version v3.0.2.
 There are 201 parameters: 118 external and 83 internal.
 
-This table compares the original UFO defaults, the author's restriction, and the author's parameter card without changing them.
+This table compares the original UFO defaults, the tutorial restriction, and `param_card_Hvlvl.dat` without changing them.
 An entry absent from the parameter card is not necessarily zero: it may have been fixed or merged at import time, or calculated from a formula.
 Consult the imported MadGraph model and run banner for parameter merging and the values ultimately used.
 Values of 0 or 1 in a restriction can fix parameters, and equal values may lead to parameter merging. Nonzero restriction values are not measurements.
@@ -16,7 +18,7 @@ Each source link points to the parameter declaration, where the complete formula
 
 ### CKMBLOCK
 
-| Parameter | LHA code | UFO default | Tutorial restriction | Value listed in the author's parameter card |
+| Parameter | LHA code | UFO default | Tutorial restriction | Value in `param_card_Hvlvl.dat` |
 |---|---:|---:|---:|---:|
 | [CKMlambda](https://github.com/IlariaBrivio/SMEFTsim_tutorial_June23/blob/92ffde994d7c0d90554ee629cc477ee171c76b84/Material/SMEFTsim_U35_MwScheme_UFO/parameters.py#L20) | 2 | 0.2265 | 0.0 | Not listed |
 | [CKMA](https://github.com/IlariaBrivio/SMEFTsim_tutorial_June23/blob/92ffde994d7c0d90554ee629cc477ee171c76b84/Material/SMEFTsim_U35_MwScheme_UFO/parameters.py#L28) | 3 | 0.79 | 0.0 | Not listed |
@@ -25,7 +27,7 @@ Each source link points to the parameter declaration, where the complete formula
 
 ### SMEFT
 
-| Parameter | LHA code | UFO default | Tutorial restriction | Value listed in the author's parameter card |
+| Parameter | LHA code | UFO default | Tutorial restriction | Value in `param_card_Hvlvl.dat` |
 |---|---:|---:|---:|---:|
 | [cG](https://github.com/IlariaBrivio/SMEFTsim_tutorial_June23/blob/92ffde994d7c0d90554ee629cc477ee171c76b84/Material/SMEFTsim_U35_MwScheme_UFO/parameters.py#L52) | 1 | 0 | 0.0 | Not listed |
 | [cW](https://github.com/IlariaBrivio/SMEFTsim_tutorial_June23/blob/92ffde994d7c0d90554ee629cc477ee171c76b84/Material/SMEFTsim_U35_MwScheme_UFO/parameters.py#L60) | 2 | 0 | 0.0 | Not listed |
@@ -90,7 +92,7 @@ Each source link points to the parameter declaration, where the complete formula
 
 ### SMEFTcpv
 
-| Parameter | LHA code | UFO default | Tutorial restriction | Value listed in the author's parameter card |
+| Parameter | LHA code | UFO default | Tutorial restriction | Value in `param_card_Hvlvl.dat` |
 |---|---:|---:|---:|---:|
 | [cGtil](https://github.com/IlariaBrivio/SMEFTsim_tutorial_June23/blob/92ffde994d7c0d90554ee629cc477ee171c76b84/Material/SMEFTsim_U35_MwScheme_UFO/parameters.py#L532) | 1 | 0 | 0.0 | Not listed |
 | [cWtil](https://github.com/IlariaBrivio/SMEFTsim_tutorial_June23/blob/92ffde994d7c0d90554ee629cc477ee171c76b84/Material/SMEFTsim_U35_MwScheme_UFO/parameters.py#L540) | 2 | 0 | 0.0 | Not listed |
@@ -120,13 +122,13 @@ Each source link points to the parameter declaration, where the complete formula
 
 ### SMEFTcutoff
 
-| Parameter | LHA code | UFO default | Tutorial restriction | Value listed in the author's parameter card |
+| Parameter | LHA code | UFO default | Tutorial restriction | Value in `param_card_Hvlvl.dat` |
 |---|---:|---:|---:|---:|
 | [LambdaSMEFT](https://github.com/IlariaBrivio/SMEFTsim_tutorial_June23/blob/92ffde994d7c0d90554ee629cc477ee171c76b84/Material/SMEFTsim_U35_MwScheme_UFO/parameters.py#L732) | 1 | 1000 | 1000.0 | 1000.0 |
 
 ### SMINPUTS
 
-| Parameter | LHA code | UFO default | Tutorial restriction | Value listed in the author's parameter card |
+| Parameter | LHA code | UFO default | Tutorial restriction | Value in `param_card_Hvlvl.dat` |
 |---|---:|---:|---:|---:|
 | [MW](https://github.com/IlariaBrivio/SMEFTsim_tutorial_June23/blob/92ffde994d7c0d90554ee629cc477ee171c76b84/Material/SMEFTsim_U35_MwScheme_UFO/parameters.py#L740) | 1 | 80.387 | 80.387 | 80.387 |
 | [Gf](https://github.com/IlariaBrivio/SMEFTsim_tutorial_June23/blob/92ffde994d7c0d90554ee629cc477ee171c76b84/Material/SMEFTsim_U35_MwScheme_UFO/parameters.py#L748) | 2 | 1.1663787e-05 | 1.166379e-05 | 1.166379e-05 |
@@ -134,13 +136,13 @@ Each source link points to the parameter declaration, where the complete formula
 
 ### SWITCHES
 
-| Parameter | LHA code | UFO default | Tutorial restriction | Value listed in the author's parameter card |
+| Parameter | LHA code | UFO default | Tutorial restriction | Value in `param_card_Hvlvl.dat` |
 |---|---:|---:|---:|---:|
 | [linearPropCorrections](https://github.com/IlariaBrivio/SMEFTsim_tutorial_June23/blob/92ffde994d7c0d90554ee629cc477ee171c76b84/Material/SMEFTsim_U35_MwScheme_UFO/parameters.py#L764) | 1 | 0 | 1.0 | Not listed |
 
 ### YUKAWA
 
-| Parameter | LHA code | UFO default | Tutorial restriction | Value listed in the author's parameter card |
+| Parameter | LHA code | UFO default | Tutorial restriction | Value in `param_card_Hvlvl.dat` |
 |---|---:|---:|---:|---:|
 | [ymdo](https://github.com/IlariaBrivio/SMEFTsim_tutorial_June23/blob/92ffde994d7c0d90554ee629cc477ee171c76b84/Material/SMEFTsim_U35_MwScheme_UFO/parameters.py#L772) | 1 | 0.00467 | 0.0 | Not listed |
 | [ymup](https://github.com/IlariaBrivio/SMEFTsim_tutorial_June23/blob/92ffde994d7c0d90554ee629cc477ee171c76b84/Material/SMEFTsim_U35_MwScheme_UFO/parameters.py#L780) | 2 | 0.00216 | 0.0 | Not listed |
@@ -154,7 +156,7 @@ Each source link points to the parameter declaration, where the complete formula
 
 ### MASS
 
-| Parameter | LHA code | UFO default | Tutorial restriction | Value listed in the author's parameter card |
+| Parameter | LHA code | UFO default | Tutorial restriction | Value in `param_card_Hvlvl.dat` |
 |---|---:|---:|---:|---:|
 | [MZ](https://github.com/IlariaBrivio/SMEFTsim_tutorial_June23/blob/92ffde994d7c0d90554ee629cc477ee171c76b84/Material/SMEFTsim_U35_MwScheme_UFO/parameters.py#L844) | 23 | 91.1876 | 91.1876 | 91.1876 |
 | [Me](https://github.com/IlariaBrivio/SMEFTsim_tutorial_June23/blob/92ffde994d7c0d90554ee629cc477ee171c76b84/Material/SMEFTsim_U35_MwScheme_UFO/parameters.py#L852) | 11 | 0.000511 | 0.0 | 0.0 |
@@ -170,7 +172,7 @@ Each source link points to the parameter declaration, where the complete formula
 
 ### DECAY
 
-| Parameter | LHA code | UFO default | Tutorial restriction | Value listed in the author's parameter card |
+| Parameter | LHA code | UFO default | Tutorial restriction | Value in `param_card_Hvlvl.dat` |
 |---|---:|---:|---:|---:|
 | [WZ](https://github.com/IlariaBrivio/SMEFTsim_tutorial_June23/blob/92ffde994d7c0d90554ee629cc477ee171c76b84/Material/SMEFTsim_U35_MwScheme_UFO/parameters.py#L932) | 23 | 2.4952 | 2.4952 | 2.4952 |
 | [WW](https://github.com/IlariaBrivio/SMEFTsim_tutorial_June23/blob/92ffde994d7c0d90554ee629cc477ee171c76b84/Material/SMEFTsim_U35_MwScheme_UFO/parameters.py#L940) | 24 | 2.085 | 2.085 | 2.085 |
