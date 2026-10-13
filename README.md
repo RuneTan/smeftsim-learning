@@ -1,33 +1,26 @@
-# SMEFTsim Learning Project
+# SMEFTsim Learning Tutorial
 
 [English](README.md) | [简体中文](README.zh-CN.md)
 
-A personal learning and reproduction project using SMEFTsim, MadGraph and ROOT
-to learn SM event generation, analysis and SMEFT reweighting of a four-lepton Higgs decay.
-The project provides bilingual notes, an isolated environment, explicit terminal instructions,
-helper commands and a locally generated example.
+An independent bilingual tutorial for SM event generation, ROOT analysis and SMEFT reweighting of a four-lepton Higgs decay using SMEFTsim and MadGraph.
+The repository provides a handbook, topic notes and locally generated example results. Obtain the runtime software directly from upstream and install it inside Linux.
 
-**Start with [handbook.md](handbook.md).** It contains the learning sequence and practical steps.
-Background material, parameter explanations and directory guides are linked from it.
-On a new machine, first follow the [fresh-clone setup guide](docs/setup/README.md).
+**First visit: follow the [installation guide](docs/setup/README.md), then the [handbook](handbook.md).**
+The installation guide connects dedicated WSL2/Ubuntu creation, pinned downloads, one `.venv`, analysis-script preparation and installation checks.
+All operations use one Linux project directory; no Windows project checkout or directory-by-directory setup is needed.
 
-| Entry point | Purpose |
+| Reading entry point | Purpose |
 |---|---|
-| [Fresh-clone setup](docs/setup/README.md) | Download pinned dependencies and prepare the isolated runtime |
-| [Handbook](handbook.md) | Generate an SM sample, use ROOT and perform reweighting |
-| [Linux and terminal basics (optional)](docs/linux-basics/README.md) | Basic Linux commands, terminal prompts and paths |
-| [Physics background](docs/physics/README.md) | Warsaw basis, flavor, input schemes and differential widths |
-| [Software and notebooks](docs/model/README.md) | Roles of the model, generator and Mathematica |
-| [Process cards](cards/README.md) | Model import, restrictions and NP/NPprop orders |
-| [Helper scripts](scripts/README.md) | What each script does and which environment it uses |
-| [Local reweighted example](examples/reweighted/README.md) | 2,000 events, 11 extra weights, ROOT histograms and PDFs |
-| [Sources and licenses](THIRD_PARTY_NOTICES.md) | Component provenance and license information |
+| [Installation](docs/setup/README.md) | Create Linux, obtain pinned software and check the example |
+| [Handbook](handbook.md) | Reference plots → your own SM sample → ROOT → reweighting comparisons |
+| [Topic notes](docs/README.md) | Consult physics, models, orders, parameters, figures or Linux basics as needed |
+| [Example results](examples/reweighted/README.md) | 2,000 events, 11 extra weights, ROOT histograms and PDFs |
+| [Sources and licenses](THIRD_PARTY_NOTICES.md) | Provenance and license scope of the software, tutorial and repository material |
 
-![Reweighted distribution from this project's own sample](docs/figures/rw_mmv.png)
+![Reweighted distribution from the locally generated sample](docs/figures/rw_mmv.png)
 
-The figure uses locally generated events and `plot_histos.py` from Ilaria Brivio's 2023 tutorial.
-The script's original axis labels are retained. This process measures a decay width;
-the old `pb` label is explained in the [figure guide](docs/figures/README.md).
+The figure uses local events and `plot_histos.py` from Ilaria Brivio's 2023 tutorial, retaining the original axis labels.
+This process measures a decay width; the old `pb` label is explained in the [figure guide](docs/figures/README.md).
 
 ## Sources and acknowledgments
 
@@ -48,14 +41,13 @@ These notes are an independent learning aid. Model, generator and tutorial credi
 this project does not imply endorsement by those projects or contributors.
 For scientific publications, follow the citation requirements of the tools you use.
 
-## Included files and licenses
+## What the repository contains
 
-- The locally generated example is in `examples/reweighted`. Its versions, parameters and checksums are recorded in `metadata.json`.
-- The public LHE is an analysis export: numerical initialization data, events and weights are preserved, while full software and card-template headers are omitted. The original run remains local.
-- Third-party software, environments and downloaded tutorial materials are obtained upstream and are not bundled here.
-- No explicit license was identified for the independent tutorial scripts. Local Python 3 copies remain usable but are excluded from Git.
-- The parameter index uses the MIT-licensed SMEFTsim model; upstream license texts are retained in [licenses](licenses/README.md).
+The public repository retains documentation, figures, the parameter index, example data and source/license records.
+MadGraph, ROOT, the UFO, original tutorial and Python 3 script copies are obtained or prepared locally during Linux installation; they are not bundled here.
+`.venv`, `tutorial`, `tools`, `work`, `reference` and `outputs` are local runtime directories created by installation or exercise commands and ignored by Git.
 
-Component sources and license information are recorded in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
-Project-owned documentation and helper scripts do not yet have a project-wide reuse license.
-Upstream licenses are not automatically licenses for this entire repository.
+The example in `examples/reweighted` was generated locally, rather than copied from the upstream reference results.
+Its public LHE is an analysis export preserving numerical initialization data, events and weights while omitting full software templates and card text. Settings and checksums are recorded in `metadata.json`.
+The SMEFTsim model's MIT license does not automatically cover the independent tutorial or this entire teaching repository.
+No project-wide reuse license has been selected for the project-owned documentation; third-party licenses and attribution are recorded in [THIRD_PARTY_NOTICES](THIRD_PARTY_NOTICES.md).

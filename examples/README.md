@@ -8,5 +8,5 @@ This directory contains one locally generated and checked reweighted sample.
 - [Figure guide](../docs/figures/README.md): the meaning of the plots.
 - `reweighted/metadata.json`: provenance, input settings and checksums.
 
-`reference` contains the reference results from Ilaria Brivio's 2023 tutorial; see the [reference guide](../reference/README.md).
+`reference` contains the reference results from Ilaria Brivio's 2023 tutorial; see the [reference guide](../docs/setup/README.md#7-extract-the-reference-results-and-continue).
 `examples` contains this project's own simulation output selected for sharing.

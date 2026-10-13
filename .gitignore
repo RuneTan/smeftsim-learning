@@ -1,26 +1,27 @@
-.venv/
-.venv-linux/
-.venv-root/
-reference/*
-!reference/README*.md
-outputs/*
-!outputs/README*.md
-work/*
-!work/README*.md
-!work/Material/
-work/Material/*
-!work/Material/README*.md
-!work/Material/pyroot_python3/
-work/Material/pyroot_python3/*
-!work/Material/pyroot_python3/README*.md
+# Runtime directories are created locally, not distributed.
+/.venv/
+/.venv-linux/
+/.venv-root/
+/tutorial/
+/tools/
+/work/
+/reference/
+/outputs/
+/vm/
+/scripts/
+/cards/
+/requirements*.txt
+/py.py
+# Private owner records, migration backups and credentials.
+/.maintainer-notes/
+/.local-secrets/
+Personal access tokens(classic).txt
+**/Personal access tokens(classic).txt
+*access*tokens*.txt
+.env
+.env.*
 __pycache__/
-vm/*
-!vm/README*.md
-# Third-party downloads are restored from the pinned sources in handbook.md.
-tools/*
-!tools/README*.md
-tutorial/
-# Keep generated data and local logs out of the teaching repository.
+*.pyc
 *.lhe
 *.lhe.gz
 *.root
@@ -28,14 +29,5 @@ tutorial/
 *.vhdx
 *.zip
 *.tar.gz
-# Publish only the selected local teaching sample.
 !examples/reweighted/events.lhe.gz
 !examples/reweighted/histograms.root
-# Local maintenance notes are not part of the teaching repository.
-/.maintainer-notes/
-# Credentials must stay local, including the user-supplied classic PAT file.
-Personal access tokens(classic).txt
-**/Personal access tokens(classic).txt
-*access*tokens*.txt
-.env
-.env.*

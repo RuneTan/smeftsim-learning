@@ -209,7 +209,7 @@ $v_T$ is the Higgs vacuum expectation value in SMEFT, and $\Delta G_F$ is a dime
 
 **How should you compare schemes?** The two schemes are different parameterizations of the same theory. Predictions should agree to the calculated accuracy when the inputs describe the same physical point, the parameters are converted consistently, and the perturbative/EFT orders match. Fixing two separate sets of experimental central values and simply copying coefficient values between them may not compare the same physical point. Finite-order truncation and omitted higher-order corrections can also produce differences. Fixing $m_W$ in `MwScheme` does not eliminate SMEFT corrections to W interactions or the W width.
 
-Thus, **the basis supplies coordinates; the flavor choice restricts allowed flavor structures; the input scheme specifies the measurements used to determine parameters.** This exercise uses `U35 + MwScheme` to match the reference calculation, rather than to claim that this combination suits every study. The `massless_Hvlvl` part of the model name is a separate, process-specific restriction; see the [process-card guide](../../cards/README.md).
+Thus, **the basis supplies coordinates; the flavor choice restricts allowed flavor structures; the input scheme specifies the measurements used to determine parameters.** This exercise uses `U35 + MwScheme` to match the reference calculation, rather than to claim that this combination suits every study. The `massless_Hvlvl` part of the model name is a separate, process-specific restriction; see the [process-card guide](../../docs/processes/README.md).
 
 ### 2.7 Differential widths: distributing a decay channel's rate over kinematic regions
 

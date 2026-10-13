@@ -1,16 +1,15 @@
-# Learning resources
+# Topic notes
 
 [English](README.md) | [简体中文](README.zh-CN.md)
 
-The main handbook focuses on operations. This directory provides explanations and examples organized by topic.
+Follow the [installation guide](setup/README.md) and [handbook](../handbook.md) in order. Consult these notes when a topic needs more explanation.
 
-| Directory | Contents |
+| Guide | Contents |
 |---|---|
-| [linux-basics](linux-basics/README.md) | Optional guide to basic Linux commands, terminal prompts and paths |
-| [setup](setup/README.md) | Complete preparation steps for a fresh clone and separate runtime |
-| [physics](physics/README.md) | SMEFT, the Warsaw basis, Wilson coefficients, flavor assumptions, input schemes, and differential decay widths |
-| [model](model/README.md) | SMEFTsim capabilities, the software chain, and the role of the Mathematica Notebook |
-| [parameters](parameters/README.md) | UFO parameters, the basis for default values, and the complete index |
-| [figures](figures/README.md) | SM and reweighting example plots generated in this project |
-
-Return to the [main handbook](../handbook.md).
+| [Installation](setup/README.md) | Linux creation, pinned downloads, the single environment and analysis scripts |
+| [Physics](physics/README.md) | SMEFT, Warsaw basis, Wilson coefficients, flavor, input schemes and differential widths |
+| [Software and notebooks](model/README.md) | SMEFTsim, MadGraph, ROOT and Mathematica roles |
+| [Processes and orders](processes/README.md) | Restrictions, amplitude orders and propagator corrections |
+| [Parameters](parameters/README.md) | Input values, derived parameters and the complete static index |
+| [Figures](figures/README.md) | Locally generated SM and reweighting plots, units and interpretation |
+| [Linux basics (optional)](linux-basics/README.md) | Basic commands, prompts, paths and Enter-key conventions |

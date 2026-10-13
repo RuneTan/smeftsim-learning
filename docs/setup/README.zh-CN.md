@@ -1,29 +1,79 @@
-# 从新克隆的仓库配置环境
+# 安装 Linux 环境
 
 [English](README.md) | [简体中文](README.zh-CN.md)
 
-在**新电脑**开始阅读[主手册](../../handbook.zh-CN.md)前，先按本说明准备环境。已有环境已经能够生成事件并导入 ROOT 时，继续使用它，跳过这里的安装步骤。
+开始阅读 [handbook](../../handbook.zh-CN.md) 前，安装只需看这一份指南。
+本仓库提供教学文档和本地生成的示例，不提供预装好的模拟器。
+下面会从上游直接获取软件，并在 **一个项目目录 `~/smeftsim` 中配置一个 Python 环境 `.venv`**。
 
-公开仓库包含教材、辅助脚本和选定的示例，不包含虚拟磁盘、虚拟环境、MadGraph、上游教程下载材料或[Ilaria Brivio 的 2023 年 6 月 SMEFTsim 教程](https://github.com/IlariaBrivio/SMEFTsim_tutorial_June23) 的分析脚本。以下步骤从上游取得本地依赖，并自行准备分析脚本，不再次发布教程代码副本。
+已验证的平台是 x86-64 Ubuntu 22.04、Python 3.10、MadGraph 2.9.27、教程提供的 SMEFTsim v3.0.2 模型和 ROOT 6.40.00。
+固定版本是为了复现这次练习，不代表各软件的最新版本。
+已有环境如果通过第 6 节检查，跳过安装，直接继续 handbook。
 
-## 1. 起点与两个目录
+**输入规则：** PowerShell 或 Bash 代码块中每一行都是完整命令。输完一行，按一次 Enter，等提示符回来再输入下一行。不要输入终端显示的提示符。如果命令失败，先处理当前错误再继续。
 
-本说明从一个**项目专用的 x86-64 Ubuntu 22.04 环境**开始，使用可以通过 `sudo` 安装发行版软件包的普通 Linux 用户。教材使用 Python 3.10。
+## 1. 创建专用 Linux 环境
 
-Windows 读者应先按 Microsoft 的 [WSL 安装指南](https://learn.microsoft.com/en-us/windows/wsl/install)准备专用 WSL2 环境；若需单独命名的发行版，参考[导入发行版指南](https://learn.microsoft.com/en-us/windows/wsl/use-custom-distro)。先完成 Linux 用户配置，再继续以下步骤。操作系统的创建过程不包含在下面的命令中。
+如果已有专用的 x86-64 Ubuntu 22.04 虚拟机，从第 2 节开始。
+Windows 10/11 用户可按下面的步骤创建名为 `SMEFTsim` 的 WSL2 发行版，与其他 Ubuntu 安装分开。
+WSL2 在轻量虚拟机中运行 Linux；虚拟磁盘文件留在 Windows 上，计算和项目文件放在 Linux 内。
 
-| 目录 | 用途 |
-|---|---|
-| `~/smeftsim-source` | Git 工作区、教材、分享示例以及本地下载的上游源码 |
-| `~/smeftsim` | 单独的运行目录：`.venv`、工作卡、生成的过程与输出 |
+**以管理员身份打开 Windows PowerShell：**
 
-`~` 指当前 Linux 用户的主目录。安装辅助脚本要求源码目录与运行目录不同；运行目录必须位于 Linux 文件系统，且路径不能带空格。不要把仓库直接克隆到 `~/smeftsim`，然后又把同一个目录作为安装目标。
+```powershell
+wsl --install --no-distribution
+```
 
-主手册原机器的 WSL 发行版名为 `SMEFTsim`，用户为 `smeft`，运行目录为 `/home/smeft/smeftsim`。你的名字不同时，应在进入环境和打开文件资源管理器的命令中替换发行版名、用户名和主目录路径；物理与分析操作不变。
+如果提示重启，重启 Windows 后再继续。已安装 WSL 时跳过这条命令。
+然后在普通 **Windows PowerShell** 中逐条执行：
 
-**回车规则：** 下面每个 Bash 代码块中，每一行都是一条完整命令。输入完整一行，按一次回车，等待 Bash 提示符重新出现，再输入下一行。提示符本身不要输入。
+```powershell
+wsl --list --verbose
+```
 
-先检查 Linux 环境：
+如果已经存在 `SMEFTsim`，进入后检查原有环境，不要再次导入。
+首次安装时，下载 Canonical 提供的 Ubuntu 22.04 x86-64 根文件系统及校验清单：
+
+```powershell
+$smeftDiskDir = "$env:USERPROFILE\SMEFTsim-WSL"
+$smeftImage = "$env:TEMP\ubuntu-jammy-smeftsim.rootfs.tar.gz"
+$smeftChecksums = "$env:TEMP\ubuntu-jammy-smeftsim-SHA256SUMS"
+curl.exe --fail --location --output "$smeftImage" https://cloud-images.ubuntu.com/wsl/jammy/current/ubuntu-jammy-wsl-amd64-ubuntu22.04lts.rootfs.tar.gz
+curl.exe --fail --location --output "$smeftChecksums" https://cloud-images.ubuntu.com/wsl/jammy/current/SHA256SUMS
+(Get-FileHash -Algorithm SHA256 -LiteralPath "$smeftImage").Hash
+Select-String -LiteralPath "$smeftChecksums" -Pattern 'ubuntu-jammy-wsl-amd64-ubuntu22.04lts.rootfs.tar.gz'
+```
+
+两处 SHA256 必须一致，大小写不影响比较。请在同一个 PowerShell 会话中继续，保留前面定义的变量。
+然后导入并进入新发行版：
+
+```powershell
+wsl --import SMEFTsim "$smeftDiskDir" "$smeftImage" --version 2
+wsl -d SMEFTsim -u root
+```
+
+现在处于 **Linux Bash，身份是 root**。创建本指南使用的普通用户：
+
+```bash
+adduser smeft
+usermod -aG sudo smeft
+exit
+```
+
+`adduser` 会要求输入两次新 Linux 密码，屏幕不显示密码字符。后续可选姓名、联系方式等问题直接回车留空，最后确认信息。每条命令结束后再执行下一条。
+`exit` 返回 PowerShell。以普通用户进入 Linux：
+
+```powershell
+wsl -d SMEFTsim -u smeft --cd ~
+```
+
+以后每次继续练习都用这条命令。命令已明确指定用户，无需修改默认用户配置。
+`$smeftDiskDir` 保存虚拟磁盘，必须保留；下载的压缩镜像是安装文件，不是已安装的磁盘。
+来源：[Microsoft WSL 安装说明](https://learn.microsoft.com/en-us/windows/wsl/install)、[WSL 导入与用户命令](https://learn.microsoft.com/en-us/windows/wsl/basic-commands)、[Canonical 的 Ubuntu 镜像](https://cloud-images.ubuntu.com/wsl/jammy/current/)。
+
+## 2. 在这个 Linux 环境中安装基础依赖
+
+**Linux Bash，普通用户：**
 
 ```bash
 uname -m
@@ -31,77 +81,72 @@ cat /etc/os-release
 whoami
 ```
 
-应看到 `x86_64`、Ubuntu 版本 `22.04` 和你的普通 Linux 用户名。继续在这个专用环境里操作，不要在 Windows PowerShell 或 Git Bash 中输入后续命令。
-
-## 2. 安装 Linux 前置工具
-
-这些软件包安装在**这个专用 Ubuntu 发行版内**。Python 物理依赖稍后放入项目 `.venv`，不会安装到 Windows Anaconda。
-
-**Linux Bash：完整一行，按一次回车，再等待。**
+应看到 `x86_64`、Ubuntu `22.04` 和 `smeft`（或你选择的普通用户名）。
+以下系统软件包只安装到这个专用 Linux 环境。Python 包随后安装到项目 `.venv`，不使用 Windows Python 或 Anaconda。
 
 ```bash
 sudo apt-get update
-sudo apt-get install -y --no-install-recommends python3 python3-venv python3-dev build-essential gfortran git perl ca-certificates coreutils sed gzip unzip
-python3 -c "import sys; print(sys.version); assert sys.version_info[:2] == (3, 10), 'This lesson requires Python 3.10'"
+sudo apt-get install -y --no-install-recommends python3 python3-venv python3-dev build-essential gfortran git perl ca-certificates coreutils sed gzip unzip nano libsm6 libice6 libx11-6 libxext6 libxrender1 libxft2 libglu1-mesa
+python3 -c "import sys; print(sys.version); assert sys.version_info[:2] == (3, 10), 'Use Ubuntu 22.04 / Python 3.10 for this lesson'"
 ```
 
-如果 `sudo` 要求 Linux 密码，输入密码后回车；输入时不会显示字符。`build-essential` 提供 GCC 和 Make，`gfortran` 提供 Fortran 编译器。`coreutils`、`sed`、`gzip`、`unzip` 提供后续转换与解压工具。这个 Ubuntu 环境也包含安装辅助脚本使用的 APT 和 `dpkg-deb`。
+`sudo` 要求密码时输入 Linux 密码。Python 检查应结束且没有断言错误。
+`build-essential` 提供 GCC 和 Make；`gfortran` 编译生成器的 Fortran 代码；`lib...` 软件包提供 ROOT 图形库；`nano` 是终端文本编辑器。
 
-Python 检查应正常结束，没有断言错误。若显示其他版本，先停下，准备 Ubuntu 22.04/Python 3.10 环境后再继续。APT 操作可查 [Ubuntu 软件包管理说明](https://ubuntu.com/server/docs/how-to/software/package-management/)。
+## 3. 获取教学文档与固定版本的软件
 
-## 3. 克隆教学仓库与固定版本的上游源码
-
-新安装使用下面的目录名。目标已存在时，先检查，不要重复向它执行 `git clone`。公开仓库下载不需要在命令中写入 token。
-
-**Linux Bash：每条命令单独输入、回车并等待完成。**
+项目放在 Linux 主目录，不放在 `/mnt/c`。
+以下命令用于首次安装；目标目录已存在时，先检查，不要覆盖式重复克隆。
 
 ```bash
 cd ~
-git clone https://github.com/RuneTan/smeftsim-learning.git smeftsim-source
-cd ~/smeftsim-source
+git clone https://github.com/RuneTan/smeftsim-learning.git smeftsim
+cd ~/smeftsim
+mkdir -p tools work/Material reference outputs
 git clone https://github.com/IlariaBrivio/SMEFTsim_tutorial_June23.git tutorial
 git -C tutorial checkout 92ffde994d7c0d90554ee629cc477ee171c76b84
 git clone https://github.com/mg5amcnlo/mg5amcnlo.git tools/MG5_aMC_v2_9_27
 git -C tools/MG5_aMC_v2_9_27 checkout eb76cab72b8d44aac7162ac7221ac08a4384a169
 git -C tutorial rev-parse HEAD
 git -C tools/MG5_aMC_v2_9_27 rev-parse HEAD
+test -L tools/MG5_aMC_v2_9_27/madgraph/VERSION
 ```
 
-最后两条命令应分别输出上面固定的提交哈希。`checkout` 后出现 “detached HEAD” 提示是正常的，表示源码固定在记录的版本。教程包含 SMEFTsim v3.0.2 UFO 和参考结果压缩包。
+两个哈希值应分别与上面的固定版本一致。“Detached HEAD” 表示固定到记录的版本，是预期提示。
+最后一条命令在 MadGraph 的 Linux 符号链接完整时安静结束。
+教程已包含需要的 SMEFTsim UFO 和 restriction，本练习不需要再单独下载 SMEFTsim 模型。
 
-来源与许可记录见[根 README](../../README.zh-CN.md)和[第三方说明](../../THIRD_PARTY_NOTICES.zh-CN.md)。上游下载材料保留本地，由教学仓库的 Git 忽略规则排除。
-
-## 4. 配置单独的 Linux 运行目录
-
-仍在 `~/smeftsim-source`，执行：
+准备可编辑的工作副本，并关闭这份固定版本 MadGraph 的更新检查：
 
 ```bash
-bash scripts/setup_linux.sh ~/smeftsim
+cp -an tutorial/Material/. work/Material/
+printf 'auto_update = 0\n' > tools/MG5_aMC_v2_9_27/input/mg5_configuration.txt
 ```
 
-等待 `Environment prepared at ...` 和 Bash 提示符出现。辅助脚本复制教程与过程卡，建立保留正确符号链接的 Linux MadGraph 工作副本，将固定依赖安装到 `~/smeftsim/.venv`，并将两个 ROOT 图形库解压到该环境内，最后准备 `work/Material`。这一步尚未生成事件。
+`cp -a` 保留文件属性，`-n` 保留目标已有文件。`tutorial` 保存下载的原文件，改卡时只改 `work/Material`。
+配置写入命令用于新下载的版本，会替换该文件内容；已有自定义配置时应保留原配置。
 
-辅助脚本不调用 `sudo`，也不向全局 Python 安装依赖。本步骤面向新的运行目录；对已有安装，它会保留已有工作文件，不能把它当成自动升级程序。
+## 4. 创建唯一的 Python 环境
 
-随后进入运行目录并检查：
+在 `~/smeftsim` 中逐条执行：
 
 ```bash
-cd ~/smeftsim
+python3 -m venv .venv
 source .venv/bin/activate
-python --version
-which python
-python -c "import ROOT; print(ROOT.gROOT.GetVersion())"
+python -m pip install --index-url https://pypi.org/simple -r docs/setup/requirements.txt
 python -m pip check
-gfortran --version
 ```
 
-应得到 Python 3.10、位于 `~/smeftsim/.venv` 下的 Python 路径、ROOT `6.40.00`，且没有依赖冲突。以下步骤继续使用这个已激活的环境。
+简短的 [依赖文件](requirements.txt) 固定 NumPy、six、setuptools 和 Linux ROOT wheel 的版本。
+ROOT 的 PyPI 打包方式标为 alpha；本教程使用本地已验证的 `0.1a12`，其中包含 ROOT `6.40.00`。
+说明见 [ROOT Python 接口文档](https://root.cern.ch/doc/master/group__Python.html) 和 [ROOT 安装方式](https://root.cern/install/)。
+不要使用 `sudo pip`，也不要向 Windows Python 安装这些包。
 
-## 5. 生成本地 Python 3 分析副本
+## 5. 准备两份 Python 3 分析脚本
 
-新克隆的公开仓库只提供分析目录的说明，**不提供其中的两个 `.py` 文件**。在调用分析器或绘图脚本前，先从刚下载的教程文件生成工作副本。
-
-**以下转换命令仅在两个工作脚本尚不存在时执行。** 从已激活环境的运行目录 `~/smeftsim` 逐条输入：
+脚本来自第 3 节下载的教程。本教学仓库提供转换步骤，不重新分发脚本文件。
+只在两份 Python 3 工作副本不存在时执行下面命令，否则 `>` 会覆盖它们。
+保持 `.venv` 激活，并停留在 `~/smeftsim`：
 
 ```bash
 mkdir -p work/Material/pyroot_python3
@@ -113,66 +158,71 @@ sed -i '1s|^#!/usr/bin/env python$|#!/usr/bin/env python3|' work/Material/pyroot
 python -m py_compile work/Material/pyroot_python3/lhe_analyzer.py work/Material/pyroot_python3/plot_histos.py
 ```
 
-`>` 把内容写入新工作副本，是命令的一部分。`tutorial/Material` 中的教程原文件不变。转换只处理 Python 3 兼容：展开缩进、转换旧语法、将 `file()` 替换为 `open()`、更新解释器行。Python 3.10 提供这里使用的 `lib2to3`，Python 3.14 已不提供。
+这些改动只展开 tab、转换 Python 2 语法、将 `file()` 换成 `open()` 并更新解释器行，保留算法和上游原文件。
+Python 3.10 带有 `lib2to3`，Python 3.14 没有。最后一条命令检查语法，正常时安静结束。
 
-最后一条命令检查语法，正常情况下没有输出。详细解释见[工作副本说明](../../work/Material/pyroot_python3/README.zh-CN.md)。
+| 脚本 | 从项目根目录调用的完整形式 | 功能 |
+|---|---|---|
+| 分析器 | `python work/Material/pyroot_python3/lhe_analyzer.py INPUT.lhe OUTPUT.root` | 读取四动量和权重，为每个权重填充四个分布，并按实际事件数归一化 |
+| 绘图器 | `python work/Material/pyroot_python3/plot_histos.py INPUT.root` | 向当前目录写出四张 PDF，显示单项贡献加 SM，以及对应的比值 |
 
-## 6. 将分享示例放入运行目录
+分析器需要 **两个脚本参数**，绘图器需要 **一个**。把所有参数输入完整后再按 Enter。
 
-安装辅助脚本不会把公开示例复制到运行目录。从 `~/smeftsim` 复制选定示例，保留已有目标文件：
-
-```bash
-mkdir -p examples/reweighted
-cp -an "$HOME/smeftsim-source/examples/reweighted/." examples/reweighted/
-ls -lh examples/reweighted/events.lhe.gz examples/reweighted/histograms.root
-```
-
-应看到两个非空文件。`cp -a` 保留复制文件的属性，`-n` 表示不覆盖已有文件。对于新安装，这就是仓库提供的示例；若目标原本有不同的示例，需另行核对，不能以为此命令已经替换它。
-
-教材仍在 `~/smeftsim-source` 或 GitHub 上阅读，运行命令则在 `~/smeftsim` 执行。现在可以按[示例重新分析与绘图说明](../../examples/reweighted/README.zh-CN.md)操作。
-
-## 7. 准备可选的 2023 年教程参考结果
-
-若要执行手册第 6 节，将本地下载的结果压缩包解压到**源码工作区**，保留已解压文件：
-
-```bash
-mkdir -p "$HOME/smeftsim-source/reference"
-unzip -n "$HOME/smeftsim-source/tutorial/SMEFTsim_tutorial_results.zip" -d "$HOME/smeftsim-source/reference"
-ls -lh "$HOME/smeftsim-source/reference/Results/Root_files/Hvlvl_SM_run_01.root"
-```
-
-压缩包内部已有顶层 `Results` 目录。`-n` 防止覆盖已解压文件。最后一条命令应列出非空 ROOT 文件。
-
-原手册使用整理机器的 Windows 挂载路径。这里的新 Linux 配置应将 `/mnt/c/Users/符文/Desktop/NSBI/smeftsim/reference` 替换为 `$HOME/smeftsim-source/reference`。
-
-在第 6.5 节 A3，从运行目录使用下面的完整命令：
+## 6. 检查安装并复现仓库示例
 
 ```bash
 cd ~/smeftsim
-mkdir -p outputs/my_pyroot_reference
-gzip -dc "$HOME/smeftsim-source/reference/Results/Hvlvl_SM/Events/run_01/unweighted_events.lhe.gz" > outputs/my_pyroot_reference/events.lhe
+source .venv/bin/activate
+python --version
+which python
+python -c "import ROOT; print(ROOT.gROOT.GetVersion())"
+python -m pip check
+gfortran --version
 ```
 
-等待 Bash 提示符返回，再接手册第 6.5 节 A4，先检查解压文件，再分析。输入时保留 `>` 和输出文件名，完整一行之后才回车。
-
-若选择该节的“直接使用已有 ROOT”可选捷径，先进入 `outputs/my_pyroot_reference`，再执行：
+应看到 Python 3.10、位于自己 `~/smeftsim/.venv` 下的 Python 路径、ROOT `6.40.00`、无依赖冲突和编译器版本。
+然后使用仓库提供的 2,000 事件示例验证分析流程：
 
 ```bash
-cd ~/smeftsim/outputs/my_pyroot_reference
-python ../../work/Material/pyroot_python3/plot_histos.py "$HOME/smeftsim-source/reference/Results/Root_files/Hvlvl_SM_run_01.root"
+mkdir -p outputs/example_reweighted
+gzip -dc examples/reweighted/events.lhe.gz > outputs/example_reweighted/events.lhe
+python work/Material/pyroot_python3/lhe_analyzer.py outputs/example_reweighted/events.lhe outputs/example_reweighted/histograms.root
+cd outputs/example_reweighted
+python ../../work/Material/pyroot_python3/plot_histos.py histograms.root
+ls -lh plot_mll.pdf plot_mmv.pdf plot_pTl1.pdf plot_pTmu.pdf
+cd ../..
 ```
 
-这一捷径替代 LHE 分析路线，不是另一个必需步骤。
+应看到 `processed 2000 events`、48 个 ROOT 直方图和四个非空 PDF。
+命令只写入本地输出，不改仓库提供的示例。在 WSL 的输出目录中执行 `explorer.exe .` 可以打开文件夹；Linux 桌面用户用自己的文件管理器查看。
+这一步检查安装和分析；事件生成与重加权另见 handbook 第 8–9 节。
 
-## 8. 继续教材
+## 7. 解压参考结果并继续学习
 
-回到已激活环境的运行目录，检查模型构造：
+固定版本教程内已有结果压缩包，解压后供 handbook 第 6 节使用：
 
 ```bash
 cd ~/smeftsim
-bash scripts/run_generator.sh check_model
+unzip -n tutorial/SMEFTsim_tutorial_results.zip -d reference
+ls -lh reference/Results/Root_files/Hvlvl_SM_run_01.root
+ls -lh reference/Results/Hvlvl_SM/Events/run_01/unweighted_events.lhe.gz
 ```
 
-这里构造过程，不生成事件。然后按[主手册](../../handbook.zh-CN.md)继续：第 6 节复现参考图，或第 8–9 节自己生成 SM 并重加权。按本说明第 1 节替换你的主目录路径和 WSL 名称。
+应看到两个非空文件。压缩包有顶层 `Results` 目录，`-n` 保留已有解压文件。
+handbook 的参考数据路径现在都指向这个 Linux 目录。
 
-早期 Windows 辅助脚本 `install-wsl-runtime.ps1`、`resume-install.ps1` 需要 `vm/downloads` 内事先准备的安装包和特定 Ubuntu 镜像；这些下载文件没有发布。`resume-install.ps1` 的 ROOT 检查还假定本地分析脚本已经存在。它们不是这条新克隆配置路线的入口。本说明使用已有安装辅助脚本和明确的手动转换步骤，没有新增一键运行程序。
+| 本地创建的目录 | 存放内容 |
+|---|---|
+| `.venv` | 共用 Python、生成器依赖和 ROOT |
+| `tutorial` | 固定版本的原教程，包括 UFO、输入卡、脚本和参考结果压缩包 |
+| `tools` | 固定版本 MadGraph 源码与程序入口 |
+| `work/Material` | 可编辑卡、Python 3 分析副本、生成的过程与 run |
+| `reference` | 解压后的上游参考结果 |
+| `outputs` | 自己的分析输出、解压副本、ROOT 文件和图 |
+
+这些目录在安装或操作时创建，由 Git 忽略，教学仓库不再附带空目录占位说明。
+仓库保留 handbook、知识附录、示例结果及来源和许可证记录。
+不需要 Windows 源码副本或第二份 Python 环境。
+
+从 [handbook 第 5 节](../../handbook.zh-CN.md#5-启动环境与核对依赖) 继续，再依次完成第 6、8、9 节。
+仓库示例的含义和来源见 [示例说明](../../examples/reweighted/README.zh-CN.md)。

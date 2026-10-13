@@ -1,29 +1,79 @@
-# Set up a fresh clone
+# Install the Linux environment
 
 [English](README.md) | [简体中文](README.zh-CN.md)
 
-Use this guide on a **new machine** before starting the [handbook](../../handbook.md). If your existing environment already generates events and imports ROOT, keep it and skip this setup.
+This is the only installation guide needed before the [handbook](../../handbook.md).
+The repository contains teaching notes and a locally generated example, rather than a preinstalled simulator.
+You will obtain the software directly from its upstream repositories and prepare **one project directory, `~/smeftsim`, with one Python environment, `.venv`**.
 
-The public repository contains teaching notes, helper scripts, and a selected example. It does not contain a virtual disk, a virtual environment, MadGraph, the tutorial download, or analysis scripts from [Ilaria Brivio's June 2023 SMEFTsim tutorial](https://github.com/IlariaBrivio/SMEFTsim_tutorial_June23). The steps below obtain those dependencies locally and prepare the analysis scripts without redistributing them.
+The tested platform is x86-64 Ubuntu 22.04, Python 3.10, MadGraph 2.9.27, the tutorial's SMEFTsim v3.0.2 model, and ROOT 6.40.00.
+The pinned versions are for this lesson; they are not claims about the latest releases.
+If your existing installation already passes Section 6, skip installation and continue with the handbook.
 
-## 1. Starting requirements and the two directories
+**Input rule:** each line in a PowerShell or Bash block is a complete command. Finish the line, press Enter once, and wait for the prompt before entering the next line. Do not type displayed prompts. If a command fails, resolve it before continuing.
 
-This guide starts inside a **dedicated, x86-64 Ubuntu 22.04 environment**, with a regular Linux user who can install distribution packages using `sudo`. Python 3.10 is the runtime used for the lesson.
+## 1. Create a dedicated Linux environment
 
-For Windows, create the dedicated WSL2 environment first using Microsoft's [WSL installation guide](https://learn.microsoft.com/en-us/windows/wsl/install) and, for a separately named distribution, its [distribution-import guide](https://learn.microsoft.com/en-us/windows/wsl/use-custom-distro). Complete the Linux-user setup there before continuing. These are operating-system setup steps, outside the commands below.
+Already using a dedicated x86-64 Ubuntu 22.04 virtual machine? Start at Section 2.
+For Windows 10/11, the following route creates a WSL2 distribution named `SMEFTsim`, separate from any other Ubuntu installation.
+WSL2 runs Linux in a lightweight virtual machine; its virtual disk remains on Windows, while calculations and project files live inside Linux.
 
-| Directory | Role |
-|---|---|
-| `~/smeftsim-source` | Git checkout, teaching documents, selected example, and locally downloaded upstream source |
-| `~/smeftsim` | Separate runtime directory containing `.venv`, working cards, generated processes, and outputs |
+**Windows PowerShell, run as administrator:**
 
-`~` means the current Linux user's home directory. The setup helper requires the source and runtime directories to be different, with the runtime on the Linux filesystem and its path containing no spaces. Do not clone the repository into `~/smeftsim` and then use that same directory as the setup target.
+```powershell
+wsl --install --no-distribution
+```
 
-The handbook's original machine uses WSL distribution `SMEFTsim`, user `smeft`, and runtime `/home/smeft/smeftsim`. If your names differ, substitute your distribution, username, and home path in its access and File Explorer commands. Its physics and analysis steps are otherwise the same.
+If prompted to restart Windows, restart before continuing. If WSL is already installed, skip this command.
+Then use ordinary **Windows PowerShell**, one complete command at a time:
 
-**Input rule:** every line in a Bash block below is one complete command. Enter the whole line, press Enter once, and wait for the Bash prompt to return before entering the next. Do not type the prompt itself.
+```powershell
+wsl --list --verbose
+```
 
-Check your Linux environment:
+If `SMEFTsim` already exists, enter it and check the existing installation; do not import over it.
+For a new installation, download Canonical's Ubuntu 22.04 x86-64 root filesystem and its checksum list:
+
+```powershell
+$smeftDiskDir = "$env:USERPROFILE\SMEFTsim-WSL"
+$smeftImage = "$env:TEMP\ubuntu-jammy-smeftsim.rootfs.tar.gz"
+$smeftChecksums = "$env:TEMP\ubuntu-jammy-smeftsim-SHA256SUMS"
+curl.exe --fail --location --output "$smeftImage" https://cloud-images.ubuntu.com/wsl/jammy/current/ubuntu-jammy-wsl-amd64-ubuntu22.04lts.rootfs.tar.gz
+curl.exe --fail --location --output "$smeftChecksums" https://cloud-images.ubuntu.com/wsl/jammy/current/SHA256SUMS
+(Get-FileHash -Algorithm SHA256 -LiteralPath "$smeftImage").Hash
+Select-String -LiteralPath "$smeftChecksums" -Pattern 'ubuntu-jammy-wsl-amd64-ubuntu22.04lts.rootfs.tar.gz'
+```
+
+The two SHA256 values must match, ignoring letter case. These are commands in the same PowerShell session, so keep the variables defined above.
+Then import and enter the new distribution:
+
+```powershell
+wsl --import SMEFTsim "$smeftDiskDir" "$smeftImage" --version 2
+wsl -d SMEFTsim -u root
+```
+
+You are now at **Linux Bash as root**. Create the normal user used in this guide:
+
+```bash
+adduser smeft
+usermod -aG sudo smeft
+exit
+```
+
+`adduser` asks for a new Linux password twice; characters are not displayed. At the optional name/contact questions, press Enter to leave them blank, then confirm the details. Wait for each command to finish.
+`exit` returns to PowerShell. Enter the normal user's Linux session:
+
+```powershell
+wsl -d SMEFTsim -u smeft --cd ~
+```
+
+Use this command whenever you return to the lesson. It specifies the user explicitly, so no default-user configuration is needed.
+The directory `$smeftDiskDir` stores the virtual disk; preserve it. The downloaded image is an installer, not the installed disk.
+Sources: [Microsoft WSL installation](https://learn.microsoft.com/en-us/windows/wsl/install), [WSL import and user commands](https://learn.microsoft.com/en-us/windows/wsl/basic-commands), and [Canonical's Ubuntu images](https://cloud-images.ubuntu.com/wsl/jammy/current/).
+
+## 2. Install prerequisites inside this Linux environment
+
+**Linux Bash as the normal user:**
 
 ```bash
 uname -m
@@ -31,77 +81,71 @@ cat /etc/os-release
 whoami
 ```
 
-Expect `x86_64`, Ubuntu version `22.04`, and your normal Linux username. Continue in this dedicated environment, rather than Windows PowerShell or Git Bash.
-
-## 2. Install the Linux prerequisites
-
-These packages are installed **inside this dedicated Ubuntu distribution**. Python physics dependencies will subsequently go into the project's `.venv`. This step does not install Python packages into Windows Anaconda.
-
-**Linux Bash: one complete command, one Enter, then wait.**
+Expect `x86_64`, Ubuntu `22.04`, and `smeft` (or your chosen normal username).
+System packages below are installed only in this dedicated Linux environment. Python packages will go into the project's `.venv`; Windows Python and Anaconda are not used.
 
 ```bash
 sudo apt-get update
-sudo apt-get install -y --no-install-recommends python3 python3-venv python3-dev build-essential gfortran git perl ca-certificates coreutils sed gzip unzip
-python3 -c "import sys; print(sys.version); assert sys.version_info[:2] == (3, 10), 'This lesson requires Python 3.10'"
+sudo apt-get install -y --no-install-recommends python3 python3-venv python3-dev build-essential gfortran git perl ca-certificates coreutils sed gzip unzip nano libsm6 libice6 libx11-6 libxext6 libxrender1 libxft2 libglu1-mesa
+python3 -c "import sys; print(sys.version); assert sys.version_info[:2] == (3, 10), 'Use Ubuntu 22.04 / Python 3.10 for this lesson'"
 ```
 
-If `sudo` asks for your Linux password, type it and press Enter. Password characters are not displayed. `build-essential` supplies GCC and Make; `gfortran` supplies the Fortran compiler. `coreutils`, `sed`, `gzip`, and `unzip` supply the conversion and archive tools used below. APT and `dpkg-deb` are available in this Ubuntu environment and are also used by the setup helper.
+Enter your Linux password if `sudo` asks. The Python check must finish without an assertion error.
+`build-essential` supplies GCC and Make; `gfortran` compiles the generator's Fortran code. The `lib...` packages supply ROOT graphics libraries. `nano` is a terminal text editor.
 
-The Python check must finish without an assertion error. If it reports another version, stop and prepare the Ubuntu 22.04/Python 3.10 environment before proceeding. See Ubuntu's [package-management documentation](https://ubuntu.com/server/docs/how-to/software/package-management/) for APT usage.
+## 3. Obtain the teaching notes and pinned software
 
-## 3. Clone the teaching repository and pinned upstream sources
-
-Use these directory names for a fresh setup. If any target already exists, inspect it first rather than repeating `git clone` into it. The public repositories can be downloaded without putting a token in a command.
-
-**Linux Bash: enter and finish each command separately.**
+Keep the project on the Linux filesystem, under your home directory, rather than `/mnt/c`.
+Run the following only for a new installation; if a destination exists, inspect it instead of cloning over it.
 
 ```bash
 cd ~
-git clone https://github.com/RuneTan/smeftsim-learning.git smeftsim-source
-cd ~/smeftsim-source
+git clone https://github.com/RuneTan/smeftsim-learning.git smeftsim
+cd ~/smeftsim
+mkdir -p tools work/Material reference outputs
 git clone https://github.com/IlariaBrivio/SMEFTsim_tutorial_June23.git tutorial
 git -C tutorial checkout 92ffde994d7c0d90554ee629cc477ee171c76b84
 git clone https://github.com/mg5amcnlo/mg5amcnlo.git tools/MG5_aMC_v2_9_27
 git -C tools/MG5_aMC_v2_9_27 checkout eb76cab72b8d44aac7162ac7221ac08a4384a169
 git -C tutorial rev-parse HEAD
 git -C tools/MG5_aMC_v2_9_27 rev-parse HEAD
+test -L tools/MG5_aMC_v2_9_27/madgraph/VERSION
 ```
 
-The last two commands should print the respective pinned hashes above. A “detached HEAD” notice after `checkout` is expected: these downloads are fixed to the recorded versions. The tutorial includes the SMEFTsim v3.0.2 UFO and the reference-results archive.
+The two hashes must match those above. “Detached HEAD” means the downloads are fixed to the recorded versions; it is expected.
+The last command quietly succeeds when MadGraph's Linux symbolic link is intact.
+The tutorial already supplies the required SMEFTsim UFO and its restriction, so a separate SMEFTsim model download is not needed for this exercise.
 
-Source and license records are in the [project README](../../README.md) and [third-party notices](../../THIRD_PARTY_NOTICES.md). Keep upstream downloads local; they remain excluded from this teaching repository's Git commits.
-
-## 4. Prepare the separate Linux runtime
-
-Still in `~/smeftsim-source`, run:
+Prepare a working copy and turn off MadGraph's update checks for this pinned checkout:
 
 ```bash
-bash scripts/setup_linux.sh ~/smeftsim
+cp -an tutorial/Material/. work/Material/
+printf 'auto_update = 0\n' > tools/MG5_aMC_v2_9_27/input/mg5_configuration.txt
 ```
 
-Wait for `Environment prepared at ...` and the Bash prompt. This helper copies the tutorial and process cards, creates a Linux MadGraph checkout with the expected symbolic links, installs the pinned dependencies into `~/smeftsim/.venv`, and extracts two ROOT graphics libraries into that environment. It then prepares `work/Material`. It does not generate events.
+`cp -a` preserves the files and `-n` keeps existing destination files. Keep `tutorial` as the downloaded original; edit cards only in `work/Material`.
+The configuration command is for a new checkout: it replaces that file's contents. Preserve a customized configuration if you already have one.
 
-The helper never invokes `sudo` and does not install into the global Python environment. On this fresh setup the runtime is new; on an existing installation the helper preserves existing working files, so it should not be treated as an automatic upgrade procedure.
+## 4. Create the single Python environment
 
-Then enter and check the runtime:
+From `~/smeftsim`, enter one complete command at a time:
 
 ```bash
-cd ~/smeftsim
+python3 -m venv .venv
 source .venv/bin/activate
-python --version
-which python
-python -c "import ROOT; print(ROOT.gROOT.GetVersion())"
+python -m pip install --index-url https://pypi.org/simple -r docs/setup/requirements.txt
 python -m pip check
-gfortran --version
 ```
 
-Expect Python 3.10, a Python path under your `~/smeftsim/.venv`, ROOT `6.40.00`, and no broken requirements. Keep this environment activated for the following steps.
+The small [requirements file](requirements.txt) pins NumPy, six, setuptools and the Linux ROOT wheel. ROOT's PyPI packaging is marked alpha; this lesson uses the locally tested wheel version `0.1a12`, which contains ROOT `6.40.00`.
+See [ROOT's Python interface documentation](https://root.cern.ch/doc/master/group__Python.html) for the PyPI distribution and [ROOT installation options](https://root.cern/install/).
+Do not use `sudo pip` or install these packages into Windows Python.
 
-## 5. Create the local Python 3 analysis copies
+## 5. Prepare the two Python 3 analysis scripts
 
-A fresh public clone contains the analysis directory's guide, **not its two `.py` files**. Create them now from the downloaded originals, before calling either analyzer or plotting script.
-
-**Run these conversion commands only when the two working scripts are absent.** From the activated runtime root `~/smeftsim`, enter one complete command at a time:
+Obtain these scripts from the tutorial downloaded in Section 3. The teaching repository provides the following conversion instructions, rather than redistributing the script files.
+Run the commands only if the two Python 3 working copies are absent; `>` would otherwise replace them.
+Keep `.venv` activated and stay in `~/smeftsim`:
 
 ```bash
 mkdir -p work/Material/pyroot_python3
@@ -113,66 +157,71 @@ sed -i '1s|^#!/usr/bin/env python$|#!/usr/bin/env python3|' work/Material/pyroot
 python -m py_compile work/Material/pyroot_python3/lhe_analyzer.py work/Material/pyroot_python3/plot_histos.py
 ```
 
-`>` writes a newly created working copy; it is part of the command. The upstream files in `tutorial/Material` are unchanged. These are Python 3 compatibility changes: expand indentation, convert old syntax, replace `file()` with `open()`, and update the interpreter line. Python 3.10 supplies `lib2to3` for this conversion; Python 3.14 does not.
+These changes expand tabs, convert Python 2 syntax, replace `file()` with `open()`, and update the interpreter line. The algorithms and upstream originals are preserved. Python 3.10 supplies `lib2to3`; Python 3.14 does not.
+The final command checks syntax and normally returns quietly.
 
-The final command checks syntax and should return quietly. More explanation is in the [working-copy guide](../../work/Material/pyroot_python3/README.md).
+| Script | Complete call from the project root | Function |
+|---|---|---|
+| Analyzer | `python work/Material/pyroot_python3/lhe_analyzer.py INPUT.lhe OUTPUT.root` | Reads momenta and weights, fills four distributions per weight, and normalizes by the event count |
+| Plotter | `python work/Material/pyroot_python3/plot_histos.py INPUT.root` | Writes four PDF plots into the current directory, showing individual contributions added to the SM and their ratios |
 
-## 6. Make the shared example available to the runtime
+The analyzer needs **two script arguments**, the plotter **one**. Include every argument before pressing Enter.
 
-The helper does not copy the public examples into the runtime. From `~/smeftsim`, copy the selected example without overwriting existing files:
-
-```bash
-mkdir -p examples/reweighted
-cp -an "$HOME/smeftsim-source/examples/reweighted/." examples/reweighted/
-ls -lh examples/reweighted/events.lhe.gz examples/reweighted/histograms.root
-```
-
-Expect two nonempty files. `cp -a` preserves the copied files' attributes; `-n` keeps any existing destination file. On a fresh setup, the files are the repository's supplied example. If you already had a different example, inspect it separately rather than assuming this command replaced it.
-
-Documents remain in `~/smeftsim-source` or on GitHub; the working commands run in `~/smeftsim`. You can now follow [the example's reanalysis and replot instructions](../../examples/reweighted/README.md).
-
-## 7. Prepare the optional upstream reference results
-
-For handbook section 6, extract the locally downloaded result archive into the **source checkout**, keeping existing extracted files:
-
-```bash
-mkdir -p "$HOME/smeftsim-source/reference"
-unzip -n "$HOME/smeftsim-source/tutorial/SMEFTsim_tutorial_results.zip" -d "$HOME/smeftsim-source/reference"
-ls -lh "$HOME/smeftsim-source/reference/Results/Root_files/Hvlvl_SM_run_01.root"
-```
-
-The archive contains a top-level `Results` directory. `-n` prevents overwriting previously extracted files. The last command should list a nonempty ROOT file.
-
-The original handbook uses the publishing machine's Windows-mounted reference path. In this fresh Linux setup, use `$HOME/smeftsim-source/reference` instead of `/mnt/c/Users/符文/Desktop/NSBI/smeftsim/reference`.
-
-For section 6.5 A3, use this complete command from the runtime root:
+## 6. Check installation and reproduce the supplied example
 
 ```bash
 cd ~/smeftsim
-mkdir -p outputs/my_pyroot_reference
-gzip -dc "$HOME/smeftsim-source/reference/Results/Hvlvl_SM/Events/run_01/unweighted_events.lhe.gz" > outputs/my_pyroot_reference/events.lhe
+source .venv/bin/activate
+python --version
+which python
+python -c "import ROOT; print(ROOT.gROOT.GetVersion())"
+python -m pip check
+gfortran --version
 ```
 
-After the Bash prompt returns, continue at section 6.5 A4, which checks the decompressed file before analysis. Preserve both the `>` symbol and the output filename before pressing Enter.
-
-For its optional shortcut using the existing ROOT file, first enter `outputs/my_pyroot_reference`, then use:
+Expect Python 3.10, a Python path under your `~/smeftsim/.venv`, ROOT `6.40.00`, no broken requirements, and a compiler version.
+Then verify the analysis chain using the included 2,000-event example:
 
 ```bash
-cd ~/smeftsim/outputs/my_pyroot_reference
-python ../../work/Material/pyroot_python3/plot_histos.py "$HOME/smeftsim-source/reference/Results/Root_files/Hvlvl_SM_run_01.root"
+mkdir -p outputs/example_reweighted
+gzip -dc examples/reweighted/events.lhe.gz > outputs/example_reweighted/events.lhe
+python work/Material/pyroot_python3/lhe_analyzer.py outputs/example_reweighted/events.lhe outputs/example_reweighted/histograms.root
+cd outputs/example_reweighted
+python ../../work/Material/pyroot_python3/plot_histos.py histograms.root
+ls -lh plot_mll.pdf plot_mmv.pdf plot_pTl1.pdf plot_pTmu.pdf
+cd ../..
 ```
 
-This shortcut replaces the LHE-analysis route; it is not an additional required step.
+Expect `processed 2000 events`, 48 ROOT histograms, and four nonempty PDFs. The commands write local outputs, leaving the supplied example unchanged.
+To view the folder from WSL, run `explorer.exe .` in the output directory; in a Linux desktop, use its file manager.
+This checks installation and analysis. Event generation and reweighting are exercised separately in handbook Sections 8–9.
 
-## 8. Continue the lesson
+## 7. Extract the reference results and continue
 
-Return to the activated runtime root and check model construction:
+The pinned tutorial includes a results archive. Extract it locally for handbook Section 6:
 
 ```bash
 cd ~/smeftsim
-bash scripts/run_generator.sh check_model
+unzip -n tutorial/SMEFTsim_tutorial_results.zip -d reference
+ls -lh reference/Results/Root_files/Hvlvl_SM_run_01.root
+ls -lh reference/Results/Hvlvl_SM/Events/run_01/unweighted_events.lhe.gz
 ```
 
-This constructs processes without generating events. Then follow the [handbook](../../handbook.md): section 6 for reference plots, or sections 8–9 for your own SM generation and reweighting. Substitute your home path and WSL names as described in section 1.
+Expect two nonempty files. The archive has a top-level `Results` directory; `-n` keeps existing extracted files.
+All reference paths in the handbook now refer to this Linux directory.
 
-The historical Windows helpers `install-wsl-runtime.ps1` and `resume-install.ps1` expect locally prepared installers and a specific Ubuntu image in `vm/downloads`; those downloads are not published. `resume-install.ps1` also assumes that the local analysis scripts are available before its ROOT check. They are not the entry point for this fresh-clone route. This guide uses the existing setup helper and explicit manual conversion steps, rather than a new all-in-one program.
+| Directory created locally | Contents |
+|---|---|
+| `.venv` | Shared Python, generator dependencies and ROOT |
+| `tutorial` | Pinned original tutorial, including UFO, input cards, scripts and reference archive |
+| `tools` | Pinned MadGraph source and executable entry points |
+| `work/Material` | Editable cards, Python 3 analysis copies and generated processes/runs |
+| `reference` | Extracted upstream reference results |
+| `outputs` | Your analysis outputs, decompressed copies, ROOT files and plots |
+
+These directories are created during installation or use and are ignored by Git. They are not empty placeholders shipped in the teaching repository.
+The repository itself retains the handbook, topic notes, example results, and source/license records.
+No Windows source checkout or second Python environment is needed.
+
+Continue at [handbook Section 5](../../handbook.md#5-start-the-environment-and-check-dependencies), then follow Sections 6, 8 and 9.
+For the meaning and provenance of the included results, see the [example guide](../../examples/reweighted/README.md).

@@ -33,7 +33,7 @@ The raw local simulation file has not been modified.
 
 ## Replot the supplied ROOT file
 
-First prepare the [local Python 3 working copies](../../work/Material/pyroot_python3/README.md).
+First prepare the [local Python 3 working copies](../../docs/setup/README.md#5-prepare-the-two-python-3-analysis-scripts).
 Then, from the Linux project root, enter each complete command and press Enter once:
 
 ```bash

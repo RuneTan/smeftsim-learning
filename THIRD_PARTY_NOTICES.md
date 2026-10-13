@@ -2,7 +2,7 @@
 
 [English](THIRD_PARTY_NOTICES.md) | [简体中文](THIRD_PARTY_NOTICES.zh-CN.md)
 
-Checked on 2026-10-13. This file records component sources and license information;
+Checked on 2026-10-14. This file records component sources and license information;
 it does not replace an upstream license.
 
 ## SMEFTsim model and parameter material
@@ -28,7 +28,7 @@ The MIT license of the SMEFTsim model is not assumed to license the independent 
 Local tutorial downloads and author-derived Python files under `work/Material` are excluded from Git.
 Compatibility changes consist of tab expansion, Python 2 syntax conversion, `file()` to `open()`
 and the Python 3 interpreter line. Restoration instructions are shared in the
-[working-copy guide](work/Material/pyroot_python3/README.md).
+[working-copy guide](docs/setup/README.md#5-prepare-the-two-python-3-analysis-scripts).
 
 ## MadGraph and ROOT
 
@@ -54,6 +54,6 @@ It does not imply upstream endorsement, independent closure or full research val
 
 ## Project-owned materials
 
-The bilingual notes and helper entry points are this project's contribution.
+The bilingual teaching notes are this project's contribution.
 No project-wide reuse license has yet been selected.
 This notice does not relicense third-party content.

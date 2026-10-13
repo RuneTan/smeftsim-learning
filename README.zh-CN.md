@@ -1,31 +1,26 @@
-# SMEFTsim 学习实践
+# SMEFTsim 学习教程
 
 [English](README.md) | [简体中文](README.zh-CN.md)
 
-新电脑先按 [首次克隆配置说明](docs/setup/README.zh-CN.md) 下载固定版本依赖并配置隔离运行环境，再阅读主手册。
+这份独立的双语教程帮助读者用 SMEFTsim、MadGraph 和 ROOT，完成 Higgs 四轻子衰变的 SM 事件生成、分析及 SMEFT 重加权。
+仓库提供操作手册、必要知识附录和自己生成的示例结果；运行软件直接从上游获取，在 Linux 中安装。
 
-这是一个个人教学与复现项目：使用已有 SMEFTsim、MadGraph 和 ROOT，
-学习 Higgs 四轻子衰变的 SM 生成、事件分析与 SMEFT 重加权。
-本项目的贡献是中英文操作说明、环境隔离、输入步骤解释、辅助入口和本地复现示例。
+**第一次使用：先看 [安装指南](docs/setup/README.zh-CN.md)，再跟随 [handbook](handbook.zh-CN.md)。**
+安装指南从创建专用 WSL2/Ubuntu 开始，将软件下载、单一 `.venv`、分析脚本准备和安装校验串在一起。
+所有操作在同一个 Linux 项目目录完成；无需逐个寻找运行目录的说明，也无需 Windows 项目副本。
 
-**先读 [handbook.md](handbook.zh-CN.md)。** 主手册只保留学习顺序和实际操作；
-背景、参数与各目录的说明放在对应 README 中。
-
-| 入口 | 阅读目的 |
+| 阅读入口 | 用途 |
 |---|---|
-| [主手册](handbook.zh-CN.md) | 按步骤生成 SM、调用 ROOT、执行重加权 |
-| [Linux 与终端入门（可选）](docs/linux-basics/README.zh-CN.md) | Linux 基本命令、提示符与路径 |
-| [物理背景](docs/physics/README.zh-CN.md) | Warsaw basis、flavor、scheme、微分宽度 |
-| [软件与 Notebook](docs/model/README.zh-CN.md) | 模型、生成器和 Mathematica 的分工 |
-| [过程卡](cards/README.zh-CN.md) | 模型导入、restriction、NP 与 NPprop 阶数 |
-| [脚本说明](scripts/README.zh-CN.md) | 每个辅助脚本的功能、环境和使用时机 |
-| [本地重加权示例](examples/reweighted/README.zh-CN.md) | 2,000 个事件、11 个权重、ROOT 与 PDF |
-| [来源与许可](THIRD_PARTY_NOTICES.zh-CN.md) | 组件出处与许可信息 |
+| [安装指南](docs/setup/README.zh-CN.md) | 创建 Linux 环境，获取固定版本软件并检验示例 |
+| [handbook](handbook.zh-CN.md) | 参考图 → 生成自己的 SM → ROOT → 重加权对比 |
+| [知识附录](docs/README.zh-CN.md) | 需要时查物理、模型、阶数、参数、图或 Linux 入门 |
+| [示例结果](examples/reweighted/README.zh-CN.md) | 2,000 个事件、11 个额外权重、ROOT 直方图与 PDF |
+| [来源与许可证](THIRD_PARTY_NOTICES.zh-CN.md) | 软件、教程和本仓库材料的来源及许可范围 |
 
-![本项目自己的重加权示例](docs/figures/rw_mmv.png)
+![本项目自行生成样本的重加权分布](docs/figures/rw_mmv.png)
 
-图来自本项目生成的事件，使用 Ilaria Brivio 的 2023 年教程中的 `plot_histos.py` 绘制。
-图中保留该脚本的轴标签；本例是衰变宽度，旧 `pb` 标签的解释见 [图的说明](docs/figures/README.zh-CN.md)。
+图由本地事件和 Ilaria Brivio 2023 教程的 `plot_histos.py` 生成，保留原轴标签。
+本例是衰变宽度，原脚本的 `pb` 标签解释见 [图的说明](docs/figures/README.zh-CN.md)。
 
 ## 来源与致谢
 
@@ -45,13 +40,13 @@
 模型、生成器和教程的署名见上表。这是独立的学习整理，不代表所列项目或贡献者背书。
 用于科学论文时，请按所使用工具的要求引用相关论文。
 
-## 收录文件与许可
+## 仓库包含什么
 
-- 自己生成的示例放在 `examples/reweighted`；数据来源、参数和校验值在 `metadata.json`。
-- 公开 LHE 是分析用导出：保留数值初始化、事件和权重，省略完整软件与卡片模板 header；原始 run 仍保留本地。
-- 第三方程序、环境和下载的教程材料留在本地，从上游获取，不随本仓库发布。
-- 教程仓库未找到明确许可；其 Python 3 副本继续本地使用，但由 Git 忽略规则排除。
-- 参数索引引用 MIT 许可的 SMEFTsim 模型，许可文本保存在 [licenses](licenses/README.zh-CN.md)。
+公开仓库保留文档、图片、参数索引、示例数据与来源/许可证记录。
+MadGraph、ROOT、UFO、原教程和 Python 3 脚本副本在 Linux 安装时获取或准备，不随本仓库分发。
+`.venv`、`tutorial`、`tools`、`work`、`reference`、`outputs` 都是本地运行目录，由安装或操作命令创建并由 Git 忽略。
 
-组件来源与许可信息见 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.zh-CN.md)。
-本项目自有文档和辅助脚本尚未选择统一发布许可证；上游许可不自动成为本项目许可。
+示例 `examples/reweighted` 来自本地生成，不是上游参考结果的复制。
+公开 LHE 是分析导出，保留数值初始化、事件和权重，省略完整软件模板和卡片文本；设置和校验值记录在 `metadata.json`。
+SMEFTsim 模型的 MIT 许可不自动覆盖独立教程或整个教学仓库。
+本项目自有文档尚未选择统一的再使用许可证；第三方许可及署名记录见 [THIRD_PARTY_NOTICES](THIRD_PARTY_NOTICES.zh-CN.md)。

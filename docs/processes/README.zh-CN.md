@@ -1,25 +1,9 @@
-# MadGraph 过程卡
+# 模型、过程与阶数
 
 [English](README.md) | [简体中文](README.zh-CN.md)
 
-下文的模型设定和配套输入卡来自 [Ilaria Brivio 的 2023 年 6 月 SMEFTsim 教程](https://github.com/IlariaBrivio/SMEFTsim_tutorial_June23)；本目录的 `.mg5` 命令文件为本学习项目整理。
-
-本目录中的 `.mg5` 是交给 MadGraph 的命令文件，不是运行卡或参数卡。
-
-| 文件 | 做什么 | 是否生成事件 |
-|---|---|---|
-| `check_model.mg5` | 导入教程 UFO，依次构造 SM、干涉、平方和传播子过程 | 否 |
-| `generate_sm.mg5` | 导出 `Hvlvl_SM` 数值代码 | 否 |
-| `generate_eft.mg5` | 导出三个独立 EFT 贡献的数值代码 | 否 |
-
-`run_generator.sh` 从正确的 `work/Material` 目录调用这些卡。
-`generate` 选择矩阵元，`output` 导出代码；真正积分和事件生成在过程的 `generate_events` 阶段。
-
-配套输入文件包括 `param_card_Hvlvl.dat`、`run_card_Hvlvl.dat` 和 `reweight_card_*.dat`，下载后在本地
-`work/Material` 使用。不要把本目录的过程卡与那些文件混淆。
-
-本项目的过程选项沿用原教程。下面集中解释模型、restriction 与阶数，
-主手册只引用这里的规则。
+这里解释 handbook 第 7 节使用的模型、restriction 与阶数语法。
+过程命令在 MadGraph 中手动输入；参数卡、run 卡和 reweight 卡从固定版本教程获取到本地工作区。
 
 ### 7.1 本例为什么选这个模型
 
@@ -100,7 +84,7 @@ $\mathcal M_0$ 是 SM 振幅，$\mathcal M_6$ 已包含 Wilson 系数与 $1/\Lam
 $$
 |\mathcal M_0+\mathcal M_6|^2
 =\underbrace{|\mathcal M_0|^2}_{\text{SM：NP 总阶数 0}}
-+\underbrace{2\mathrm{Re}(\mathcal M_0^*\mathcal M_6)}_{\text{干涉：NP 总阶数 1}}
++\underbrace{2\mathrm{Re}(\mathcal M_0^{\ast}\mathcal M_6)}_{\text{干涉：NP 总阶数 1}}
 +\underbrace{|\mathcal M_6|^2}_{\text{维六平方：NP 总阶数 2}}.
 $$
 
@@ -113,9 +97,9 @@ SM × SM 为 $0+0=0$，SM × EFT 为 $0+1=1$，EFT × EFT 为 $1+1=2$。
 | 阶数选项 | 最后计算的贡献 | 是否含 SM 基线 |
 |---|---|---|
 | `NP=0` | $\lvert\mathcal M_0\rvert^2$ | 是 |
-| `NP=1` | $\lvert\mathcal M_0\rvert^2+2\mathrm{Re}(\mathcal M_0^*\mathcal M_6)+\lvert\mathcal M_6\rvert^2$ | 是 |
-| `NP=1 NP^2<=1` | $\lvert\mathcal M_0\rvert^2+2\mathrm{Re}(\mathcal M_0^*\mathcal M_6)$ | 是 |
-| `NP=1 NP^2==1` | $2\mathrm{Re}(\mathcal M_0^*\mathcal M_6)$，只有干涉修正 | 否 |
+| `NP=1` | $\lvert\mathcal M_0\rvert^2+2\mathrm{Re}(\mathcal M_0^{\ast}\mathcal M_6)+\lvert\mathcal M_6\rvert^2$ | 是 |
+| `NP=1 NP^2<=1` | $\lvert\mathcal M_0\rvert^2+2\mathrm{Re}(\mathcal M_0^{\ast}\mathcal M_6)$ | 是 |
+| `NP=1 NP^2==1` | $2\mathrm{Re}(\mathcal M_0^{\ast}\mathcal M_6)$，只有干涉修正 | 否 |
 | `NP==1`，或 `NP=1 NP^2==2` | $\lvert\mathcal M_6\rvert^2$，只有维六平方贡献 | 否 |
 
 因此，`NP==1` 的“一次插入”说的是振幅：计算速率时，这个振幅仍需与其复共轭相乘。
@@ -166,7 +150,7 @@ $m_0,\Gamma_0$ 是基线质量和宽度；$\delta m,\delta\Gamma$ 是 Wilson 系
 **标签为 2 不表示两个 EFT 插入，也不表示两条传播子分别被修正。**
 
 把普通 SM 振幅记作 $\mathcal M_0$、这一传播子修正振幅记作 $\mathcal M_P$，
-两者的干涉为 $2\mathrm{Re}(\mathcal M_0^*\mathcal M_P)$，
+两者的干涉为 $2\mathrm{Re}(\mathcal M_0^{\ast}\mathcal M_P)$，
 在 `NPprop^2` 中计数 $0+2=2$。
 虽然这个标签是 2，$\mathcal M_P$ 对 Wilson 系数仍是一阶，干涉仍属于 $1/\Lambda^2$ 修正。
 辅助场是计算实现的计数约定，不应直接当作 EFT 能标的幂次。

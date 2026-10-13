@@ -2,7 +2,7 @@
 
 [English](THIRD_PARTY_NOTICES.md) | [简体中文](THIRD_PARTY_NOTICES.zh-CN.md)
 
-核对时间：2026-10-13。此文件记录组件来源与许可信息，不代替具体上游许可证。
+核对时间：2026-10-14。此文件记录组件来源与许可信息，不代替具体上游许可证。
 
 ## SMEFTsim 模型与参数资料
 
@@ -25,7 +25,7 @@
 
 本地 `tutorial`、`work/Material` 的作者材料和两个 Python 3 兼容脚本被 Git 忽略。
 兼容转换只有 tab 展开、Python 2 语法转换、`file()` 到 `open()`；
-转换方法保留在 [工作副本说明](work/Material/pyroot_python3/README.zh-CN.md)。
+转换方法保留在 [工作副本说明](docs/setup/README.zh-CN.md#5-准备两份-python-3-分析脚本)。
 
 ## MadGraph 与 ROOT
 

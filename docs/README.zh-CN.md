@@ -1,17 +1,15 @@
-# 教学资料
+# 知识附录
 
 [English](README.md) | [简体中文](README.zh-CN.md)
 
-新电脑的完整准备流程见 [setup](setup/README.zh-CN.md)。
+先按顺序完成 [安装指南](setup/README.zh-CN.md) 和 [handbook](../handbook.zh-CN.md)。需要进一步解释时再查这些附录。
 
-主手册保留操作，这里存放按主题查阅的解释和示例。
-
-| 目录 | 内容 |
+| 说明 | 内容 |
 |---|---|
-| [linux-basics](linux-basics/README.zh-CN.md) | 可选的 Linux 基本命令、终端提示符与路径入门 |
-| [physics](physics/README.zh-CN.md) | SMEFT、Warsaw basis、Wilson 系数、flavor、scheme、微分宽度 |
-| [model](model/README.zh-CN.md) | SMEFTsim 功能、软件链、Notebook 的用途 |
-| [parameters](parameters/README.zh-CN.md) | UFO 参数、默认值依据与完整索引 |
-| [figures](figures/README.zh-CN.md) | 自己生成的 SM 与重加权示例图 |
-
-返回 [主手册](../handbook.zh-CN.md)。
+| [安装](setup/README.zh-CN.md) | 创建 Linux、固定版本下载、唯一环境与分析脚本 |
+| [物理背景](physics/README.zh-CN.md) | SMEFT、Warsaw basis、Wilson 系数、flavor、scheme、微分宽度 |
+| [软件与 Notebook](model/README.zh-CN.md) | SMEFTsim、MadGraph、ROOT 与 Mathematica 的分工 |
+| [过程与阶数](processes/README.zh-CN.md) | Restriction、振幅阶数与传播子修正 |
+| [参数](parameters/README.zh-CN.md) | 输入值、推导参数与完整静态索引 |
+| [图](figures/README.zh-CN.md) | 自己生成的 SM 与重加权图、单位与解释 |
+| [Linux 入门（可选）](linux-basics/README.zh-CN.md) | 基本命令、提示符、路径与回车约定 |

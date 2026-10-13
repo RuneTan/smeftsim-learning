@@ -27,7 +27,7 @@
 
 ## 使用现有 ROOT 重画
 
-已准备好 [本地 Python 3 工作副本](../../work/Material/pyroot_python3/README.zh-CN.md) 后，
+已准备好 [本地 Python 3 工作副本](../../docs/setup/README.zh-CN.md#5-准备两份-python-3-分析脚本) 后，
 在 Linux 项目根目录逐条输入、回车并等待：
 
 ```bash

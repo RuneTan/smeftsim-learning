@@ -1,26 +1,13 @@
-# MadGraph process cards
+# Models, processes and coupling orders
 
 [English](README.md) | [简体中文](README.zh-CN.md)
 
-The model settings and supplied input cards discussed here follow [Ilaria Brivio's June 2023 SMEFTsim tutorial](https://github.com/IlariaBrivio/SMEFTsim_tutorial_June23). The `.mg5` command files in this directory were prepared for this learning project.
-
-The `.mg5` files in this directory contain commands for MadGraph. They are process cards, rather than run cards or parameter cards.
-
-| File | Purpose | Generates events? |
-|---|---|---|
-| `check_model.mg5` | Import the tutorial UFO and construct the SM, interference, quadratic, and propagator-correction processes in turn | No |
-| `generate_sm.mg5` | Export numerical code for `Hvlvl_SM` | No |
-| `generate_eft.mg5` | Export numerical code for three separate EFT contributions | No |
-
-`run_generator.sh` calls these cards from the required `work/Material` directory. `generate` selects the matrix element; `output` exports its code. Numerical integration and event generation happen later, when the process's `generate_events` command runs.
-
-The supplied input files are `param_card_Hvlvl.dat`, `run_card_Hvlvl.dat`, and `reweight_card_*.dat`. After download, they are used locally in `work/Material`. Distinguish those files from the process cards in this directory.
-
-The process settings follow the original tutorial. The explanations below cover the model, restriction, and coupling orders; the handbook refers here for these details.
+This guide explains the model, restriction and order syntax used in handbook Section 7.
+Enter process commands directly in MadGraph. Parameter, run and reweight cards are obtained from the pinned tutorial and used in the local working directory.
 
 ### 7.1 Why this example uses this model
 
-See [sections 2.5–2.6 of the physics guide](../docs/physics/README.md) for the physical meaning of flavor assumptions and electroweak input schemes. This exercise uses:
+See [sections 2.5–2.6 of the physics guide](../physics/README.md) for the physical meaning of flavor assumptions and electroweak input schemes. This exercise uses:
 
 ```text
 SMEFTsim_U35_MwScheme_UFO-massless_Hvlvl
@@ -82,7 +69,7 @@ The rate depends on the squared amplitude:
 $$
 |\mathcal M_0+\mathcal M_6|^2
 =\underbrace{|\mathcal M_0|^2}_{\text{SM: total NP order 0}}
-+\underbrace{2\mathrm{Re}(\mathcal M_0^*\mathcal M_6)}_{\text{interference: total NP order 1}}
++\underbrace{2\mathrm{Re}(\mathcal M_0^{\ast}\mathcal M_6)}_{\text{interference: total NP order 1}}
 +\underbrace{|\mathcal M_6|^2}_{\text{dimension-six squared: total NP order 2}}.
 $$
 
@@ -93,9 +80,9 @@ Each row below also includes `SMHLOOP=0 NPprop=0`, excluding explicit propagator
 | Order options | Contribution calculated | Includes the SM baseline? |
 |---|---|---|
 | `NP=0` | $\lvert\mathcal M_0\rvert^2$ | Yes |
-| `NP=1` | $\lvert\mathcal M_0\rvert^2+2\mathrm{Re}(\mathcal M_0^*\mathcal M_6)+\lvert\mathcal M_6\rvert^2$ | Yes |
-| `NP=1 NP^2<=1` | $\lvert\mathcal M_0\rvert^2+2\mathrm{Re}(\mathcal M_0^*\mathcal M_6)$ | Yes |
-| `NP=1 NP^2==1` | $2\mathrm{Re}(\mathcal M_0^*\mathcal M_6)$; only the interference correction | No |
+| `NP=1` | $\lvert\mathcal M_0\rvert^2+2\mathrm{Re}(\mathcal M_0^{\ast}\mathcal M_6)+\lvert\mathcal M_6\rvert^2$ | Yes |
+| `NP=1 NP^2<=1` | $\lvert\mathcal M_0\rvert^2+2\mathrm{Re}(\mathcal M_0^{\ast}\mathcal M_6)$ | Yes |
+| `NP=1 NP^2==1` | $2\mathrm{Re}(\mathcal M_0^{\ast}\mathcal M_6)$; only the interference correction | No |
 | `NP==1`, or `NP=1 NP^2==2` | $\lvert\mathcal M_6\rvert^2$; only the dimension-six squared contribution | No |
 
 Thus, “one insertion” in `NP==1` refers to the amplitude. To calculate a rate, that amplitude is still multiplied by its complex conjugate. For one coefficient, $|\mathcal M_6|^2=(c/\Lambda^2)^2|\mathcal A|^2$, so this is the term quadratic in that coefficient. It contains no SM amplitude and therefore no SM–EFT interference. If several coefficients are nonzero, this square also contains cross terms between different dimension-six amplitudes.
@@ -128,7 +115,7 @@ Correction term: left dummy vertex -------- W1 carrying ΔP -------- right dummy
 
 The two ends of this auxiliary internal line each contribute one label, so the correction amplitude has total `NPprop` order 2. In general, a vertex's `NPprop` order equals its number of dummy legs; this example has one internal line connecting two endpoints. **An order label of 2 does not mean two EFT insertions, or corrections to two different propagators.**
 
-Denote the ordinary SM amplitude by $\mathcal M_0$ and this propagator-correction amplitude by $\mathcal M_P$. Their interference is $2\mathrm{Re}(\mathcal M_0^*\mathcal M_P)$, with squared-amplitude order $0+2=2$ in `NPprop^2`. Despite this label of 2, $\mathcal M_P$ is still linear in the Wilson coefficients, and the interference is still a $1/\Lambda^2$ correction. Auxiliary-field labels follow an implementation convention; they are not directly the powers of the EFT scale.
+Denote the ordinary SM amplitude by $\mathcal M_0$ and this propagator-correction amplitude by $\mathcal M_P$. Their interference is $2\mathrm{Re}(\mathcal M_0^{\ast}\mathcal M_P)$, with squared-amplitude order $0+2=2$ in `NPprop^2`. Despite this label of 2, $\mathcal M_P$ is still linear in the Wilson coefficients, and the interference is still a $1/\Lambda^2$ correction. Auxiliary-field labels follow an implementation convention; they are not directly the powers of the EFT scale.
 
 This example therefore uses
 
@@ -149,7 +136,7 @@ This feature also requires the model to allow dummy couplings and set `linearPro
 | `Hvlvl_SMEFT_linear` | `SMHLOOP=0 NP=1 NP^2==1 NPprop=0` | Ordinary SM–dimension-six interference |
 | `Hvlvl_SMEFT_prop` | `SMHLOOP=0 NP=0 NPprop=2 NPprop^2==2` | SM–propagator-correction interference |
 
-These samples isolate different contributions. To construct the tutorial's linear prediction, combine the SM baseline, ordinary interference, and propagator interference. If you also choose to retain the ordinary dimension-six squared term, add that sample. The squared term does not include every contribution at $1/\Lambda^4$; see [section 2.4 of the physics guide](../docs/physics/README.md).
+These samples isolate different contributions. To construct the tutorial's linear prediction, combine the SM baseline, ordinary interference, and propagator interference. If you also choose to retain the ordinary dimension-six squared term, add that sample. The squared term does not include every contribution at $1/\Lambda^4$; see [section 2.4 of the physics guide](../physics/README.md).
 
 Do not add `Auto` width calculations without checking the convention: when explicit propagator corrections are enabled, doing so may mix in or double-count some effects. Keep the width values and treatment specified in `param_card_Hvlvl.dat` for this exercise.
 

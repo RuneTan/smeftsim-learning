@@ -2,23 +2,22 @@
 
 [English](handbook.md) | [简体中文](handbook.zh-CN.md)
 
-新电脑先完成 [首次克隆配置说明](docs/setup/README.zh-CN.md)，再执行本手册的运行步骤。
+新电脑先完成 [安装指南](docs/setup/README.zh-CN.md)，再执行本手册的运行步骤。
 
 这是一份基于[Ilaria Brivio 的 2023 年 6 月 SMEFTsim 教程](https://github.com/IlariaBrivio/SMEFTsim_tutorial_June23)的实践笔记，学习目标是：
 **理解 SMEFT → 读参考图 → 生成自己的 SM 样本并画图 → 用重加权比较 EFT 贡献。**
 
 本手册使用 Linux 项目的统一 `.venv` 环境和 ROOT。
 作者原始材料保留在 `tutorial`；本地分析和绘图使用 Python 3 兼容副本。
-目录用途、脚本功能与全部来源集中在 [根 README](README.zh-CN.md)。
+来源与阅读入口见 [根 README](README.zh-CN.md)，脚本功能与运行目录见 [安装指南](docs/setup/README.zh-CN.md)。
 第 8 节直接调用 ROOT 的现有绘图接口，第 9 节调用作者绘图脚本，不需要新增分析程序。
 
 如果你不熟悉 Linux 或终端操作，可查阅可选的 [Linux 与终端入门手册](docs/linux-basics/README.zh-CN.md)。
 已有 SM 样本时，从第 8.5–8.6 节得到自己的图，再完成第 9.3–9.4 节。
 完成第 9 节即可结束这一轮教学练习。
 
-本文使用当前项目的 WSL 名称 `SMEFTsim`、Linux 用户 `smeft` 和示例路径。
-其他电脑需要先准备对应环境，并替换 Windows 用户名、项目路径与 Linux 用户目录。
-这份仓库分享教学文档、配置、图片和选定的生成分析示例；虚拟环境、第三方下载和完整模拟 run 保存在本地。
+所有工作命令都在 Linux 项目 `~/smeftsim` 中执行。安装指南创建名为 `SMEFTsim` 的 WSL 发行版和用户 `smeft`；名称不同时请替换。
+公开仓库保留教学资料与选定结果，软件和环境在本地从上游获取并安装。
 
 ## 目录
 
@@ -55,12 +54,12 @@
 | NumPy / setuptools | 1.26.4 / 69.5.1 | 保留这条重加权路线所需的构建接口 |
 | ROOT | 官方 Python 分发 0.1a12，对应 6.40.00 | 保存直方图与画图 |
 
-这套配置已完成本地运行检查。精确依赖见 `requirements-linux.txt` 和
-`requirements-linux.lock.txt`。固定版本用于复现这份教程，不代表最新研究默认配置。
+这套配置已完成本地运行检查。精确依赖见 [docs/setup/requirements.txt](docs/setup/requirements.txt) 和
+[docs/setup/requirements.txt](docs/setup/requirements.txt)。固定版本用于复现这份教程，不代表最新研究默认配置。
 
 本手册的终端操作从**已准备好专用 Linux 环境**开始。
 新电脑需先准备 WSL2/Ubuntu、Python 虚拟环境、编译器和第三方材料；
-第 4 节说明目录，下载与环境细节见 [tools](tools/README.zh-CN.md) 和 [scripts](scripts/README.zh-CN.md)。
+第 4 节说明目录，下载与环境准备统一见 [安装指南](docs/setup/README.zh-CN.md)。
 
 ## 2. SMEFT 的背景知识
 
@@ -124,51 +123,40 @@ Notebook 用于解析费曼规则和模型开发；已有 UFO 时不需要先运
 
 ## 4. 环境隔离与文件位置
 
-### 4.1 隔离到什么程度
+生成、重加权与 ROOT 共用 Linux 项目的 `.venv`。编译器及系统依赖安装在专用 WSL/Ubuntu 中，Windows Python 不参与计算。
 
-生成、重加权与 ROOT 共用 Linux 项目的 `.venv`，工具和编译器在专用 WSL 内。
-Windows 全局 Python 不用于这条流程。隔离细节见 [vm/README.md](vm/README.zh-CN.md)。
+所有操作都在一个 Linux 项目目录 `~/smeftsim` 中进行；不再维护 Windows 与 Linux 两份项目副本。
+Windows 只负责启动 Linux，并保存 WSL 虚拟磁盘。
 
-### 4.2 文件地图
-
-| 目录 | 阅读入口 |
+| 内容 | 位置 |
 |---|---|
-| 辅助脚本 | [scripts/README.md](scripts/README.zh-CN.md) |
-| 过程卡与阶数 | [cards/README.md](cards/README.zh-CN.md) |
-| 物理、参数、图与终端入门 | [docs/README.md](docs/README.zh-CN.md) |
-| 自己生成的教学示例 | [examples/README.md](examples/README.zh-CN.md) |
-| 本地工作区 | [work/README.md](work/README.zh-CN.md) |
-| 可重新生成的输出 | [outputs/README.md](outputs/README.zh-CN.md) |
-| 作者参考结果 | [reference/README.md](reference/README.zh-CN.md) |
-| 第三方程序 | [tools/README.md](tools/README.zh-CN.md) |
-| 虚拟机资产 | [vm/README.md](vm/README.zh-CN.md) |
+| 本手册与知识附录 | `handbook.zh-CN.md`、[docs](docs/README.zh-CN.md) |
+| 仓库示例结果 | [examples/reweighted](examples/reweighted/README.zh-CN.md) |
+| Python 环境 | `.venv`，本地安装时创建 |
+| 原教程、MadGraph、工作文件、参考数据与输出 | `tutorial`、`tools`、`work`、`reference`、`outputs`，本地安装或操作时创建 |
 
-`tutorial` 沿用作者原 README；依赖、第三方源码和生成器内部目录沿用原文档，不逐级改写。
-当前项目中 Linux 路径为 `/home/smeft/smeftsim`；
-Windows 整理目录为 `C:\Users\符文\Desktop\NSBI\smeftsim`。两者不会自动同步。
+软件获取、脚本功能和运行目录的说明集中在 [安装指南](docs/setup/README.zh-CN.md)。
 
 ## 5. 启动环境与核对依赖
 
 ### 5.1 进入项目 Linux
 
-在 Windows PowerShell 进入本机项目目录。下面的路径采用 `用户目录/Desktop/NSBI/smeftsim`；
-项目放在其他位置时，替换 `cd` 后面的路径。
-
-**Windows PowerShell｜逐条回车：** 每行完整输入后回车一次；第二条会进入 Linux。
+如果已在 Linux Bash 中，直接进入第 5.2 节。
+Windows 用户在 **PowerShell** 中输入完整命令并回车一次：
 
 ```powershell
-cd "$env:USERPROFILE\Desktop\NSBI\smeftsim"
-.\scripts\enter-linux.ps1
+wsl -d SMEFTsim -u smeft --cd ~
 ```
 
-看到 `smeft@...$` 后，才输入下一节的 Bash 命令。
+这是安装指南采用的发行版与用户名；你使用其他名称时替换它们。
+看到 Linux 提示符后才输入 Bash 命令。
 
 ### 5.2 激活统一环境
 
 **Linux Bash｜逐条回车：** 每行是一条完整命令，回车后等待提示符返回。
 
 ```bash
-cd /home/smeft/smeftsim
+cd ~/smeftsim
 source .venv/bin/activate
 python --version
 which python
@@ -179,7 +167,7 @@ gfortran --version
 检查：
 
 - `python --version` 应为 Python 3.10。
-- `which python` 应指向 `/home/smeft/smeftsim/.venv/bin/python`。
+- `which python` 应指向 `/home/<your-user>/smeftsim/.venv/bin/python`。
 - ROOT 应输出 `6.40.00`；编译器应能显示版本。
 
 成功后继续第 6 节。同一终端可以连续完成生成、重加权和绘图，不用切换环境。
@@ -236,12 +224,11 @@ $$R(X)=\frac{(\text{SM}+\text{一个指定贡献})(X)}{\text{SM}(X)}.$$
 本例作者 SM 样本的积分宽度约为 $1.00868\times10^{-5}\ \mathrm{GeV}$。
 以后自己的小样本不必与最后几位数相同，需要连同积分误差来比较。
 
-### 6.3 作者 ROOT 文件在哪里
+### 6.3 参考 ROOT 文件在哪里
 
-作者参考包的 ROOT 位于 Windows 项目的 `reference/Results/Root_files`，
-LHE 位于 `reference/Results/Hvlvl_*/Events/run_01`。
-文件结构与来源见 [reference/README.md](reference/README.zh-CN.md)。
-下面第 6.5 节仍从这些已下载文件操作。
+按安装指南解压后，ROOT 文件在 Linux 项目内的 `reference/Results/Root_files`，LHE 文件在 `reference/Results/Hvlvl_*/Events/run_01`。
+数据来自 Ilaria Brivio 教程随附的结果压缩包，不需要另外寻找 ROOT 下载链接。
+[解压与文件检查步骤](docs/setup/README.zh-CN.md#7-解压参考结果并继续学习)。
 
 ### 6.4 激活 PyROOT，保留作者脚本
 
@@ -249,7 +236,7 @@ LHE 位于 `reference/Results/Hvlvl_*/Events/run_01`。
 实际调用 Linux 的 `work/Material/pyroot_python3/lhe_analyzer.py` 和 `plot_histos.py`。
 
 原件、两个脚本的参数及新机器转换方法见
-[工作副本 README](work/Material/pyroot_python3/README.zh-CN.md)。
+[安装指南第 5 节](docs/setup/README.zh-CN.md#5-准备两份-python-3-分析脚本)。
 许可未明确的教程代码只在本地使用；公开仓库包含转换说明，不包含这些副本。
 
 **Linux Bash，项目根目录，逐条回车：**
@@ -278,7 +265,7 @@ Python 应来自项目 `.venv`，ROOT 应为 6.40.00。
 **Linux Bash｜逐条回车：** 每一行是一条完整命令；输完一行按一次 Enter，结束后再输入下一行。
 
 ```bash
-cd /home/smeft/smeftsim
+cd ~/smeftsim
 ```
 
 `cd` 只切换目录，成功时通常不打印文字。等提示符重新出现后，执行 A2。
@@ -299,7 +286,7 @@ mkdir -p outputs/my_pyroot_reference
 **Linux Bash｜逐条回车：** 每一行是一条完整命令；输完一行按一次 Enter，结束后再输入下一行。
 
 ```bash
-gzip -dc '/mnt/c/Users/符文/Desktop/NSBI/smeftsim/reference/Results/Hvlvl_SM/Events/run_01/unweighted_events.lhe.gz' > outputs/my_pyroot_reference/events.lhe
+gzip -dc 'reference/Results/Hvlvl_SM/Events/run_01/unweighted_events.lhe.gz' > outputs/my_pyroot_reference/events.lhe
 ```
 
 命令在屏幕上自动折行也没关系，仍是一条命令。不要在引号后或 `>` 前提前回车。
@@ -368,7 +355,7 @@ python work/Material/pyroot_python3/lhe_analyzer.py outputs/my_pyroot_reference/
 **Linux Bash｜逐条回车：** 每一行是一条完整命令；输完一行按一次 Enter，结束后再输入下一行。
 
 ```bash
-cd /home/smeft/smeftsim/outputs/my_pyroot_reference
+cd ~/smeftsim/outputs/my_pyroot_reference
 ```
 
 当前目录决定 PDF 保存在哪里。等提示符重新出现，再执行 B2。
@@ -393,13 +380,14 @@ ls -lh plot_mll.pdf plot_mmv.pdf plot_pTl1.pdf plot_pTmu.pdf
 
 这条检查命令也只按一次回车；应列出四个非空 PDF。
 
-**B3. 在 Windows 打开 PDF。** 另开 **Windows PowerShell**，
+**B3. 在 Windows 打开 PDF。** 在 WSL 的 **Linux Bash** 中，
 不要把下面命令输入 Python 的 `>>>`。完整输入一行，按回车一次：
 
-**Windows PowerShell｜逐条回车：** 每一行是一条完整命令；输完一行按一次 Enter，结束后再输入下一行。
+**Linux Bash / WSL｜每条命令完整输入后回车：**
 
-```powershell
-explorer.exe '\\wsl.localhost\SMEFTsim\home\smeft\smeftsim\outputs\my_pyroot_reference'
+```bash
+cd ~/smeftsim/outputs/my_pyroot_reference
+explorer.exe .
 ```
 
 资源管理器会打开输出目录，双击 PDF 阅读即可。
@@ -411,7 +399,7 @@ explorer.exe '\\wsl.localhost\SMEFTsim\home\smeft\smeftsim\outputs\my_pyroot_ref
 **Linux Bash｜逐条回车：** 每一行是一条完整命令；输完一行按一次 Enter，结束后再输入下一行。
 
 ```bash
-python ../../work/Material/pyroot_python3/plot_histos.py '/mnt/c/Users/符文/Desktop/NSBI/smeftsim/reference/Results/Root_files/Hvlvl_SM_run_01.root'
+python ../../work/Material/pyroot_python3/plot_histos.py '../../reference/Results/Root_files/Hvlvl_SM_run_01.root'
 ```
 
 不要把这一条与 B2 连续都运行；它们是两个不同输入的选择。
@@ -454,13 +442,13 @@ weights_to_plot = [
 
 模型为 `SMEFTsim_U35_MwScheme_UFO-massless_Hvlvl`：
 U35 flavor、MwScheme 电弱输入，以及教程自定义 restriction。
-[模型说明](cards/README.zh-CN.md#71-本例为什么选这个模型)。
+[模型说明](docs/processes/README.zh-CN.md#71-本例为什么选这个模型)。
 
 ### 7.2 Restriction 与参数卡不同
 
 restriction 在导入时简化模型；参数卡设置本次运行的可调输入。
 被导入时删除的顶点不会因为后来改参数卡就恢复。
-[完整区别](cards/README.zh-CN.md#72-restriction-与参数卡不同)。
+[完整区别](docs/processes/README.zh-CN.md#72-restriction-与参数卡不同)。
 
 ### 7.3 阶数选项：先筛选振幅，再筛选振幅平方
 
@@ -474,7 +462,7 @@ restriction 在导入时简化模型；参数卡设置本次运行的可调输�
 `NP=1` 是振幅层的上限，`NP==1` 是精确选择。
 `NP^2` 在振幅乘积两侧相加计数；dummy vertices 的 `NPprop` 计数不是 EFT 插入次数。
 展开公式、原来的两张详细表与 dummy 实现已移到
-[cards/README.md](cards/README.zh-CN.md#73-阶数选项先筛选振幅再筛选振幅平方)。
+[docs/processes/README.md](docs/processes/README.zh-CN.md#73-阶数选项先筛选振幅再筛选振幅平方)。
 
 ### 7.4 UFO 中有哪些参数，哪些需要自己设置
 
@@ -488,34 +476,50 @@ restriction 在导入时简化模型；参数卡设置本次运行的可调输�
 **前提：环境已准备好并完成第 5 节检查。以下命令在 Linux Bash 中执行。**
 第一次练习建议 2,000 个事件；这足以练习流程，精细分布比较时再增加统计量。
 
-### 8.1 导出过程
+### 8.1 在 MadGraph 中导出过程
 
-**Linux Bash｜逐条回车：** 每一行是一条完整命令；输完一行按一次 Enter，结束后再输入下一行。
+安装指南已准备好 `work/Material`。从 Linux Bash 逐条输入并回车，等提示符回来再继续：
 
 ```bash
-cd /home/smeft/smeftsim
+cd ~/smeftsim
 source .venv/bin/activate
-bash scripts/run_generator.sh check_model
+cd work/Material
+python ../../tools/MG5_aMC_v2_9_27/bin/mg5_aMC
 ```
 
-检查 `outputs/check_model.log` 中的导入和四种过程是否成功。
-如未建立 `work/Material/Hvlvl_SM`，再执行：
+最后一条进入 `MG5_aMC>` 提示符。接下来是 **MadGraph 命令**，每行输入完整后回车，等待执行完成；不要把它们当成 Bash 命令：
 
-**Linux Bash｜逐条回车：** 每一行是一条完整命令；输完一行按一次 Enter，结束后再输入下一行。
+```text
+set auto_update 0 --no_save
+set auto_convert_model True --no_save
+import model ./SMEFTsim_U35_MwScheme_UFO-massless_Hvlvl
+generate h > e- ve~ mu+ vm SMHLOOP=0 NP=0 NPprop=0
+display processes
+```
+
+检查模型成功导入，过程是预期 Higgs 四轻子 SM 衰变。
+首次导出时，在同一个 `MG5_aMC>` 中继续逐条执行：
+
+```text
+output Hvlvl_SM
+quit
+```
+
+`output` 导出可用于数值计算的过程，不生成事件。`quit` 返回 Bash，此时仍在 `work/Material`。
+检查导出文件：
 
 ```bash
-bash scripts/run_generator.sh generate_sm
+ls Hvlvl_SM/Cards/param_card.dat Hvlvl_SM/Cards/run_card.dat
 ```
 
-过程目录已存在时，直接跳到设置卡和新 run。
-启动脚本会拒绝覆盖已有过程目录。你可以在一个已导出的过程下生成多个不同的 run。
+如果 `Hvlvl_SM` 已存在，跳过 `output`，只执行 `quit`，然后继续配置卡或使用新的 run 名称；不要覆盖已有过程。
 
 ### 8.2 设置卡
 
 **Linux Bash｜逐条回车：** 每一行是一条完整命令；输完一行按一次 Enter，结束后再输入下一行。
 
 ```bash
-cd work/Material
+cd ~/smeftsim/work/Material
 cp param_card_Hvlvl.dat Hvlvl_SM/Cards/param_card.dat
 cp run_card_Hvlvl.dat Hvlvl_SM/Cards/run_card.dat
 ```
@@ -526,15 +530,17 @@ cp run_card_Hvlvl.dat Hvlvl_SM/Cards/run_card.dat
 | `run_card.dat` | 事件数、种子、积分和切选设置 | `nevents=2000`，`iseed=23456`，其余保留 |
 | `reweight_card.dat` | 新参数点和新过程的权重定义 | SM 练习阶段暂不启用 |
 
-可以用自己熟悉的文本编辑器打开卡。若 Ubuntu 没有桌面编辑器，Windows PowerShell 可打开文件目录：
+在 **Linux Bash，当前目录 `~/smeftsim/work/Material`** 中，用终端编辑器打开两张卡；先完成第一张，再打开第二张：
 
-**Windows PowerShell｜逐条回车：** 每一行是一条完整命令；输完一行按一次 Enter，结束后再输入下一行。
-
-```powershell
-explorer.exe '\\wsl.localhost\SMEFTsim\home\smeft\smeftsim\work\Material\Hvlvl_SM\Cards'
+```bash
+nano Hvlvl_SM/Cards/param_card.dat
+nano Hvlvl_SM/Cards/run_card.dat
 ```
 
-这一步在**编辑器**完成，不向终端输入卡内容；回车用于换行，编辑完按 `Ctrl+S` 保存。
+进入 `nano` 后，修改表中指定的设置；按 `Ctrl+O` 保存，按 Enter 确认文件名，再按 `Ctrl+X` 返回 Bash。
+在编辑器内，Enter 用于换行；卡内容不能当作 Bash 命令执行。
+使用图形编辑器时按 `Ctrl+S` 保存，确认文件来自 Linux 工作目录。
+
 确认修改的是 Linux 工作副本；事件数要改 `run_card.dat` 中的 `nevents`，
 只给 run 起名 `...2000` 并不会让生成器自动生成 2,000 个事件。
 卡的一般形式是 `数值 = 参数名` 或 `编号 数值 # 参数注释`，具体按原文件格式保留。
@@ -594,7 +600,7 @@ explorer.exe '\\wsl.localhost\SMEFTsim\home\smeft\smeftsim\work\Material\Hvlvl_S
 **Linux Bash｜逐条回车：**
 
 ```bash
-cd /home/smeft/smeftsim
+cd ~/smeftsim
 mkdir -p outputs/my_sm_visual
 gzip -dc work/Material/Hvlvl_SM/Events/training_sm_2000/unweighted_events.lhe.gz > outputs/my_sm_visual/events_full.lhe
 ```
@@ -660,7 +666,7 @@ ROOT 文件中应有四个直方图：
 **Linux Bash｜逐条回车：** 先执行 `cd`，再执行 `python`。
 
 ```bash
-cd /home/smeft/smeftsim/outputs/my_sm_visual
+cd ~/smeftsim/outputs/my_sm_visual
 python
 ```
 
@@ -730,10 +736,11 @@ ls -lh SM_*.pdf SM_*.png
 
 应列出四张 PDF 和四张 PNG：`mll`、`mmv`、`pTl1`、`pTmu` 各一张。
 
-另开 **Windows PowerShell**，输入完整一行并回车：
+在 WSL 的 **Linux Bash** 中，输入完整一行并回车：
 
-```powershell
-explorer.exe '\\wsl.localhost\SMEFTsim\home\smeft\smeftsim\outputs\my_sm_visual'
+```bash
+cd ~/smeftsim/outputs/my_sm_visual
+explorer.exe .
 ```
 
 双击 PNG 或 PDF。先看峰的位置、分布末端和整体数量级；
@@ -799,7 +806,7 @@ LHE 中的 `<rwgt>` 会保存各权重。原 SM 权重和新增权重的意义�
 
 $$
 w_{L,i}=w_{S,i}\,
-\frac{2\mathrm{Re}(\mathcal M_0^*\mathcal M_6)(x_i)}{|\mathcal M_0(x_i)|^2}.
+\frac{2\mathrm{Re}(\mathcal M_0^{\ast}\mathcal M_6)(x_i)}{|\mathcal M_0(x_i)|^2}.
 $$
 
 $w_{S,i}$ 是 SM 权重，$w_{L,i}$ 是这个事件代表的线性贡献，可以为负。
@@ -829,23 +836,17 @@ $w_{S,i}$ 是 SM 权重，$w_{L,i}$ 是这个事件代表的线性贡献，可�
 并不是四个 Wilson 系数一起取 1。`LambdaSMEFT` 沿用基础样本的 1,000 GeV。
 重加权卡中的 `change process` 改的是目标贡献，基础事件仍来自 SM。
 
-#### A. 启动 Linux 环境并建立自己的操作副本
+#### A. 进入 Linux 并创建自己的工作副本
 
-**Windows PowerShell**：
+已经在 Linux 中时直接继续；否则先按第 5.1 节进入。
+在 Linux Bash 中激活 `.venv`，已激活时可以直接使用。
 
-**Windows PowerShell｜逐条回车：** 每一行是一条完整命令；输完一行按一次 Enter，结束后再输入下一行。
-
-```powershell
-cd 'C:\Users\符文\Desktop\NSBI\smeftsim'
-.\scripts\enter-linux.ps1
-```
-
-进入 **Linux Bash** 后，激活统一 `.venv`；已激活则继续使用：
+**Linux Bash** 后，激活统一 `.venv`；已激活则继续使用：
 
 **Linux Bash｜逐条回车：** 每一行是一条完整命令；输完一行按一次 Enter，结束后再输入下一行。
 
 ```bash
-cd /home/smeft/smeftsim
+cd ~/smeftsim
 source .venv/bin/activate
 which python
 cd work/Material
@@ -873,7 +874,7 @@ ls -d Hvlvl_SM_manual
 cp -a Hvlvl_SM Hvlvl_SM_manual
 ```
 
-本机原 SM 目录已有之前的重加权编译缓存 `rw_me`、`rw_me_2`。
+如果原 SM 过程已做过重加权，目录中可能已有编译缓存 `rw_me`、`rw_me_2`。
 在**刚复制的副本中**把它们改名保存，让这次练习重新建立自己的缓存：
 
 **Linux Bash｜逐条回车：** 每一行是一条完整命令；输完一行按一次 Enter，结束后再输入下一行。
@@ -883,7 +884,7 @@ mv Hvlvl_SM_manual/rw_me Hvlvl_SM_manual/cache_before_manual_rw_me
 mv Hvlvl_SM_manual/rw_me_2 Hvlvl_SM_manual/cache_before_manual_rw_me_2
 ```
 
-这两项是本机当前已核实存在的目录；若你将来从没有做过重加权的 SM 过程开始，
+仅对操作副本中实际存在的缓存执行重命名；若原 SM 过程从未做过重加权，
 对应缓存不存在，则跳过不存在的那项。不要反复执行改名，也不要改原 `Hvlvl_SM`。
 如果原样本已经有 `cHl3` 标签，作者卡会在这个副本中替换同名标签；
 MadGraph 的 `tag ... already defines, will replace it` 提示应结合这一点理解。
@@ -967,7 +968,7 @@ cp reweight_card_propW.dat Hvlvl_SM_manual/Cards/reweight_card.dat
 **Linux Bash｜逐条回车：** 每一行是一条完整命令；输完一行按一次 Enter，结束后再输入下一行。
 
 ```bash
-cd /home/smeft/smeftsim
+cd ~/smeftsim
 mkdir -p outputs/my_pyroot_reweighted
 
 gzip -dc work/Material/Hvlvl_SM_manual/Events/training_sm_2000/unweighted_events.lhe.gz > outputs/my_pyroot_reweighted/events.lhe
@@ -996,12 +997,13 @@ python ../../work/Material/pyroot_python3/plot_histos.py Hvlvl_SM.root
 ```
 
 第一条 Python 命令分析 LHE，第二条画图，两条都是作者脚本的兼容副本。
-应生成四张 `plot_*.pdf`。在 Windows PowerShell 打开：
+应生成四张 `plot_*.pdf`。在 WSL 的 Linux Bash 中打开输出目录：
 
-**Windows PowerShell｜逐条回车：** 每一行是一条完整命令；输完一行按一次 Enter，结束后再输入下一行。
+**Linux Bash / WSL｜每条命令完整输入后回车：**
 
-```powershell
-explorer.exe '\\wsl.localhost\SMEFTsim\home\smeft\smeftsim\outputs\my_pyroot_reweighted'
+```bash
+cd ~/smeftsim/outputs/my_pyroot_reweighted
+explorer.exe .
 ```
 
 与第 6.5 节参考 PDF 比较时，保持相同的 `weights_to_plot` 和显示范围。
@@ -1028,8 +1030,9 @@ LHE 中保存的额外权重已经包含生成器归一化，作者分析器再�
 
 ### 10.1 日常操作速查
 
-入口和每个脚本的功能见 [scripts/README.md](scripts/README.zh-CN.md)。
-从本次输出重新画图可直接使用 [examples/reweighted](examples/reweighted/README.zh-CN.md)。
+安装与脚本输入输出见 [安装指南](docs/setup/README.zh-CN.md)。
+进入环境见第 5 节，生成见第 8 节，重加权见第 9 节。
+重新分析和绘图已有示例见 [examples/reweighted](examples/reweighted/README.zh-CN.md)。
 
 ### 10.2 保存一次练习
 
@@ -1043,8 +1046,8 @@ LHE 中保存的额外权重已经包含生成器归一化，作者分析器再�
 
 ### 10.4 整理本地输出
 
-当前输出用途见 [outputs/README.md](outputs/README.zh-CN.md)；分享示例与运行输出分开。
-清理可重新生成的解压文件，不删除 `.venv`、原始 run 或虚拟磁盘。
+自己的运行输出放在 `outputs`，仓库示例放在 `examples`。`outputs` 由命令创建，不作为空目录上传。
+可清理能由原始压缩文件重新得到的解压副本；保留 `.venv`、原始 run、卡、banner 和虚拟磁盘。
 
 ## 11. 学习节奏与掌握标准
 
@@ -1072,7 +1075,7 @@ LHE 中保存的额外权重已经包含生成器归一化，作者分析器再�
 ## 12. 版本与参考资料
 
 本教程固定 Python 3.10、MadGraph 2.9.27、SMEFTsim v3.0.2 和 ROOT 6.40.00。
-精确 Python 依赖见 `requirements-linux.txt`、`requirements-linux.lock.txt`；
+精确 Python 依赖见 [docs/setup/requirements.txt](docs/setup/requirements.txt)；
 本次示例实际版本见 [metadata.json](examples/reweighted/metadata.json)。
 
 完整教程、作者和论文集中列在 [根 README](README.zh-CN.md#来源与致谢)。

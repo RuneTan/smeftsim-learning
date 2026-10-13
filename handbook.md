@@ -7,16 +7,15 @@ These practical notes follow [Ilaria Brivio's June 2023 SMEFTsim tutorial](https
 
 This handbook uses the Linux project's shared `.venv` environment and ROOT.
 The authors' original material remains in `tutorial`; local analysis and plotting use Python 3-compatible copies.
-The [root README](README.md) explains the directories, scripts, and all sources.
+The [root README](README.md) lists the sources and reading entry points; the [installation guide](docs/setup/README.md) explains the scripts and runtime directories.
 Section 8 calls ROOT's existing plotting interfaces directly; Section 9 calls the authors' plotting script. Neither requires a new analysis program.
 
 For terminal prompts, paths or Enter-key conventions, see the optional [Linux and terminal basics guide](docs/linux-basics/README.md).
 If you already have an SM sample, obtain your own plots in Sections 8.5–8.6, then complete Sections 9.3–9.4.
 Section 9 completes the main tutorial exercise.
 
-The commands use this project's WSL distribution name `SMEFTsim`, Linux user `smeft`, and example paths.
-On another computer, prepare the corresponding environment and replace the Windows username, project path, and Linux home directory.
-This repository shares teaching documents, configuration, images and selected generated analysis examples; virtual environments, third-party downloads and complete simulation runs stay local.
+All working commands run in the Linux project `~/smeftsim`. The installation guide creates a dedicated WSL distribution named `SMEFTsim` and user `smeft`; substitute your own names if they differ.
+The public repository contains teaching notes and selected results. Software and environments are installed locally from upstream sources.
 
 ## Contents
 
@@ -53,13 +52,12 @@ The tutorial uses this fixed combination:
 | NumPy / setuptools | 1.26.4 / 69.5.1 | Retains the build interfaces needed for this reweighting workflow |
 | ROOT | Official Python distribution 0.1a12, corresponding to 6.40.00 | Stores histograms and produces plots |
 
-This combination has passed local execution checks. Exact dependencies are listed in `requirements-linux.txt`
-and `requirements-linux.lock.txt`. The pinned versions reproduce this tutorial; they are not a recommendation for the latest research setup.
+This combination has passed local execution checks. Exact dependencies are listed in [the pinned requirements](docs/setup/requirements.txt). The pinned versions reproduce this tutorial; they are not a recommendation for the latest research setup.
 
 Terminal instructions start from an **already prepared dedicated Linux environment**.
 On a new computer, first prepare WSL2/Ubuntu, a Python virtual environment, compilers, and the third-party material.
-Follow the [fresh-clone setup guide](docs/setup/README.md) for the complete preparation sequence.
-Section 4 explains the directories; see [tools](tools/README.md) and [scripts](scripts/README.md) for downloads and environment details.
+Follow the [installation guide](docs/setup/README.md) for the complete preparation sequence.
+Section 4 explains the directories; the [installation guide](docs/setup/README.md) covers all downloads and environment preparation.
 
 ## 2. SMEFT background
 
@@ -124,52 +122,40 @@ The notebook is used to derive Feynman rules and develop the model. You do not n
 
 ## 4. Environment isolation and file locations
 
-### 4.1 Extent of isolation
+Generation, reweighting and ROOT share the Linux project's `.venv`. Compilers and system libraries are installed inside the dedicated WSL/Ubuntu environment; Windows Python is not used.
 
-Generation, reweighting, and ROOT share the Linux project's `.venv`; tools and compilers live inside the dedicated WSL distribution.
-The global Windows Python installation is not used in this workflow. See [vm/README.md](vm/README.md) for the isolation details.
+All operations use one Linux project directory, `~/smeftsim`. There is no second Windows project checkout to keep synchronized.
+Windows starts Linux and stores the WSL virtual disk.
 
-### 4.2 Directory map
-
-| Directory contents | Reading entry point |
+| Contents | Location |
 |---|---|
-| Helper scripts | [scripts/README.md](scripts/README.md) |
-| Process cards and order selection | [cards/README.md](cards/README.md) |
-| Physics, parameters, figures, and terminal basics | [docs/README.md](docs/README.md) |
-| Teaching examples generated in this project | [examples/README.md](examples/README.md) |
-| Local working files | [work/README.md](work/README.md) |
-| Regenerable outputs | [outputs/README.md](outputs/README.md) |
-| The authors' reference results | [reference/README.md](reference/README.md) |
-| Third-party programs | [tools/README.md](tools/README.md) |
-| Virtual-machine assets | [vm/README.md](vm/README.md) |
+| This handbook and topic notes | `handbook.md`, [docs](docs/README.md) |
+| Supplied example results | [examples/reweighted](examples/reweighted/README.md) |
+| Python environment | `.venv`, created during local installation |
+| Original tutorial, MadGraph, working files, reference data and outputs | `tutorial`, `tools`, `work`, `reference`, `outputs`, created during installation or use |
 
-`tutorial` retains the authors' original README. Dependencies, third-party source trees, and generator internals retain their own documentation.
-This project does not replace it with a README in every internal directory.
-The Linux project is at `/home/smeft/smeftsim`;
-the Windows collection is at `C:\Users\符文\Desktop\NSBI\smeftsim`. They do not synchronize automatically.
+Software sources, script functions and working directories are explained together in the [installation guide](docs/setup/README.md).
 
 ## 5. Start the environment and check dependencies
 
 ### 5.1 Enter the project's Linux environment
 
-In Windows PowerShell, go to the project directory on this computer. The example assumes `user directory/Desktop/NSBI/smeftsim`.
-If your project is elsewhere, replace the path after `cd`.
-
-**Windows PowerShell | one command at a time:** enter each complete line and press Enter once. The second command enters Linux.
+If you are already in Linux Bash, continue at Section 5.2.
+On Windows, enter the complete command in **PowerShell** and press Enter once:
 
 ```powershell
-cd "$env:USERPROFILE\Desktop\NSBI\smeftsim"
-.\scripts\enter-linux.ps1
+wsl -d SMEFTsim -u smeft --cd ~
 ```
 
-Wait until you see `smeft@...$` before typing the next section's Bash commands.
+These are the distribution and user names used in the installation guide; replace them if yours differ.
+Wait for the Linux prompt before entering Bash commands.
 
 ### 5.2 Activate the shared environment
 
 **Linux Bash | one command at a time:** each line is a complete command. After pressing Enter, wait for the prompt to return.
 
 ```bash
-cd /home/smeft/smeftsim
+cd ~/smeftsim
 source .venv/bin/activate
 python --version
 which python
@@ -180,7 +166,7 @@ gfortran --version
 Check that:
 
 - `python --version` reports Python 3.10.
-- `which python` points to `/home/smeft/smeftsim/.venv/bin/python`.
+- `which python` points to `/home/<your-user>/smeftsim/.venv/bin/python`.
 - ROOT reports `6.40.00`, and the compiler displays its version.
 
 Then continue to Section 6. You can generate, reweight, and plot in the same terminal without switching environments.
@@ -238,19 +224,18 @@ The [official tutorial](https://smeftsim.github.io/tutorials.html) suggests obse
 The authors' SM sample has an integrated width of approximately $1.00868\times10^{-5}\ \mathrm{GeV}$.
 Your smaller sample need not match its final digits; compare results together with their integration uncertainties.
 
-### 6.3 Where are the authors' ROOT files?
+### 6.3 Where are the reference ROOT files?
 
-In the Windows project, the reference ROOT files are under `reference/Results/Root_files`,
-and the LHE files under `reference/Results/Hvlvl_*/Events/run_01`.
-See [reference/README.md](reference/README.md) for their structure and source.
-Section 6.5 works from these already downloaded files.
+After the installation guide's extraction step, ROOT files are in the Linux project's `reference/Results/Root_files`, and LHE files in `reference/Results/Hvlvl_*/Events/run_01`.
+They come from the results archive supplied with Ilaria Brivio's tutorial; no separate ROOT download is needed.
+See the [extraction and file checks](docs/setup/README.md#7-extract-the-reference-results-and-continue).
 
 ### 6.4 Activate PyROOT while preserving the authors' scripts
 
 The shared `.venv` activated in Section 5 already contains ROOT. There is no need to switch environments during normal use.
 The actual scripts called in Linux are `work/Material/pyroot_python3/lhe_analyzer.py` and `plot_histos.py`.
 
-The [working-copy README](work/Material/pyroot_python3/README.md) describes the originals, the arguments required by both scripts,
+The [installation guide, Section 5](docs/setup/README.md#5-prepare-the-two-python-3-analysis-scripts) describes the originals, the arguments required by both scripts,
 and how to convert them on a new computer.
 Tutorial code without a confirmed license is used only locally; the public repository includes conversion instructions rather than these copies.
 
@@ -280,7 +265,7 @@ If your file already passes checks A4 and A5, continue at A6 without decompressi
 **Linux Bash | one command at a time:** each line is one complete command. Press Enter once, wait for it to finish, then enter the next line.
 
 ```bash
-cd /home/smeft/smeftsim
+cd ~/smeftsim
 ```
 
 `cd` only changes directories and normally prints nothing on success. When the prompt returns, proceed to A2.
@@ -301,7 +286,7 @@ This directory holds the decompressed file, ROOT file, and PDFs for this exercis
 **Linux Bash | one command at a time:** each line is one complete command. Press Enter once, wait for it to finish, then enter the next line.
 
 ```bash
-gzip -dc '/mnt/c/Users/符文/Desktop/NSBI/smeftsim/reference/Results/Hvlvl_SM/Events/run_01/unweighted_events.lhe.gz' > outputs/my_pyroot_reference/events.lhe
+gzip -dc 'reference/Results/Hvlvl_SM/Events/run_01/unweighted_events.lhe.gz' > outputs/my_pyroot_reference/events.lhe
 ```
 
 Screen wrapping is fine: this is still one command. Do not press Enter after the closing quote or before `>`.
@@ -370,7 +355,7 @@ Do not divide by 20,000 again yourself.
 **Linux Bash | one command at a time:** each line is one complete command. Press Enter once, wait for it to finish, then enter the next line.
 
 ```bash
-cd /home/smeft/smeftsim/outputs/my_pyroot_reference
+cd ~/smeftsim/outputs/my_pyroot_reference
 ```
 
 The current directory determines where the PDFs are saved. Wait for the prompt before B2.
@@ -395,13 +380,14 @@ ls -lh plot_mll.pdf plot_mmv.pdf plot_pTl1.pdf plot_pTmu.pdf
 
 Press Enter only once for this checking command too. It should list four nonempty PDFs.
 
-**B3. Open the PDFs in Windows.** Open a separate **Windows PowerShell** terminal;
+**B3. Open the PDFs in Windows.** In **Linux Bash under WSL**, go to the output directory;
 do not enter this command at Python's `>>>`. Enter the full line and press Enter once:
 
-**Windows PowerShell | one command at a time:** each line is one complete command. Press Enter once, wait for it to finish, then enter the next line.
+**Linux Bash / WSL | enter each complete command and press Enter:**
 
-```powershell
-explorer.exe '\\wsl.localhost\SMEFTsim\home\smeft\smeftsim\outputs\my_pyroot_reference'
+```bash
+cd ~/smeftsim/outputs/my_pyroot_reference
+explorer.exe .
 ```
 
 File Explorer opens the output directory. Double-click a PDF to read it.
@@ -413,7 +399,7 @@ Create and enter the output directory above, then enter this full line and press
 **Linux Bash | one command at a time:** each line is one complete command. Press Enter once, wait for it to finish, then enter the next line.
 
 ```bash
-python ../../work/Material/pyroot_python3/plot_histos.py '/mnt/c/Users/符文/Desktop/NSBI/smeftsim/reference/Results/Root_files/Hvlvl_SM_run_01.root'
+python ../../work/Material/pyroot_python3/plot_histos.py '../../reference/Results/Root_files/Hvlvl_SM_run_01.root'
 ```
 
 Choose either this command or B2; they use different inputs, so do not run both in succession.
@@ -455,13 +441,13 @@ The [figure README](docs/figures/README.md) explains the original plots' width u
 
 The model is `SMEFTsim_U35_MwScheme_UFO-massless_Hvlvl`:
 the U35 flavor assumption, MwScheme electroweak inputs, and the tutorial's custom restriction.
-[Model explanation](cards/README.md#71-why-this-example-uses-this-model).
+[Model explanation](docs/processes/README.md#71-why-this-example-uses-this-model).
 
 ### 7.2 A restriction differs from a parameter card
 
 A restriction simplifies the model at import time; the parameter card sets the adjustable inputs for a run.
 Vertices removed during import are not restored by subsequently editing the parameter card.
-[Full distinction](cards/README.md#72-a-restriction-is-different-from-a-parameter-card).
+[Full distinction](docs/processes/README.md#72-a-restriction-is-different-from-a-parameter-card).
 
 ### 7.3 Order options: select amplitudes, then select their products
 
@@ -475,7 +461,7 @@ Vertices removed during import are not restored by subsequently editing the para
 `NP=1` is an upper bound at amplitude level; `NP==1` selects an exact order.
 `NP^2` counts the sum of orders on the two sides of an amplitude product. The `NPprop` counting of dummy vertices is not the number of EFT insertions.
 The expanded formulas, two detailed tables, and dummy-vertex implementation are in
-[cards/README.md](cards/README.md#73-coupling-order-options-select-amplitudes-then-terms-in-their-square).
+[docs/processes/README.md](docs/processes/README.md#73-coupling-order-options-select-amplitudes-then-terms-in-their-square).
 
 ### 7.4 Which UFO parameters exist, and which should you set?
 
@@ -489,34 +475,50 @@ and the [complete parameter index](docs/parameters/model_parameter_reference.md)
 **Prerequisite: prepare the environment and pass the checks in Section 5. Run the following commands in Linux Bash.**
 Start with 2,000 events: enough to practice the workflow. Increase the statistics later for detailed distribution comparisons.
 
-### 8.1 Export the process
+### 8.1 Export the process directly in MadGraph
 
-**Linux Bash | one command at a time:** each line is one complete command. Press Enter once, wait for it to finish, then enter the next line.
+The installation guide has prepared `work/Material`. In Linux Bash, enter one complete command at a time, press Enter, and wait for the prompt:
 
 ```bash
-cd /home/smeft/smeftsim
+cd ~/smeftsim
 source .venv/bin/activate
-bash scripts/run_generator.sh check_model
+cd work/Material
+python ../../tools/MG5_aMC_v2_9_27/bin/mg5_aMC
 ```
 
-Check `outputs/check_model.log` for successful model import and all four process definitions.
-If `work/Material/Hvlvl_SM` has not been created, run:
+The last command opens the `MG5_aMC>` prompt. The following are **MadGraph commands**: enter each complete line and press Enter, waiting for it to finish. Do not enter them in Bash.
 
-**Linux Bash | one command at a time:** each line is one complete command. Press Enter once, wait for it to finish, then enter the next line.
+```text
+set auto_update 0 --no_save
+set auto_convert_model True --no_save
+import model ./SMEFTsim_U35_MwScheme_UFO-massless_Hvlvl
+generate h > e- ve~ mu+ vm SMHLOOP=0 NP=0 NPprop=0
+display processes
+```
+
+Check that the model imports successfully and that the process is the intended SM Higgs decay to four leptons.
+For the first export, continue in the same `MG5_aMC>` session:
+
+```text
+output Hvlvl_SM
+quit
+```
+
+`output` exports numerical process code; it does not generate events. `quit` returns to Bash in `work/Material`.
+Check the exported files:
 
 ```bash
-bash scripts/run_generator.sh generate_sm
+ls Hvlvl_SM/Cards/param_card.dat Hvlvl_SM/Cards/run_card.dat
 ```
 
-If the process directory already exists, go straight to configuring cards and creating a new run.
-The helper script refuses to overwrite an existing process directory. One exported process can contain several differently named runs.
+If `Hvlvl_SM` already exists, skip `output`, enter only `quit`, and continue with card configuration or a new run name. Preserve the existing process.
 
 ### 8.2 Configure the cards
 
 **Linux Bash | one command at a time:** each line is one complete command. Press Enter once, wait for it to finish, then enter the next line.
 
 ```bash
-cd work/Material
+cd ~/smeftsim/work/Material
 cp param_card_Hvlvl.dat Hvlvl_SM/Cards/param_card.dat
 cp run_card_Hvlvl.dat Hvlvl_SM/Cards/run_card.dat
 ```
@@ -527,15 +529,17 @@ cp run_card_Hvlvl.dat Hvlvl_SM/Cards/run_card.dat
 | `run_card.dat` | Event count, seed, integration, and cuts | `nevents=2000`, `iseed=23456`; retain the other settings |
 | `reweight_card.dat` | Weight definitions for new parameter points and processes | Leave reweighting disabled during the SM exercise |
 
-Open the cards in a text editor you know. If Ubuntu has no desktop editor, open the file directory from Windows PowerShell:
+In **Linux Bash, in `~/smeftsim/work/Material`**, open the cards with the terminal editor, finishing the first before opening the second:
 
-**Windows PowerShell | one command at a time:** each line is one complete command. Press Enter once, wait for it to finish, then enter the next line.
-
-```powershell
-explorer.exe '\\wsl.localhost\SMEFTsim\home\smeft\smeftsim\work\Material\Hvlvl_SM\Cards'
+```bash
+nano Hvlvl_SM/Cards/param_card.dat
+nano Hvlvl_SM/Cards/run_card.dat
 ```
 
-Do this in an **editor**, without entering card contents in the terminal. Enter inserts a new line; press `Ctrl+S` when finished.
+In `nano`, change the settings listed in the table. Press `Ctrl+O` to save, Enter to confirm the filename, then `Ctrl+X` to return to Bash.
+Inside the editor, Enter inserts a new line; card contents are not Bash commands.
+If you use a graphical editor, save with `Ctrl+S` and check that the files are in the Linux working directory.
+
 Check that you are editing the Linux working copy. To change the event count, edit `nevents` in `run_card.dat`.
 Naming a run `...2000` does not make the generator produce 2,000 events automatically.
 Cards commonly use `value = parameter_name` or `index value # parameter comment`; preserve the original file's format.
@@ -595,7 +599,7 @@ Particle four-momenta, the original SM weights, and the event count remain uncha
 **Linux Bash | one command at a time:**
 
 ```bash
-cd /home/smeft/smeftsim
+cd ~/smeftsim
 mkdir -p outputs/my_sm_visual
 gzip -dc work/Material/Hvlvl_SM/Events/training_sm_2000/unweighted_events.lhe.gz > outputs/my_sm_visual/events_full.lhe
 ```
@@ -661,7 +665,7 @@ The authors' analyzer has filled the histograms, so there is no need to rewrite 
 **Linux Bash | one command at a time:** run `cd` first, then `python`.
 
 ```bash
-cd /home/smeft/smeftsim/outputs/my_sm_visual
+cd ~/smeftsim/outputs/my_sm_visual
 python
 ```
 
@@ -731,10 +735,11 @@ ls -lh SM_*.pdf SM_*.png
 
 Expect four PDFs and four PNGs: one of each for `mll`, `mmv`, `pTl1`, and `pTmu`.
 
-Open a separate **Windows PowerShell** terminal, enter the whole line, and press Enter:
+In **Linux Bash under WSL**, enter one complete command at a time:
 
-```powershell
-explorer.exe '\\wsl.localhost\SMEFTsim\home\smeft\smeftsim\outputs\my_sm_visual'
+```bash
+cd ~/smeftsim/outputs/my_sm_visual
+explorer.exe .
 ```
 
 Double-click a PNG or PDF. Start by examining the peak positions, distribution tails, and overall scale.
@@ -800,7 +805,7 @@ For example, the conceptual expression for the linear contribution is
 
 $$
 w_{L,i}=w_{S,i}\,
-\frac{2\mathrm{Re}(\mathcal M_0^*\mathcal M_6)(x_i)}{|\mathcal M_0(x_i)|^2}.
+\frac{2\mathrm{Re}(\mathcal M_0^{\ast}\mathcal M_6)(x_i)}{|\mathcal M_0(x_i)|^2}.
 $$
 
 $w_{S,i}$ is the SM weight, while $w_{L,i}$ is the linear contribution represented by this event; it can be negative.
@@ -832,21 +837,15 @@ The reweight card's `change process` changes the target contribution; the base e
 
 #### A. Enter Linux and create your own working copy
 
-**Windows PowerShell:**
+If you are already in Linux, continue below; otherwise enter it as in Section 5.1.
+Activate `.venv` in Linux Bash, or keep using it if already active.
 
-**Windows PowerShell | one command at a time:** each line is one complete command. Press Enter once, wait for it to finish, then enter the next line.
-
-```powershell
-cd 'C:\Users\符文\Desktop\NSBI\smeftsim'
-.\scripts\enter-linux.ps1
-```
-
-After entering **Linux Bash**, activate the shared `.venv`, or keep using it if it is already active:
+**Linux Bash**, activate the shared `.venv`, or keep using it if it is already active:
 
 **Linux Bash | one command at a time:** each line is one complete command. Press Enter once, wait for it to finish, then enter the next line.
 
 ```bash
-cd /home/smeft/smeftsim
+cd ~/smeftsim
 source .venv/bin/activate
 which python
 cd work/Material
@@ -874,7 +873,7 @@ If the directory does not exist, run:
 cp -a Hvlvl_SM Hvlvl_SM_manual
 ```
 
-On this computer, the original SM directory already contains reweighting compilation caches `rw_me` and `rw_me_2`.
+If the original SM process has already been reweighted, it may contain compilation caches `rw_me` and `rw_me_2`.
 In the **newly copied process**, rename them to keep them while allowing this exercise to build fresh caches:
 
 **Linux Bash | one command at a time:** each line is one complete command. Press Enter once, wait for it to finish, then enter the next line.
@@ -884,7 +883,7 @@ mv Hvlvl_SM_manual/rw_me Hvlvl_SM_manual/cache_before_manual_rw_me
 mv Hvlvl_SM_manual/rw_me_2 Hvlvl_SM_manual/cache_before_manual_rw_me_2
 ```
 
-Both directories have been verified to exist in the local setup. If you start from an SM process that has never been reweighted,
+Rename a cache only if it exists in your copied process. If you start from an SM process that has never been reweighted,
 skip any cache that does not exist. Do not repeat the renaming or change the original `Hvlvl_SM`.
 If the original sample already has a `cHl3` label, the authors' card replaces that label in this copy.
 Interpret MadGraph's `tag ... already defines, will replace it` message accordingly.
@@ -968,7 +967,7 @@ After Section 9.3, the file should contain the linear, squared, and propagator l
 **Linux Bash | one command at a time:** each line is one complete command. Press Enter once, wait for it to finish, then enter the next line.
 
 ```bash
-cd /home/smeft/smeftsim
+cd ~/smeftsim
 mkdir -p outputs/my_pyroot_reweighted
 
 gzip -dc work/Material/Hvlvl_SM_manual/Events/training_sm_2000/unweighted_events.lhe.gz > outputs/my_pyroot_reweighted/events.lhe
@@ -997,12 +996,13 @@ python ../../work/Material/pyroot_python3/plot_histos.py Hvlvl_SM.root
 ```
 
 The first Python command analyzes the LHE file; the second plots the histograms. Both call compatible copies of the authors' scripts.
-Expect four `plot_*.pdf` files. Open them from Windows PowerShell:
+Expect four `plot_*.pdf` files. In WSL, open the output directory from Linux Bash:
 
-**Windows PowerShell | one command at a time:** each line is one complete command. Press Enter once, wait for it to finish, then enter the next line.
+**Linux Bash / WSL | enter each complete command and press Enter:**
 
-```powershell
-explorer.exe '\\wsl.localhost\SMEFTsim\home\smeft\smeftsim\outputs\my_pyroot_reweighted'
+```bash
+cd ~/smeftsim/outputs/my_pyroot_reweighted
+explorer.exe .
 ```
 
 When comparing with Section 6.5's reference PDFs, keep the same `weights_to_plot` and display ranges.
@@ -1029,8 +1029,9 @@ and [muon transverse momentum](docs/figures/rw_pTmu.png).
 
 ### 10.1 Quick reference for routine operations
 
-See [scripts/README.md](scripts/README.md) for the entry points and each script's role.
-To redraw the saved output, use [examples/reweighted](examples/reweighted/README.md).
+Installation and script inputs/outputs are in the [installation guide](docs/setup/README.md).
+Enter the environment in Section 5, generate in Section 8, and reweight in Section 9.
+To analyze and redraw the supplied results, follow [examples/reweighted](examples/reweighted/README.md).
 
 ### 10.2 Save an exercise
 
@@ -1044,8 +1045,8 @@ The [example metadata](examples/reweighted/metadata.json) illustrates these reco
 
 ### 10.4 Organize local outputs
 
-See [outputs/README.md](outputs/README.md) for the current outputs; keep shared examples separate from run outputs.
-You may remove decompressed files that can be recreated, but keep `.venv`, original runs, and the virtual disk.
+Put your run outputs in `outputs` and keep the supplied example in `examples`. Commands create `outputs` locally; the repository does not ship an empty placeholder.
+You can remove decompressed copies that can be recreated from compressed originals. Preserve `.venv`, original runs, cards, banners and the virtual disk.
 
 ## 11. Learning schedule and completion criteria
 
@@ -1073,7 +1074,7 @@ Before using this workflow for research, check and document the model version, E
 ## 12. Versions and references
 
 This tutorial pins Python 3.10, MadGraph 2.9.27, SMEFTsim v3.0.2, and ROOT 6.40.00.
-Exact Python dependencies are in `requirements-linux.txt` and `requirements-linux.lock.txt`.
+Exact Python dependencies are in [docs/setup/requirements.txt](docs/setup/requirements.txt).
 See [metadata.json](examples/reweighted/metadata.json) for the actual versions used for this example.
 
 The full tutorial list, authors, and papers are in the [root README](README.md#sources-and-acknowledgments).
