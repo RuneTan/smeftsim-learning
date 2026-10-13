@@ -14,6 +14,7 @@
 | 入口 | 阅读目的 |
 |---|---|
 | [主手册](handbook.zh-CN.md) | 按步骤生成 SM、调用 ROOT、执行重加权 |
+| [Linux 与终端入门（可选）](docs/linux-basics/README.zh-CN.md) | 提示符、路径与回车规则 |
 | [物理背景](docs/physics/README.zh-CN.md) | Warsaw basis、flavor、scheme、微分宽度 |
 | [软件与 Notebook](docs/model/README.zh-CN.md) | 模型、生成器和 Mathematica 的分工 |
 | [过程卡](cards/README.zh-CN.md) | 模型导入、restriction、NP 与 NPprop 阶数 |

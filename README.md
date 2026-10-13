@@ -15,6 +15,7 @@ On a new machine, first follow the [fresh-clone setup guide](docs/setup/README.m
 |---|---|
 | [Fresh-clone setup](docs/setup/README.md) | Download pinned dependencies and prepare the isolated runtime |
 | [Handbook](handbook.md) | Generate an SM sample, use ROOT and perform reweighting |
+| [Linux and terminal basics (optional)](docs/linux-basics/README.md) | Command prompts, paths and when to press Enter |
 | [Physics background](docs/physics/README.md) | Warsaw basis, flavor, input schemes and differential widths |
 | [Software and notebooks](docs/model/README.md) | Roles of the model, generator and Mathematica |
 | [Process cards](cards/README.md) | Model import, restrictions and NP/NPprop orders |

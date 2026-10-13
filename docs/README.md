@@ -6,6 +6,7 @@ The main handbook focuses on operations. This directory provides explanations an
 
 | Directory | Contents |
 |---|---|
+| [linux-basics](linux-basics/README.md) | Optional guide to terminal prompts, paths and command input |
 | [setup](setup/README.md) | Complete preparation steps for a fresh clone and separate runtime |
 | [physics](physics/README.md) | SMEFT, the Warsaw basis, Wilson coefficients, flavor assumptions, input schemes, and differential decay widths |
 | [model](model/README.md) | SMEFTsim capabilities, the software chain, and the role of the Mathematica Notebook |
