@@ -157,11 +157,11 @@ $$
 
 平方后，有 SM 项、SM 与维六振幅的干涉，以及维六振幅的平方：
 
-$$
+```math
 |\mathcal M|^2=|\mathcal M_{\mathrm{SM}}|^2
-+2\sum_i\frac{c_i}{\Lambda^2}\mathrm{Re}(\mathcal M_{\mathrm{SM}}^*\mathcal M_i^{(6)})
-+\sum_{ij}\frac{c_i c_j}{\Lambda^4}\mathcal M_i^{(6)}\mathcal M_j^{(6)*}+\cdots.
-$$
++2\sum_i\frac{c_i}{\Lambda^2}\mathrm{Re}(\mathcal M_{\mathrm{SM}}^{\ast}\mathcal M_i^{(6)})
++\sum_{ij}\frac{c_i c_j}{\Lambda^4}\mathcal M_i^{(6)}\mathcal M_j^{(6)\ast}+\cdots.
+```
 
 干涉项可以为负，因为它是一种修正，而不是独立的正概率。
 仅保留维六平方项不构成完整的 $1/\Lambda^4$ 展开；相同阶还可能有 SM 与维八振幅的干涉。

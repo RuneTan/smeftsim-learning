@@ -125,11 +125,11 @@ $$
 
 Squaring gives the SM term, interference between the SM and dimension-six amplitudes, and the square of the dimension-six amplitude:
 
-$$
+```math
 |\mathcal M|^2=|\mathcal M_{\mathrm{SM}}|^2
-+2\sum_i\frac{c_i}{\Lambda^2}\mathrm{Re}(\mathcal M_{\mathrm{SM}}^*\mathcal M_i^{(6)})
-+\sum_{ij}\frac{c_i c_j}{\Lambda^4}\mathcal M_i^{(6)}\mathcal M_j^{(6)*}+\cdots.
-$$
++2\sum_i\frac{c_i}{\Lambda^2}\mathrm{Re}(\mathcal M_{\mathrm{SM}}^{\ast}\mathcal M_i^{(6)})
++\sum_{ij}\frac{c_i c_j}{\Lambda^4}\mathcal M_i^{(6)}\mathcal M_j^{(6)\ast}+\cdots.
+```
 
 The interference term can be negative because it is a correction, rather than a separate positive probability. Retaining the dimension-six squared term alone does not give a complete expansion through $1/\Lambda^4$: interference between the SM and dimension-eight amplitudes can also occur at that order. Whether to retain only linear terms or also quadratic terms is therefore a physical choice that must be documented.
 
