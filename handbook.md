@@ -893,7 +893,7 @@ For example, the conceptual expression for the linear contribution is
 
 $$
 w_{L,i}=w_{S,i}\,
-\frac{2\operatorname{Re}(\mathcal M_0^*\mathcal M_6)(x_i)}{|\mathcal M_0(x_i)|^2}.
+\frac{2\mathrm{Re}(\mathcal M_0^*\mathcal M_6)(x_i)}{|\mathcal M_0(x_i)|^2}.
 $$
 
 $w_{S,i}$ is the SM weight, while $w_{L,i}$ is the linear contribution represented by this event; it can be negative.

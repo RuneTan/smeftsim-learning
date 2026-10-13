@@ -99,7 +99,7 @@ $\mathcal M_0$ 是 SM 振幅，$\mathcal M_6$ 已包含 Wilson 系数与 $1/\Lam
 $$
 |\mathcal M_0+\mathcal M_6|^2
 =\underbrace{|\mathcal M_0|^2}_{\text{SM：NP 总阶数 0}}
-+\underbrace{2\operatorname{Re}(\mathcal M_0^*\mathcal M_6)}_{\text{干涉：NP 总阶数 1}}
++\underbrace{2\mathrm{Re}(\mathcal M_0^*\mathcal M_6)}_{\text{干涉：NP 总阶数 1}}
 +\underbrace{|\mathcal M_6|^2}_{\text{维六平方：NP 总阶数 2}}.
 $$
 
@@ -112,9 +112,9 @@ SM × SM 为 $0+0=0$，SM × EFT 为 $0+1=1$，EFT × EFT 为 $1+1=2$。
 | 阶数选项 | 最后计算的贡献 | 是否含 SM 基线 |
 |---|---|---|
 | `NP=0` | $\lvert\mathcal M_0\rvert^2$ | 是 |
-| `NP=1` | $\lvert\mathcal M_0\rvert^2+2\operatorname{Re}(\mathcal M_0^*\mathcal M_6)+\lvert\mathcal M_6\rvert^2$ | 是 |
-| `NP=1 NP^2<=1` | $\lvert\mathcal M_0\rvert^2+2\operatorname{Re}(\mathcal M_0^*\mathcal M_6)$ | 是 |
-| `NP=1 NP^2==1` | $2\operatorname{Re}(\mathcal M_0^*\mathcal M_6)$，只有干涉修正 | 否 |
+| `NP=1` | $\lvert\mathcal M_0\rvert^2+2\mathrm{Re}(\mathcal M_0^*\mathcal M_6)+\lvert\mathcal M_6\rvert^2$ | 是 |
+| `NP=1 NP^2<=1` | $\lvert\mathcal M_0\rvert^2+2\mathrm{Re}(\mathcal M_0^*\mathcal M_6)$ | 是 |
+| `NP=1 NP^2==1` | $2\mathrm{Re}(\mathcal M_0^*\mathcal M_6)$，只有干涉修正 | 否 |
 | `NP==1`，或 `NP=1 NP^2==2` | $\lvert\mathcal M_6\rvert^2$，只有维六平方贡献 | 否 |
 
 因此，`NP==1` 的“一次插入”说的是振幅：计算速率时，这个振幅仍需与其复共轭相乘。
@@ -165,7 +165,7 @@ $m_0,\Gamma_0$ 是基线质量和宽度；$\delta m,\delta\Gamma$ 是 Wilson 系
 **标签为 2 不表示两个 EFT 插入，也不表示两条传播子分别被修正。**
 
 把普通 SM 振幅记作 $\mathcal M_0$、这一传播子修正振幅记作 $\mathcal M_P$，
-两者的干涉为 $2\operatorname{Re}(\mathcal M_0^*\mathcal M_P)$，
+两者的干涉为 $2\mathrm{Re}(\mathcal M_0^*\mathcal M_P)$，
 在 `NPprop^2` 中计数 $0+2=2$。
 虽然这个标签是 2，$\mathcal M_P$ 对 Wilson 系数仍是一阶，干涉仍属于 $1/\Lambda^2$ 修正。
 辅助场是计算实现的计数约定，不应直接当作 EFT 能标的幂次。

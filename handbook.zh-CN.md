@@ -893,7 +893,7 @@ LHE 中的 `<rwgt>` 会保存各权重。原 SM 权重和新增权重的意义�
 
 $$
 w_{L,i}=w_{S,i}\,
-\frac{2\operatorname{Re}(\mathcal M_0^*\mathcal M_6)(x_i)}{|\mathcal M_0(x_i)|^2}.
+\frac{2\mathrm{Re}(\mathcal M_0^*\mathcal M_6)(x_i)}{|\mathcal M_0(x_i)|^2}.
 $$
 
 $w_{S,i}$ 是 SM 权重，$w_{L,i}$ 是这个事件代表的线性贡献，可以为负。

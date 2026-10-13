@@ -125,7 +125,7 @@ Squaring gives the SM term, interference between the SM and dimension-six amplit
 
 $$
 |\mathcal M|^2=|\mathcal M_{\mathrm{SM}}|^2
-+2\sum_i\frac{c_i}{\Lambda^2}\operatorname{Re}(\mathcal M_{\mathrm{SM}}^*\mathcal M_i^{(6)})
++2\sum_i\frac{c_i}{\Lambda^2}\mathrm{Re}(\mathcal M_{\mathrm{SM}}^*\mathcal M_i^{(6)})
 +\sum_{ij}\frac{c_i c_j}{\Lambda^4}\mathcal M_i^{(6)}\mathcal M_j^{(6)*}+\cdots.
 $$
 

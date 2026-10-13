@@ -80,7 +80,7 @@ The rate depends on the squared amplitude:
 $$
 |\mathcal M_0+\mathcal M_6|^2
 =\underbrace{|\mathcal M_0|^2}_{\text{SM: total NP order 0}}
-+\underbrace{2\operatorname{Re}(\mathcal M_0^*\mathcal M_6)}_{\text{interference: total NP order 1}}
++\underbrace{2\mathrm{Re}(\mathcal M_0^*\mathcal M_6)}_{\text{interference: total NP order 1}}
 +\underbrace{|\mathcal M_6|^2}_{\text{dimension-six squared: total NP order 2}}.
 $$
 
@@ -91,9 +91,9 @@ Each row below also includes `SMHLOOP=0 NPprop=0`, excluding explicit propagator
 | Order options | Contribution calculated | Includes the SM baseline? |
 |---|---|---|
 | `NP=0` | $\lvert\mathcal M_0\rvert^2$ | Yes |
-| `NP=1` | $\lvert\mathcal M_0\rvert^2+2\operatorname{Re}(\mathcal M_0^*\mathcal M_6)+\lvert\mathcal M_6\rvert^2$ | Yes |
-| `NP=1 NP^2<=1` | $\lvert\mathcal M_0\rvert^2+2\operatorname{Re}(\mathcal M_0^*\mathcal M_6)$ | Yes |
-| `NP=1 NP^2==1` | $2\operatorname{Re}(\mathcal M_0^*\mathcal M_6)$; only the interference correction | No |
+| `NP=1` | $\lvert\mathcal M_0\rvert^2+2\mathrm{Re}(\mathcal M_0^*\mathcal M_6)+\lvert\mathcal M_6\rvert^2$ | Yes |
+| `NP=1 NP^2<=1` | $\lvert\mathcal M_0\rvert^2+2\mathrm{Re}(\mathcal M_0^*\mathcal M_6)$ | Yes |
+| `NP=1 NP^2==1` | $2\mathrm{Re}(\mathcal M_0^*\mathcal M_6)$; only the interference correction | No |
 | `NP==1`, or `NP=1 NP^2==2` | $\lvert\mathcal M_6\rvert^2$; only the dimension-six squared contribution | No |
 
 Thus, “one insertion” in `NP==1` refers to the amplitude. To calculate a rate, that amplitude is still multiplied by its complex conjugate. For one coefficient, $|\mathcal M_6|^2=(c/\Lambda^2)^2|\mathcal A|^2$, so this is the term quadratic in that coefficient. It contains no SM amplitude and therefore no SM–EFT interference. If several coefficients are nonzero, this square also contains cross terms between different dimension-six amplitudes.
@@ -126,7 +126,7 @@ Correction term: left dummy vertex -------- W1 carrying ΔP -------- right dummy
 
 The two ends of this auxiliary internal line each contribute one label, so the correction amplitude has total `NPprop` order 2. In general, a vertex's `NPprop` order equals its number of dummy legs; this example has one internal line connecting two endpoints. **An order label of 2 does not mean two EFT insertions, or corrections to two different propagators.**
 
-Denote the ordinary SM amplitude by $\mathcal M_0$ and this propagator-correction amplitude by $\mathcal M_P$. Their interference is $2\operatorname{Re}(\mathcal M_0^*\mathcal M_P)$, with squared-amplitude order $0+2=2$ in `NPprop^2`. Despite this label of 2, $\mathcal M_P$ is still linear in the Wilson coefficients, and the interference is still a $1/\Lambda^2$ correction. Auxiliary-field labels follow an implementation convention; they are not directly the powers of the EFT scale.
+Denote the ordinary SM amplitude by $\mathcal M_0$ and this propagator-correction amplitude by $\mathcal M_P$. Their interference is $2\mathrm{Re}(\mathcal M_0^*\mathcal M_P)$, with squared-amplitude order $0+2=2$ in `NPprop^2`. Despite this label of 2, $\mathcal M_P$ is still linear in the Wilson coefficients, and the interference is still a $1/\Lambda^2$ correction. Auxiliary-field labels follow an implementation convention; they are not directly the powers of the EFT scale.
 
 This example therefore uses
 
