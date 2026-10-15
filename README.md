@@ -7,13 +7,15 @@ The repository provides a handbook, topic notes and locally generated example re
 
 **First visit: follow the [installation guide](docs/setup/README.md), then the [handbook](handbook.md).**
 The installation guide connects dedicated WSL2/Ubuntu creation, pinned downloads, one `.venv`, analysis-script preparation and installation checks.
+The handbook explains what each call reads, changes and writes. Analysis and plotting use the locally prepared tutorial scripts; no hand-typed plotting program is required.
 All operations use one Linux project directory; no Windows project checkout or directory-by-directory setup is needed.
 
 | Reading entry point | Purpose |
 |---|---|
 | [Installation](docs/setup/README.md) | Create Linux, obtain pinned software and check the example |
-| [Handbook](handbook.md) | Reference plots → your own SM sample → ROOT → reweighting comparisons |
+| [Handbook](handbook.md) | Model and cards → your SM sample → reweighting → analysis and plots |
 | [Topic notes](docs/README.md) | Consult physics, models, orders, parameters, figures or Linux basics as needed |
+| [Detector-chain exercise](https://github.com/RuneTan/detector-learning) | Continue with an independent Pythia → Delphes / Parnassus tutorial |
 | [Example results](examples/reweighted/README.md) | 2,000 events, 11 extra weights, ROOT histograms and PDFs |
 | [Sources and licenses](THIRD_PARTY_NOTICES.md) | Provenance and license scope of the software, tutorial and repository material |
 

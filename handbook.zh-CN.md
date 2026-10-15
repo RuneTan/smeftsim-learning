@@ -10,7 +10,7 @@
 本手册使用 Linux 项目的统一 `.venv` 环境和 ROOT。
 作者原始材料保留在 `tutorial`；本地分析和绘图使用 Python 3 兼容副本。
 来源与阅读入口见 [根 README](README.zh-CN.md)，脚本功能与运行目录见 [安装指南](docs/setup/README.zh-CN.md)。
-第 8 节直接调用 ROOT 的现有绘图接口，第 9 节调用作者绘图脚本，不需要新增分析程序。
+第 6、8、9 节统一调用教程已有的分析与绘图脚本，不需要手打画图程序。主要练习是理解模型、配置卡、生成事件和计算额外权重。
 
 如果你不熟悉 Linux 或终端操作，可查阅可选的 [Linux 与终端入门手册](docs/linux-basics/README.zh-CN.md)。
 已有 SM 样本时，从第 8.5–8.6 节得到自己的图，再完成第 9.3–9.4 节。
@@ -40,7 +40,7 @@
 
 1. 说明模型的 flavor、scheme、restriction 和 EFT 阶数。
 2. 设置卡并生成一个独立命名的 SM run。
-3. 将 SM LHE 转为 ROOT 直方图，并调用 ROOT 画出四个运动学分布。
+3. 解释 LHE 事件如何变成 ROOT 直方图，并调用现有脚本得到四个分布。
 4. 读懂作者 reweight 卡，计算指定系数的贡献并与 SM 比较。
 
 当前操作环境采用下列固定组合：
@@ -54,8 +54,7 @@
 | NumPy / setuptools | 1.26.4 / 69.5.1 | 保留这条重加权路线所需的构建接口 |
 | ROOT | 官方 Python 分发 0.1a12，对应 6.40.00 | 保存直方图与画图 |
 
-这套配置已完成本地运行检查。精确依赖见 [docs/setup/requirements.txt](docs/setup/requirements.txt) 和
-[docs/setup/requirements.txt](docs/setup/requirements.txt)。固定版本用于复现这份教程，不代表最新研究默认配置。
+这套配置已完成本地运行检查。精确依赖见 [docs/setup/requirements.txt](docs/setup/requirements.txt)。固定版本用于复现这份教程，不代表最新研究默认配置。
 
 本手册的终端操作从**已准备好专用 Linux 环境**开始。
 新电脑需先准备 WSL2/Ubuntu、Python 虚拟环境、编译器和第三方材料；
@@ -108,8 +107,21 @@ SMEFTsim 提供 FeynRules/UFO 模型，供生成器计算；它不独立产生�
 
 ### 3.2 软件链中的职责
 
-本教程使用 **UFO → MadGraph → LHE → ROOT → 图**。
-模型、生成器和分析工具的分工见 [软件说明](docs/model/README.zh-CN.md)。
+主线是 **UFO + 卡 → MadGraph → LHE 事件 → LHE 新权重 → ROOT 直方图 → PDF**。
+每一步都会把文件或目录交给下一个程序：
+
+| 环节 | 读取什么 | 做什么 | 输出什么；下一步谁读取 |
+|---|---|---|---|
+| 导入 SMEFTsim 模型 | UFO 和选定的 restriction | 提供粒子、相互作用和参数公式；删去 restriction 排除的相互作用 | MadGraph 内的模型，供后续构造矩阵元 |
+| MadGraph 导出过程 | 已导入模型和 `generate ...` 命令 | 为指定过程与耦合阶数构造数值代码 | `Hvlvl_SM/`；其中的 `bin/generate_events` 用来运行计算 |
+| MadEvent 生成 | 过程代码、`param_card.dat`、`run_card.dat` | 编译、积分衰变宽度、在相空间中抽样 | 压缩 LHE 事件和 banner；由重加权程序或分析器读取 |
+| MadEvent 重加权 | 原始 LHE 和 `reweight_card.dat` | 在相同事件运动学上计算选定贡献 | 写入同一 LHE 的额外权重；由分析器读取 |
+| `lhe_analyzer.py` | 一份解压后的 LHE | 根据粒子动量重建四个观测量，为每个观测量和权重填直方图 | 一个 ROOT 文件；由绘图器读取 |
+| `plot_histos.py` | 一个 ROOT 文件 | 画出已有直方图；有修正项时分别将其加到 SM 上 | 四张 `plot_*.pdf`；由你阅读 |
+
+LHE 保存逐粒子的事件记录和权重；这里的 ROOT 文件保存**分 bin 的汇总**，不是新的一批事件。
+改显示范围不用重新生成事件；只在卡里改 Wilson 系数也不会自动改变结果，必须运行相应生成或重加权命令。
+本次 Higgs 衰变练习不包含 Pythia、Delphes 或探测器响应。计算边界见 [软件说明](docs/model/README.zh-CN.md)。
 
 ### 3.3 计算范围要明确
 
@@ -125,8 +137,11 @@ Notebook 用于解析费曼规则和模型开发；已有 UFO 时不需要先运
 
 生成、重加权与 ROOT 共用 Linux 项目的 `.venv`。编译器及系统依赖安装在专用 WSL/Ubuntu 中，Windows Python 不参与计算。
 
-所有操作都在一个 Linux 项目目录 `~/smeftsim` 中进行；不再维护 Windows 与 Linux 两份项目副本。
+所有操作都在一个 Linux 项目目录 `~/smeftsim` 中进行。新的分析练习使用短目录 `outputs/ref`、`outputs/sm`、`outputs/rw`，以前的本地输出可以留在原处；不再维护 Windows 与 Linux 两份项目副本。
 Windows 只负责启动 Linux，并保存 WSL 虚拟磁盘。
+若已完成旧版教程，可以继续使用已有 LHE 和 ROOT：仅因新版缩短输出目录名，不需要重新生成事件。
+在分析和绘图命令中沿用已有路径，或按下文创建新的分析目录即可。
+重复分析前先检查目标位置：Shell 的 `>` 会替换目标 LHE 副本，分析器会替换输出 ROOT，绘图器会替换同名 PDF。希望保留上一次练习时，请选另一个输出目录。
 
 | 内容 | 位置 |
 |---|---|
@@ -249,162 +264,58 @@ python -c "import ROOT; print(ROOT.gROOT.GetVersion())"
 
 Python 应来自项目 `.venv`，ROOT 应为 6.40.00。
 
-### 6.5 先用作者样本完成 LHE → ROOT → PDF
+### 6.5 先用教程样本完成 LHE → ROOT → PDF
 
-**准备状态：Linux Bash，已按第 6.4 节激活 `.venv`。**
-这一节从原始事件得到直方图，再调用作者脚本画图。
-每个小步骤只执行它自己的那条命令：**完整输入 → 回车一次 → 等待结束 → 看检查点**。
-某条报错就停下来，不继续做下一步。
+**Linux Bash，已激活 `.venv`。** 下方每一行都是一条完整命令：完整输入，回车一次，等 Bash 提示符回来再继续。`gzip` 与 `> 输出路径` 必须在同一条命令中，屏幕自动折行不需要额外回车。
+某条报错就停下来。更多终端操作解释见可选的 [Linux 入门](docs/linux-basics/README.zh-CN.md)。
 
-#### A. 解压和分析：六个输入步骤
-
-如果你已经通过 A4、A5 的文件检查，可以直接从 A6 继续，不必重新解压。
-
-**A1. 回到项目根目录。** 输入下面这一行，按回车一次：
-
-**Linux Bash｜逐条回车：** 每一行是一条完整命令；输完一行按一次 Enter，结束后再输入下一行。
+#### A. 准备并检查 LHE 输入
 
 ```bash
 cd ~/smeftsim
+mkdir -p outputs/ref
+gzip -dc reference/Results/Hvlvl_SM/Events/run_01/unweighted_events.lhe.gz > outputs/ref/events.lhe
+ls -lh outputs/ref/events.lhe
+head -n 1 outputs/ref/events.lhe
 ```
 
-`cd` 只切换目录，成功时通常不打印文字。等提示符重新出现后，执行 A2。
+`gzip -dc` 读取压缩样本而不修改原文件；`>` 将解压内容写入 `events.lhe`。
+应得到约 **33 MiB** 的非空文件，开头为 `<LesHouchesEvents ...>`。
+虽然文件名有 `SM`，这份随教程提供的样本已经包含额外重加权贡献，后面会用它们生成对比曲线。
 
-**A2. 准备输出目录。** 输入一行，按回车一次：
-
-**Linux Bash｜逐条回车：** 每一行是一条完整命令；输完一行按一次 Enter，结束后再输入下一行。
+#### B. 分析事件
 
 ```bash
-mkdir -p outputs/my_pyroot_reference
+python work/Material/pyroot_python3/lhe_analyzer.py outputs/ref/events.lhe outputs/ref/Hvlvl_SM.root
 ```
 
-`mkdir -p` 创建目录，目录已经存在也可以继续使用；成功时通常没有输出。
-这个目录放本次解压文件、ROOT 和 PDF，不改作者参考包。
+分析器需要**两个参数**：输入 LHE、输出 ROOT。两者都输入完整后再回车。
+它读取粒子四动量和权重，计算 `mll`、`mmv`、`pTl1`、`pTmu`，为每个“观测量–权重”组合填直方图。
+例如 `mmv_direct_sim` 保存 SM 贡献，`mmv_cHl3` 保存指定线性干涉贡献。
+程序按实际事件数归一化，不要自己再除一次。
+应看到 `processed 20000 events`、各贡献的积分值和 `file ... produced`，然后返回 Bash。
+下一个程序读取这个 ROOT 文件，不再读取 LHE。
 
-**A3. 解压到文件。** 把下面的**整条命令**一次复制进去，末尾回车一次：
-
-**Linux Bash｜逐条回车：** 每一行是一条完整命令；输完一行按一次 Enter，结束后再输入下一行。
-
-```bash
-gzip -dc 'reference/Results/Hvlvl_SM/Events/run_01/unweighted_events.lhe.gz' > outputs/my_pyroot_reference/events.lhe
-```
-
-命令在屏幕上自动折行也没关系，仍是一条命令。不要在引号后或 `>` 前提前回车。
-
-| 命令部分 | 含义 |
-|---|---|
-| `gzip -dc` | 解压；原 `.gz` 保留，内容先送到标准输出 |
-| 引号里的 `...unweighted_events.lhe.gz` | 输入的作者压缩事件文件 |
-| `>` | 将输出写入后面的文件；不是终端提示符，不能省略 |
-| `outputs/my_pyroot_reference/events.lhe` | 新的解压文件 |
-
-解压时可能短暂没有输出。**等 Bash 提示符重新出现**，再执行 A4。
-不要仅靠“没看到文字”判断成功，也不要立刻输入分析命令。
-
-**A4. 检查文件是否生成。** 输入一行，按回车一次：
-
-**Linux Bash｜逐条回车：** 每一行是一条完整命令；输完一行按一次 Enter，结束后再输入下一行。
+#### C. 画出已有直方图
 
 ```bash
-ls -lh outputs/my_pyroot_reference/events.lhe
-```
-
-应看到一个约 **33 MiB** 的非空文件。
-如果提示 `No such file or directory` 或大小为 0，就停在这里，
-检查 A3 的报错、完整路径和 `>`，不要继续 A5/A6。
-
-**A5. 检查文件第一行。** 输入一行，按回车一次：
-
-**Linux Bash｜逐条回车：** 每一行是一条完整命令；输完一行按一次 Enter，结束后再输入下一行。
-
-```bash
-head -n 1 outputs/my_pyroot_reference/events.lhe
-```
-
-应看到类似 `<LesHouchesEvents version="3.0">` 的文字。
-这只是读第一行，不修改事件。
-
-**A6. 用作者分析器生成 ROOT。** 把下面**完整一行**复制进去，末尾回车一次：
-
-**Linux Bash｜逐条回车：** 每一行是一条完整命令；输完一行按一次 Enter，结束后再输入下一行。
-
-```bash
-python work/Material/pyroot_python3/lhe_analyzer.py outputs/my_pyroot_reference/events.lhe outputs/my_pyroot_reference/Hvlvl_SM.root
-```
-
-| 命令部分 | 含义 |
-|---|---|
-| `python` | 当前统一 `.venv` 中的解释器 |
-| `work/Material/pyroot_python3/lhe_analyzer.py` | 要执行的作者分析脚本兼容副本 |
-| `outputs/my_pyroot_reference/events.lhe` | 脚本的第 1 个参数：输入 LHE |
-| `outputs/my_pyroot_reference/Hvlvl_SM.root` | 脚本的第 2 个参数：输出 ROOT，会自动生成 |
-
-**不要在 `events.lhe` 后按回车。** 输出 ROOT 的路径也必须在同一条命令里。
-若出现 `two command-line arguments required`，说明漏掉了第二个参数；
-补齐整条命令再运行，不需要重做已经成功的解压。
-
-运行期间等待，不输入别的命令。成功时会看到 `processed 20000 events`、
-各权重的积分值，以及 `file ... produced`，然后返回 Bash 提示符。
-分析器读取四动量、填四个观测量的 bin，并按实际事件数归一化；
-不要再次手动除以 20,000。
-
-#### B. 绘图：两个输入步骤
-
-**B1. 进入输出目录。** 输入一行，按回车一次：
-
-**Linux Bash｜逐条回车：** 每一行是一条完整命令；输完一行按一次 Enter，结束后再输入下一行。
-
-```bash
-cd ~/smeftsim/outputs/my_pyroot_reference
-```
-
-当前目录决定 PDF 保存在哪里。等提示符重新出现，再执行 B2。
-
-**B2. 调用作者绘图脚本。** 输入完整一行，按回车一次：
-
-**Linux Bash｜逐条回车：** 每一行是一条完整命令；输完一行按一次 Enter，结束后再输入下一行。
-
-```bash
+cd outputs/ref
 python ../../work/Material/pyroot_python3/plot_histos.py Hvlvl_SM.root
-```
-
-`../../` 表示回到上两级目录寻找脚本；`Hvlvl_SM.root` 是当前目录里的输入文件。
-绘图脚本只需要一个 ROOT 参数，和 A6 分析器要求的两个参数不同。
-等待运行结束、返回 Bash 提示符，再检查：
-
-**Linux Bash｜逐条回车：** 每一行是一条完整命令；输完一行按一次 Enter，结束后再输入下一行。
-
-```bash
 ls -lh plot_mll.pdf plot_mmv.pdf plot_pTl1.pdf plot_pTmu.pdf
 ```
 
-这条检查命令也只按一次回车；应列出四个非空 PDF。
+绘图器只需要**一个参数**，即输入 ROOT 文件；四张 PDF 写入**当前目录**。
+它不计算新的矩阵元或事件权重，而是把选定修正分别加到 SM 上，再除以 SM 得到下半图。
+应看到四张非空 PDF。WSL 用户可在 Bash 执行 `explorer.exe .`，用 Windows 打开当前目录。
 
-**B3. 在 Windows 打开 PDF。** 在 WSL 的 **Linux Bash** 中，
-不要把下面命令输入 Python 的 `>>>`。完整输入一行，按回车一次：
-
-**Linux Bash / WSL｜每条命令完整输入后回车：**
-
-```bash
-cd ~/smeftsim/outputs/my_pyroot_reference
-explorer.exe .
-```
-
-资源管理器会打开输出目录，双击 PDF 阅读即可。
-
-**可选捷径，不是下一步：**
-如果只是重画作者已有 ROOT，可以跳过 A 中的解压与分析。
-先建立并进入上面的输出目录，再输入以下完整一行、回车一次：
-
-**Linux Bash｜逐条回车：** 每一行是一条完整命令；输完一行按一次 Enter，结束后再输入下一行。
+检查点：沿着 `events.lhe → Hvlvl_SM.root → plot_mmv.pdf` 说出每个文件由哪个程序生成。
+如果只想重画已有参考 ROOT，跳过 A–B，在 `~/smeftsim/outputs/ref` 使用这条替代命令：
 
 ```bash
-python ../../work/Material/pyroot_python3/plot_histos.py '../../reference/Results/Root_files/Hvlvl_SM_run_01.root'
+python ../../work/Material/pyroot_python3/plot_histos.py ../../reference/Results/Root_files/Hvlvl_SM_run_01.root
 ```
 
-不要把这一条与 B2 连续都运行；它们是两个不同输入的选择。
-重复绘图会更新同名 PDF。作者 `make_rootfiles.sh` 是批量调用分析器的脚本，
-默认 `run_01`；这里逐个调用作者脚本，方便你看清输入、输出和自己的 run 名。
+选择一种绘图输入即可；再次调用会覆盖同名 PDF。学习这两次调用不需要使用批处理脚本 `make_rootfiles.sh`。
 
 ### 6.6 按需要调整作者已有的绘图设置
 
@@ -497,7 +408,17 @@ generate h > e- ve~ mu+ vm SMHLOOP=0 NP=0 NPprop=0
 display processes
 ```
 
-检查模型成功导入，过程是预期 Higgs 四轻子 SM 衰变。
+这些命令的作用不同：
+
+| 命令 | 本次含义 |
+|---|---|
+| `set ... --no_save` | 在当前会话关闭更新、允许本地模型转换，不修改保存的全局配置 |
+| `import model ...` | 导入施加 `massless_Hvlvl` restriction 后的 SMEFTsim 相互作用 |
+| `generate ...` | 选择 Higgs 衰变到 `e- ve~ mu+ vm` 并构造 SM 矩阵元，此时还没有抽样事件 |
+| `display processes` | 打印已选过程，导出前发现末态或阶数设置错误 |
+
+确认模型成功导入，选中的是预期衰变。
+`generate h > ...` 中的 `>` 是 MadGraph 的过程语法，不是 Bash 的输出重定向。
 首次导出时，在同一个 `MG5_aMC>` 中继续逐条执行：
 
 ```text
@@ -515,6 +436,9 @@ ls Hvlvl_SM/Cards/param_card.dat Hvlvl_SM/Cards/run_card.dat
 如果 `Hvlvl_SM` 已存在，跳过 `output`，只执行 `quit`，然后继续配置卡或使用新的 run 名称；不要覆盖已有过程。
 
 ### 8.2 设置卡
+
+导出的过程决定**计算哪个矩阵元**，卡决定**使用哪些数值输入和抽样设置**。
+先复制模板，使质量、宽度和切选约定与参考练习一致：
 
 **Linux Bash｜逐条回车：** 每一行是一条完整命令；输完一行按一次 Enter，结束后再输入下一行。
 
@@ -545,6 +469,14 @@ nano Hvlvl_SM/Cards/run_card.dat
 只给 run 起名 `...2000` 并不会让生成器自动生成 2,000 个事件。
 卡的一般形式是 `数值 = 参数名` 或 `编号 数值 # 参数注释`，具体按原文件格式保留。
 
+例如 `Block smeft` 中 `22 0.000000e+00 # cHl3` 将这个独立系数设为零；`Block smeftcutoff` 将 `LambdaSMEFT` 设为 1,000 GeV。
+`nevents` 控制请求的事件数，`iseed` 控制伪随机抽样，两者都不改变相互作用模型。
+这里计算衰变，没有质子束；通用卡虽然保留 beam/PDF 字段，不能由这些未使用条目推断是在做 13 TeV 碰撞。
+切选保持模板原样：本例 `ptl=0` 没有正的下限，`ptlmax=-1` 表示不设上限，不要把探测器教程的 `ptl=10` 搬来这个参考衰变练习。
+本练习没有 parton shower，也没有 matching/merging 环节；卡中不一定存在这些词本身。
+
+检查点：找到 `cHl3`、`LambdaSMEFT`、`nevents`、`iseed`，说出它们各在哪张卡中。只修改卡不会生成事件。
+
 ### 8.3 生成一个独立命名的 run
 
 **Linux Bash，当前目录 `work/Material`：**
@@ -554,6 +486,10 @@ nano Hvlvl_SM/Cards/run_card.dat
 ```bash
 ./Hvlvl_SM/bin/generate_events training_sm_2000
 ```
+
+`generate_events` 运行第 8.1 节导出的数值代码，读取刚才保存的两张卡。
+编译生成可执行程序，积分估计部分宽度，事件抽样把粒子动量和权重写进 LHE。
+`training_sm_2000` 选择结果目录，不是输入文件名，也不是事件数选项。
 
 这条命令回车后会进入 MadGraph 的工具菜单，**此时不是普通 Bash**。
 按下面顺序操作，不要把后面的分析命令提前粘进菜单：
@@ -574,6 +510,13 @@ nano Hvlvl_SM/Cards/run_card.dat
 
 ### 8.4 核对你生成了什么
 
+`Hvlvl_SM/Events/training_sm_2000/` 下的重要输出是：
+
+| 文件 | 查看什么 | 下一步用途 |
+|---|---|---|
+| `unweighted_events.lhe.gz` | LHE 头部、末态粒子记录和事件权重 | 第 8.5 节解压分析副本；原压缩文件留给第 9 节 |
+| `training_sm_2000_tag_1_banner.txt` | 过程定义、卡和积分信息的快照 | 记录实际运行配置，避免把事后改过的卡当成当时输入 |
+
 检查以下内容：
 
 1. 过程是预期的 Higgs 衰变，模型和 restriction 没有换成其他版本。
@@ -586,183 +529,67 @@ nano Hvlvl_SM/Cards/run_card.dat
 
 ### 8.5 为 SM 分布生成 ROOT 文件
 
-本节得到**只含 SM 基线**的四个直方图。
-第 9 节再使用原始压缩事件计算额外贡献，两节的输入用途不同。
-
-作者分析器会读取 LHE 头部的额外权重声明。只画 SM 时，
-我们在单独的**分析副本**中去掉这些声明及额外权重块，只保留原始 SM 事件。
-粒子四动量、原始 SM 权重和事件数都不变；原始 `.lhe.gz` 保留。
-
-**准备状态：Linux Bash，已激活 `.venv`。每条命令完整输入后，回车一次，等待结束。**
-
-#### A. 准备目录和解压副本
-
-**Linux Bash｜逐条回车：**
+**Linux Bash，已激活 `.venv`；每条命令完整输入后回车一次。** 输入是你自己生成的 LHE，不是参考样本。
+在短分析目录 `outputs/sm` 建立解压副本：
 
 ```bash
 cd ~/smeftsim
-mkdir -p outputs/my_sm_visual
-gzip -dc work/Material/Hvlvl_SM/Events/training_sm_2000/unweighted_events.lhe.gz > outputs/my_sm_visual/events_full.lhe
+mkdir -p outputs/sm
+gzip -dc work/Material/Hvlvl_SM/Events/training_sm_2000/unweighted_events.lhe.gz > outputs/sm/events_full.lhe
 ```
 
-最后一条是完整的一行：先输入压缩文件路径、`>` 和输出路径，再按回车。
-使用其他 run 时，只替换 `training_sm_2000`。
-`events_full.lhe` 是解压副本，原压缩文件不受影响。
-
-#### B. 准备只用于 SM 分析的输入
-
-**Linux Bash｜完整一行，回车一次：**
+若使用其他 run 名，请统一替换 `training_sm_2000`。
+教程分析器根据 LHE 头部的额外权重声明分配直方图；某些 SM 文件有声明，却没有完整的逐事件额外权重。
+因此在**只分析 SM**时，另存一份删除声明和额外权重块的副本：
 
 ```bash
-sed -e '/<initrwgt>/,/<\/initrwgt>/d' -e '/<rwgt>/,/<\/rwgt>/d' outputs/my_sm_visual/events_full.lhe > outputs/my_sm_visual/events_sm.lhe
+sed -e '/<initrwgt>/,/<\/initrwgt>/d' -e '/<rwgt>/,/<\/rwgt>/d' outputs/sm/events_full.lhe > outputs/sm/events_sm.lhe
+ls -lh outputs/sm/events_sm.lhe
+head -n 1 outputs/sm/events_sm.lhe
 ```
 
-| 命令部分 | 含义 |
-|---|---|
-| `sed` | 按规则处理文本，不编辑原文件 |
-| 第一个 `-e ...` | 删除额外权重声明块 `<initrwgt>... </initrwgt>` |
-| 第二个 `-e ...` | 删除每个事件的额外权重块 `<rwgt>... </rwgt>` |
-| `events_full.lhe` | 输入的完整解压副本 |
-| `> .../events_sm.lhe` | 将处理结果另存为 SM 分析输入 |
-
-这一步**不是把缺失的 EFT 权重填零**。我们只选取原始 SM 权重进行分析，
-不计算额外贡献。`events_sm.lhe` 只供本节分析；第 9 节重加权继续使用原始 `.lhe.gz`。
-
-**Linux Bash｜逐条回车，检查文件：**
+两条 `sed` 规则分别删除 `<initrwgt>...</initrwgt>`、`<rwgt>...</rwgt>` 块；不会重算权重，也不会用零补齐缺失的 EFT 贡献。
+粒子动量、原始 SM 权重和事件数保留。原始 `.lhe.gz` 留给重加权；第 9 节不用这份删减副本。
+应看到非空文件，开头为 `<LesHouchesEvents ...>`，然后运行与第 6 节相同的分析器：
 
 ```bash
-ls -lh outputs/my_sm_visual/events_sm.lhe
-head -n 1 outputs/my_sm_visual/events_sm.lhe
+python work/Material/pyroot_python3/lhe_analyzer.py outputs/sm/events_sm.lhe outputs/sm/Hvlvl_SM.root
 ```
 
-应看到非空文件，第一行以 `<LesHouchesEvents ...>` 开始。
-
-#### C. 调用作者分析器
-
-**Linux Bash｜完整一行，回车一次，再等待运行结束：**
-
-```bash
-python work/Material/pyroot_python3/lhe_analyzer.py outputs/my_sm_visual/events_sm.lhe outputs/my_sm_visual/Hvlvl_SM.root
-```
-
-`events_sm.lhe` 是第一个参数，`Hvlvl_SM.root` 是第二个参数；
-两者必须与脚本路径一起输入，不能在 LHE 后提前回车。
-
-没有额外权重时，分析器可能输出 `no new weights found`，这是本节预期状态。
-最终应看到 `processed 2000 events` 和 `file ... produced`。
-换了事件数时，以实际数量为准。等 Bash 提示符返回，再进入第 8.6 节。
-
-ROOT 文件中应有四个直方图：
-`mll_direct_sim`、`mmv_direct_sim`、`pTl1_direct_sim`、`pTmu_direct_sim`。
-作者分析器已经按事件数归一化，不需要再手动除一次。
+**第一个参数**是输入，**第二个参数**是输出。等待 `processed 2000 events` 和 `file ... produced`；请求其他事件数时按实际数量检查。
+SM 分析副本出现 `no new weights found` 属于预期情况。ROOT 中应有四个直方图：`mll_direct_sim`、`mmv_direct_sim`、`pTl1_direct_sim`、`pTmu_direct_sim`。
+分析器已按事件数归一化。下一条命令直接画已有的 bin，不再读取 LHE。
 
 ### 8.6 调用 ROOT，画出自己的 SM 分布
 
-这里使用 ROOT 已有的 `TFile`、`TCanvas`、`Draw` 和 `SaveAs`。
-直方图已经由作者分析器填好，不需要自己重写事件分析。
-
-#### A. 从 Bash 进入 Python
-
-**Linux Bash｜逐条回车：** 先执行 `cd`，再执行 `python`。
+使用参考图同一份**现有 `plot_histos.py`**，不需要在 Python 交互窗口手打循环。
+在 Linux Bash 中完整输入一行，回车一次：
 
 ```bash
-cd ~/smeftsim/outputs/my_sm_visual
-python
+cd ~/smeftsim/outputs/sm
+python ../../work/Material/pyroot_python3/plot_histos.py Hvlvl_SM.root
+ls -lh plot_mll.pdf plot_mmv.pdf plot_pTl1.pdf plot_pTmu.pdf
 ```
 
-第二条回车后会出现 Python 的 `>>>`。从现在起只输入 Python 代码。
+输入是第 8.5 节的四个 SM 直方图，输出是 `outputs/sm` 中的四张 PDF。
+上半图只有 SM 曲线；这份文件没有 EFT 修正直方图，下半图为空属于预期情况。
+第 9 节加入额外贡献后才会出现比值曲线。WSL 用户可在 Bash 执行 `explorer.exe .` 打开当前目录。
 
-#### B. 打开 ROOT 文件并准备画布
-
-**Python 交互输入｜每行完整输入后回车一次，看到 `>>>` 再输入下一行。**
-很长的 `labels = ...` 也是一条语句，要整行输入后回车。
-
-```python
-import ROOT
-ROOT.gROOT.SetBatch(True)
-file = ROOT.TFile.Open("Hvlvl_SM.root")
-canvas = ROOT.TCanvas("sm", "SM distributions", 800, 600)
-canvas.SetLogy()
-observables = ["mll", "mmv", "pTl1", "pTmu"]
-labels = {"mll": "m_{e#mu} [GeV]", "mmv": "m_{#mu#nu_{#mu}} [GeV]", "pTl1": "p_{T}^{leading lepton} [GeV]", "pTmu": "p_{T}^{#mu} [GeV]"}
-```
-
-`SetBatch(True)` 将图保存成文件，不要求 Ubuntu 图形桌面。
-`TFile.Open` 读取直方图，`TCanvas` 创建画布，`SetLogy` 使用对数纵轴。
-`labels` 是 ROOT 的轴标题写法，例如 `#mu` 表示希腊字母 μ。
-
-#### C. 画四个已有直方图并保存
-
-**Python 交互循环｜每行回车，保留缩进；最后再按一次空白回车。**
-
-1. 输入第一行 `for obs in observables:`，回车，出现 `...`。
-2. 后面七行都保留 **4 个空格**，每行输入后回车。
-3. 最后一行 `canvas.SaveAs(...)` 回车后仍显示 `...`。
-4. **什么都不输入，再按一次回车**，整个循环执行。
-5. 等待出现四组文件保存提示，并重新看到 `>>>`。
-
-```python
-for obs in observables:
-    hist = file.Get(obs + "_direct_sim")
-    hist.SetTitle("SM: " + obs)
-    hist.GetXaxis().SetTitle(labels[obs])
-    hist.GetYaxis().SetTitle("Partial width per bin [GeV]")
-    hist.Draw("hist")
-    canvas.SaveAs("SM_" + obs + ".pdf")
-    canvas.SaveAs("SM_" + obs + ".png")
-
-```
-
-`Get` 取出已生成的直方图；`Draw("hist")` 画出 bin 内容；
-`SaveAs` 根据扩展名保存为 PDF 或 PNG。标题修改只发生在内存中，不写回 ROOT 文件。
-这里纵轴是**每 bin 的部分宽度贡献，单位 GeV**，不是除以 bin 宽后的微分密度。
-
-#### D. 关闭文件，返回 Bash
-
-**Python 交互输入｜每行回车一次：**
-
-```python
-file.Close()
-exit()
-```
-
-`exit()` 后应返回 Bash 的 `$`。再检查结果：
-
-**Linux Bash｜完整一行，回车一次：**
-
-```bash
-ls -lh SM_*.pdf SM_*.png
-```
-
-应列出四张 PDF 和四张 PNG：`mll`、`mmv`、`pTl1`、`pTmu` 各一张。
-
-在 WSL 的 **Linux Bash** 中，输入完整一行并回车：
-
-```bash
-cd ~/smeftsim/outputs/my_sm_visual
-explorer.exe .
-```
-
-双击 PNG 或 PDF。先看峰的位置、分布末端和整体数量级；
-当前 SM 部分宽度约为 `1e-5 GeV`，不同种子会有统计波动。
-
-下面是本项目 2,000 个 SM 事件的示例，读者实际结果不要求逐 bin 一样：
+脚本保留原有 `pb` 轴标签；但本例是**衰变**，bin 内容是以 **GeV** 为单位的部分宽度贡献，不是截面，详见第 6.2 节和[图的说明](docs/figures/README.zh-CN.md)。
+不要根据沿用的标签判断物理单位。下面另外提供的单面板示例使用了明确的宽度标签：
 
 ![SM 的电子与 muon 不变质量分布](docs/figures/sm_mll.png)
 
-其他示例：[muon 与中微子不变质量](docs/figures/sm_mmv.png)、
-[leading lepton 横动量](docs/figures/sm_pTl1.png)、
-[muon 横动量](docs/figures/sm_pTmu.png)。
-
-**本章完成：** 你已从自己的 SM LHE 得到 ROOT、PDF 和 PNG。
-接着完成第 9 节，在同一组原始 SM 事件上计算 EFT 贡献。
+检查点：积分宽度量级约为 `1e-5 GeV`。指出哪一面板画出了你的 SM，以及为什么此时没有比值曲线。
+你已沿着自己的事件走通**生成 → SM 分析副本 → ROOT → PDF**。
+第 9 节继续使用原压缩事件。
 
 ## 9. 重加权与 ROOT 绘图
 
 本章使用第 8 节生成的原始 SM LHE，在相同事件上计算作者卡定义的额外贡献。
 第 8.5 节的 SM 分析副本只用于单独画 SM，不作为这里的重加权输入。
 第 9.1–9.2 节解释原理与卡的含义；实际操作从第 9.3 节开始。
-第 9.4 节将生成 `outputs/my_pyroot_reweighted/Hvlvl_SM.root` 和四张对比图。
+第 9.4 节将生成 `outputs/rw/Hvlvl_SM.root` 和四张对比图。
 
 ### 9.1 Reweighting 做了什么
 
@@ -796,6 +623,8 @@ done
 ```
 
 第一行选择干涉过程；`launch` 给输出权重命名；随后指定这个点的系数。
+这张卡由 `madevent reweight` 读取，不需要重新进入事件生成菜单。
+`change process` 决定分子的矩阵元贡献，`--rwgt_name` 决定 LHE 权重标签，`set` 行决定参数点；卡文件名不是权重标签。
 LHE 中的 `<rwgt>` 会保存各权重。原 SM 权重和新增权重的意义不同，分析时应分开。
 这里的 `cHl3` 权重代表所选线性干涉贡献；其他卡选择平方或传播子修正。
 
@@ -820,7 +649,10 @@ $w_{S,i}$ 是 SM 权重，$w_{L,i}$ 是这个事件代表的线性贡献，可�
 
 ### 9.3 亲自用作者的 reweight 卡操作 MadGraph
 
-目标是用作者提供的三张卡计算线性、平方和传播子贡献，供 ROOT 绘图使用。
+目标是用教程提供的三张卡计算线性、平方和传播子贡献，供 ROOT 绘图使用。
+下面每次调用都读取所选 run 的**已有 LHE**与过程副本中**当前的 `Cards/reweight_card.dat`**。
+需要时编译目标矩阵元，在每个已有事件上计算目标贡献，然后向该 run 的压缩 LHE 更新权重标签和数值。
+这一步不生成 ROOT 或 PDF；三次完成后，第 9.4 节统一分析更新后的 LHE。
 用三张作者卡即可：线性卡一次计算四个单系数线性贡献，
 平方卡计算四个平方贡献，传播子卡计算三个宽度/传播子贡献。
 **不需要为每个系数重新生成事件，也不需要混合项卡才能画这六条参考曲线。**
@@ -954,7 +786,13 @@ cp reweight_card_propW.dat Hvlvl_SM_manual/Cards/reweight_card.dat
 不要在失败后直接继续绘图。首次计算是否成功还要在下一节核对每个事件的权重，
 不能只凭头部标签或进程退出码判断。
 
-#### E. 继续 ROOT 分析
+#### E. 先沿着一个系数核对流程
+
+对 `cHl3`，找到三个独立标签：`cHl3`（普通线性）、`cHl3_sq`（维六平方）、`cHl3_propW`（传播子修正）。
+输入的相空间点相同，目标阶数与权重不同。
+绘图时每个选定标签**分别**加到 SM 上；选中三个标签不代表绘图器会把三项合成一条完整预测。
+以后要研究其他参数点，先说明目标贡献和系数值，再编辑**独立的卡并使用新的权重标签**，重新执行重加权。
+只改 `weights_to_plot` 是选择已有直方图，不会计算新物理。
 
 三次重加权完成后，文件仍在 Linux 过程目录中。
 按第 9.4 节继续在同一个 `.venv` 调用作者分析器和绘图脚本。
@@ -969,11 +807,9 @@ cp reweight_card_propW.dat Hvlvl_SM_manual/Cards/reweight_card.dat
 
 ```bash
 cd ~/smeftsim
-mkdir -p outputs/my_pyroot_reweighted
-
-gzip -dc work/Material/Hvlvl_SM_manual/Events/training_sm_2000/unweighted_events.lhe.gz > outputs/my_pyroot_reweighted/events.lhe
-
-python work/Material/pyroot_python3/lhe_analyzer.py  outputs/my_pyroot_reweighted/events.lhe  outputs/my_pyroot_reweighted/Hvlvl_SM.root
+mkdir -p outputs/rw
+gzip -dc work/Material/Hvlvl_SM_manual/Events/training_sm_2000/unweighted_events.lhe.gz > outputs/rw/events.lhe
+python work/Material/pyroot_python3/lhe_analyzer.py outputs/rw/events.lhe outputs/rw/Hvlvl_SM.root
 ```
 
 **先检查分析成功，再画图：** 应看到 `processed ... events`、各权重积分值和 `file ... produced`，
@@ -983,26 +819,28 @@ python work/Material/pyroot_python3/lhe_analyzer.py  outputs/my_pyroot_reweighte
 **Linux Bash｜逐条回车：** 完整输入一行，回车一次，等待结果。
 
 ```bash
-ls -lh outputs/my_pyroot_reweighted/Hvlvl_SM.root
+ls -lh outputs/rw/Hvlvl_SM.root
 ```
 
-应看到非空的 ROOT 文件。这里的 `my_pyroot_reweighted` 是目录，`Hvlvl_SM.root` 是文件。
+应看到非空的 ROOT 文件。这里的 `rw` 是目录，`Hvlvl_SM.root` 是文件。
 它来自重加权后的 SM 副本，包含 SM 基线和额外贡献；第 8.5 节的 ROOT 只包含 SM 基线。
 
 **Linux Bash｜逐条回车：** 先切换目录，回车；再输入完整绘图命令，回车并等待结束。
 
 ```bash
-cd outputs/my_pyroot_reweighted
+cd outputs/rw
 python ../../work/Material/pyroot_python3/plot_histos.py Hvlvl_SM.root
 ```
 
-第一条 Python 命令分析 LHE，第二条画图，两条都是作者脚本的兼容副本。
+分析器读取更新后的 LHE，包括原始 SM 权重和全部额外标签，为每类权重保存四个分布。
+绘图器再读取这些分 bin 结果画对比，不需要打开多份独立 SM/EFT 模拟目录，也不会重新计算 `cHl3=1` 参数点。
+本练习用一份重加权事件样本就包含画参考贡献所需的信息。
 应生成四张 `plot_*.pdf`。在 WSL 的 Linux Bash 中打开输出目录：
 
 **Linux Bash / WSL｜每条命令完整输入后回车：**
 
 ```bash
-cd ~/smeftsim/outputs/my_pyroot_reweighted
+cd ~/smeftsim/outputs/rw
 explorer.exe .
 ```
 
@@ -1056,7 +894,7 @@ LHE 中保存的额外权重已经包含生成器归一化，作者分析器再�
 | 次数 | 主动学习时间 | 任务 | 自己应该能解释什么 |
 |---|---:|---|---|
 | 1 | 30–40 分钟 | 第 2–3 节，认识物理与软件链 | SMEFTsim 如何描述新相互作用 |
-| 2 | 30–40 分钟 | 第 6 节，调用作者脚本读参考图 | 权重标签、rate、shape 和 bin 的含义 |
+| 2 | 20–30 分钟 | 第 6 节，跟踪两次分析调用、读参考图 | 哪个文件保存粒子、权重或分 bin 汇总 |
 | 3 | 30–45 分钟 | 第 7–8 节，生成并画自己的 SM | 模型、两张卡、LHE 与 ROOT 各自做什么 |
 | 4 | 30–45 分钟 | 第 9 节，重加权并画对比图 | 不同贡献怎样来自同一组基础事件 |
 

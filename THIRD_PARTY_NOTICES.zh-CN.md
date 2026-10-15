@@ -2,7 +2,7 @@
 
 [English](THIRD_PARTY_NOTICES.md) | [简体中文](THIRD_PARTY_NOTICES.zh-CN.md)
 
-核对时间：2026-10-14。此文件记录组件来源与许可信息，不代替具体上游许可证。
+核对时间：2026-10-15。此文件记录组件来源与许可信息，不代替具体上游许可证。
 
 ## SMEFTsim 模型与参数资料
 
@@ -30,7 +30,7 @@
 ## MadGraph 与 ROOT
 
 MadGraph5_aMC@NLO 2.9.27，MadTeam：
-本地核心 `madgraph/LICENSE` 是改写自 Illinois/NCSA 的许可，
+固定版本源码根目录的 `LICENSE` 是改写自 Illinois/NCSA 的许可，
 原文保存在 [licenses/MadGraph-NCSA.txt](licenses/MadGraph-NCSA.txt)。
 vendor 组件可能有其他许可。程序源码与二进制不纳入本项目发布。
 

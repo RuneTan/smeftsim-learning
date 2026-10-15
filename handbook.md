@@ -8,7 +8,7 @@ These practical notes follow [Ilaria Brivio's June 2023 SMEFTsim tutorial](https
 This handbook uses the Linux project's shared `.venv` environment and ROOT.
 The authors' original material remains in `tutorial`; local analysis and plotting use Python 3-compatible copies.
 The [root README](README.md) lists the sources and reading entry points; the [installation guide](docs/setup/README.md) explains the scripts and runtime directories.
-Section 8 calls ROOT's existing plotting interfaces directly; Section 9 calls the authors' plotting script. Neither requires a new analysis program.
+Analysis and plotting use the two existing tutorial scripts in Sections 6, 8 and 9. You do not need to type a plotting program. The main exercise is to understand the model, configure cards, generate events, and calculate additional weights.
 
 For terminal prompts, paths or Enter-key conventions, see the optional [Linux and terminal basics guide](docs/linux-basics/README.md).
 If you already have an SM sample, obtain your own plots in Sections 8.5–8.6, then complete Sections 9.3–9.4.
@@ -38,7 +38,7 @@ After completing the project, you should be able to:
 
 1. Explain the model's flavor assumption, input scheme, restriction, and EFT order.
 2. Configure cards and generate an SM run with its own name.
-3. Convert SM LHE events to ROOT histograms and use ROOT to plot four kinematic distributions.
+3. Explain how LHE events become ROOT histograms, and call the existing scripts to obtain four distributions.
 4. Read the authors' reweight cards, calculate contributions for specified coefficients, and compare them with the SM.
 
 The tutorial uses this fixed combination:
@@ -107,8 +107,21 @@ SMEFTsim provides FeynRules/UFO models for generators to calculate with. It does
 
 ### 3.2 Responsibilities in the software chain
 
-This tutorial follows **UFO → MadGraph → LHE → ROOT → plots**.
-See the [software guide](docs/model/README.md) for the roles of the model, generator, and analysis tools.
+The main chain is **UFO + cards → MadGraph → LHE events → additional LHE weights → ROOT histograms → PDFs**.
+Each arrow passes a file or directory to the next program:
+
+| Stage | Reads | Does | Produces; next reader |
+|---|---|---|---|
+| SMEFTsim model import | UFO and the selected restriction | Supplies particles, interactions and parameter formulas; removes the interactions excluded by the restriction | A model in MadGraph; used to construct matrix elements |
+| MadGraph process export | Imported model and `generate ...` command | Builds numerical code for the selected process and coupling orders | `Hvlvl_SM/`; its `bin/generate_events` runs the calculation |
+| MadEvent generation | Process code, `param_card.dat`, `run_card.dat` | Compiles, integrates the decay width and samples phase space | Compressed LHE events and a banner; read by reweighting or the analyzer |
+| MadEvent reweighting | The original LHE and `reweight_card.dat` | Evaluates selected contributions at the same event kinematics | Additional weights inside that LHE; read by the analyzer |
+| `lhe_analyzer.py` | One decompressed LHE | Reconstructs four observables from particle momenta and fills one histogram per observable and weight | One ROOT file; read by the plotter |
+| `plot_histos.py` | One ROOT file | Draws the stored histograms and, where present, each selected correction added to the SM | Four `plot_*.pdf` files; read by you |
+
+LHE stores individual particles and event weights. The analyzer's ROOT file stores **binned summaries**, not a new event sample.
+Changing a plot range does not rerun generation; changing a Wilson coefficient in a card does nothing until the relevant generator or reweighting command runs.
+Pythia, Delphes and detector effects are outside this Higgs-decay exercise. See the [software guide](docs/model/README.md) for the calculation's scope.
 
 ### 3.3 Define the calculation's scope
 
@@ -124,8 +137,11 @@ The notebook is used to derive Feynman rules and develop the model. You do not n
 
 Generation, reweighting and ROOT share the Linux project's `.venv`. Compilers and system libraries are installed inside the dedicated WSL/Ubuntu environment; Windows Python is not used.
 
-All operations use one Linux project directory, `~/smeftsim`. There is no second Windows project checkout to keep synchronized.
+All operations use one Linux project directory, `~/smeftsim`. New analysis exercises use the short directories `outputs/ref`, `outputs/sm` and `outputs/rw`; older local output directories can remain where they are. There is no second Windows project checkout to keep synchronized.
 Windows starts Linux and stores the WSL virtual disk.
+If you completed an earlier edition, keep your existing LHE and ROOT files: no regeneration is needed just because this edition uses shorter output names.
+Use their existing paths in the analyzer/plotter calls, or create the new analysis directories below.
+Before rerunning analysis, check the destination: shell `>` replaces the target LHE copy, the analyzer replaces its output ROOT file, and the plotter replaces same-named PDFs. Choose a different output directory to preserve an earlier exercise.
 
 | Contents | Location |
 |---|---|
@@ -249,162 +265,58 @@ python -c "import ROOT; print(ROOT.gROOT.GetVersion())"
 
 Python should come from the project's `.venv`, and ROOT should report 6.40.00.
 
-### 6.5 Complete LHE → ROOT → PDF with the authors' sample
+### 6.5 Complete LHE → ROOT → PDF with the tutorial sample
 
-**Starting point: Linux Bash, with `.venv` activated as in Section 6.4.**
-This section turns the original events into histograms, then plots them with the authors' script.
-At each small step, run only its command: **enter the whole command → press Enter once → wait → check the result**.
-If a command fails, stop rather than continuing to the next step.
+**Linux Bash, `.venv` active.** Each line below is one complete command: enter the whole line, press Enter once, and wait for Bash to return. Keep `> OUTPUT` on the same line as `gzip`; terminal line wrapping does not require an extra Enter.
+Stop if a command fails. The optional [Linux guide](docs/linux-basics/README.md) explains the shell commands in more detail.
 
-#### A. Decompress and analyze: six input steps
-
-If your file already passes checks A4 and A5, continue at A6 without decompressing it again.
-
-**A1. Return to the project root.** Enter this line and press Enter once:
-
-**Linux Bash | one command at a time:** each line is one complete command. Press Enter once, wait for it to finish, then enter the next line.
+#### A. Prepare and inspect the LHE input
 
 ```bash
 cd ~/smeftsim
+mkdir -p outputs/ref
+gzip -dc reference/Results/Hvlvl_SM/Events/run_01/unweighted_events.lhe.gz > outputs/ref/events.lhe
+ls -lh outputs/ref/events.lhe
+head -n 1 outputs/ref/events.lhe
 ```
 
-`cd` only changes directories and normally prints nothing on success. When the prompt returns, proceed to A2.
+`gzip -dc` reads the compressed sample without changing it; `>` writes the decompressed contents to `events.lhe`.
+Expect a nonempty file of about **33 MiB**, starting with `<LesHouchesEvents ...>`.
+The filename contains `SM`, but this supplied sample already includes additional reweighting contributions; these will generate the comparison curves.
 
-**A2. Prepare the output directory.** Enter this line and press Enter once:
-
-**Linux Bash | one command at a time:** each line is one complete command. Press Enter once, wait for it to finish, then enter the next line.
+#### B. Analyze the events
 
 ```bash
-mkdir -p outputs/my_pyroot_reference
+python work/Material/pyroot_python3/lhe_analyzer.py outputs/ref/events.lhe outputs/ref/Hvlvl_SM.root
 ```
 
-`mkdir -p` creates the directory or reuses it if it already exists; it normally prints nothing on success.
-This directory holds the decompressed file, ROOT file, and PDFs for this exercise without changing the reference package.
+The analyzer takes **two arguments**: input LHE, then output ROOT. Enter both before pressing Enter.
+It reads particle four-momenta and weights, calculates `mll`, `mmv`, `pTl1` and `pTmu`, and fills a histogram for each observable–weight pair.
+For example, `mmv_direct_sim` contains the SM contribution and `mmv_cHl3` the selected linear interference contribution.
+The program divides by the actual event count; do not divide again yourself.
+Expect `processed 20000 events`, contribution integrals and `file ... produced`, followed by Bash.
+The next program reads this ROOT file, not the LHE.
 
-**A3. Decompress into a file.** Copy the **entire command** below, then press Enter once at its end:
-
-**Linux Bash | one command at a time:** each line is one complete command. Press Enter once, wait for it to finish, then enter the next line.
-
-```bash
-gzip -dc 'reference/Results/Hvlvl_SM/Events/run_01/unweighted_events.lhe.gz' > outputs/my_pyroot_reference/events.lhe
-```
-
-Screen wrapping is fine: this is still one command. Do not press Enter after the closing quote or before `>`.
-
-| Command part | Meaning |
-|---|---|
-| `gzip -dc` | Decompresses while keeping the original `.gz`, sending the contents to standard output |
-| Quoted `...unweighted_events.lhe.gz` | The authors' compressed input event file |
-| `>` | Writes the output to the following file; it is part of the command, not a prompt |
-| `outputs/my_pyroot_reference/events.lhe` | The new decompressed file |
-
-Decompression may produce no visible output for a short time. **Wait for the Bash prompt to return**, then proceed to A4.
-Silence alone does not prove success; do not immediately enter the analysis command.
-
-**A4. Check that the file was created.** Enter this line and press Enter once:
-
-**Linux Bash | one command at a time:** each line is one complete command. Press Enter once, wait for it to finish, then enter the next line.
+#### C. Draw the stored histograms
 
 ```bash
-ls -lh outputs/my_pyroot_reference/events.lhe
-```
-
-Expect a nonempty file of approximately **33 MiB**.
-If you see `No such file or directory`, or its size is zero, stop here.
-Check A3's error message, full path, and `>` before continuing to A5 or A6.
-
-**A5. Check the first line.** Enter this line and press Enter once:
-
-**Linux Bash | one command at a time:** each line is one complete command. Press Enter once, wait for it to finish, then enter the next line.
-
-```bash
-head -n 1 outputs/my_pyroot_reference/events.lhe
-```
-
-Expect something like `<LesHouchesEvents version="3.0">`.
-This reads only the first line and does not change any events.
-
-**A6. Generate ROOT histograms with the authors' analyzer.** Copy the **complete line** below and press Enter once at its end:
-
-**Linux Bash | one command at a time:** each line is one complete command. Press Enter once, wait for it to finish, then enter the next line.
-
-```bash
-python work/Material/pyroot_python3/lhe_analyzer.py outputs/my_pyroot_reference/events.lhe outputs/my_pyroot_reference/Hvlvl_SM.root
-```
-
-| Command part | Meaning |
-|---|---|
-| `python` | The interpreter in the shared `.venv` |
-| `work/Material/pyroot_python3/lhe_analyzer.py` | The compatible working copy of the authors' analysis script |
-| `outputs/my_pyroot_reference/events.lhe` | First script argument: input LHE file |
-| `outputs/my_pyroot_reference/Hvlvl_SM.root` | Second script argument: output ROOT file, created by the script |
-
-**Do not press Enter after `events.lhe`.** The output ROOT path must be in the same command.
-If the script reports `two command-line arguments required`, the second argument is missing.
-Complete the command and run it again; successful decompression does not need to be repeated.
-
-Wait while it runs without entering another command. On success, expect `processed 20000 events`,
-the integral of each weight, and `file ... produced`, followed by the Bash prompt.
-The analyzer reads four-momenta, fills bins for four observables, and normalizes by the actual event count.
-Do not divide by 20,000 again yourself.
-
-#### B. Plotting: two input steps
-
-**B1. Enter the output directory.** Enter this line and press Enter once:
-
-**Linux Bash | one command at a time:** each line is one complete command. Press Enter once, wait for it to finish, then enter the next line.
-
-```bash
-cd ~/smeftsim/outputs/my_pyroot_reference
-```
-
-The current directory determines where the PDFs are saved. Wait for the prompt before B2.
-
-**B2. Call the authors' plotting script.** Enter the full line and press Enter once:
-
-**Linux Bash | one command at a time:** each line is one complete command. Press Enter once, wait for it to finish, then enter the next line.
-
-```bash
+cd outputs/ref
 python ../../work/Material/pyroot_python3/plot_histos.py Hvlvl_SM.root
-```
-
-`../../` goes up two directory levels to find the script; `Hvlvl_SM.root` is the input in the current directory.
-The plotting script needs one ROOT argument, whereas the analyzer in A6 needs two arguments.
-Wait until plotting finishes and the Bash prompt returns, then check:
-
-**Linux Bash | one command at a time:** each line is one complete command. Press Enter once, wait for it to finish, then enter the next line.
-
-```bash
 ls -lh plot_mll.pdf plot_mmv.pdf plot_pTl1.pdf plot_pTmu.pdf
 ```
 
-Press Enter only once for this checking command too. It should list four nonempty PDFs.
+The plotter takes **one argument**, the input ROOT file. It creates four PDFs in the **current directory**.
+It does not calculate new matrix elements or event weights. For each selected correction it forms SM + that correction, then divides by SM for the lower panel.
+Expect four nonempty PDFs. In WSL, run `explorer.exe .` in Bash to open this directory in Windows.
 
-**B3. Open the PDFs in Windows.** In **Linux Bash under WSL**, go to the output directory;
-do not enter this command at Python's `>>>`. Enter the full line and press Enter once:
-
-**Linux Bash / WSL | enter each complete command and press Enter:**
-
-```bash
-cd ~/smeftsim/outputs/my_pyroot_reference
-explorer.exe .
-```
-
-File Explorer opens the output directory. Double-click a PDF to read it.
-
-**Optional shortcut, rather than the next step:**
-To redraw the authors' existing ROOT file, skip the decompression and analysis in A.
-Create and enter the output directory above, then enter this full line and press Enter once:
-
-**Linux Bash | one command at a time:** each line is one complete command. Press Enter once, wait for it to finish, then enter the next line.
+Checkpoint: trace `events.lhe → Hvlvl_SM.root → plot_mmv.pdf`, and identify which program creates each file.
+If you only want to redraw the existing reference ROOT file, skip A–B and use this alternative in `~/smeftsim/outputs/ref`:
 
 ```bash
-python ../../work/Material/pyroot_python3/plot_histos.py '../../reference/Results/Root_files/Hvlvl_SM_run_01.root'
+python ../../work/Material/pyroot_python3/plot_histos.py ../../reference/Results/Root_files/Hvlvl_SM_run_01.root
 ```
 
-Choose either this command or B2; they use different inputs, so do not run both in succession.
-Plotting again overwrites PDFs with the same names. The authors' `make_rootfiles.sh` calls the analyzer in batches
-and assumes `run_01`. Here, calling the scripts individually makes each input, output, and run name clear.
+Choose one plotting input; another call overwrites PDFs with the same names. The batch script `make_rootfiles.sh` is unnecessary for learning these two calls.
 
 ### 6.6 Adjust the authors' existing plot settings if needed
 
@@ -496,7 +408,17 @@ generate h > e- ve~ mu+ vm SMHLOOP=0 NP=0 NPprop=0
 display processes
 ```
 
-Check that the model imports successfully and that the process is the intended SM Higgs decay to four leptons.
+These commands have different jobs:
+
+| Command | Meaning here |
+|---|---|
+| `set ... --no_save` | Disables updating and allows local model conversion for this session; does not edit your saved global configuration |
+| `import model ...` | Loads SMEFTsim interactions after applying the `massless_Hvlvl` restriction |
+| `generate ...` | Selects Higgs decay to `e- ve~ mu+ vm` and builds its SM matrix elements; no events are sampled yet |
+| `display processes` | Prints what was selected, so you can catch a wrong final state or order before exporting |
+
+Check that the model imports successfully and the selected process is the intended decay.
+The `>` in `generate h > ...` belongs to MadGraph process syntax; it is not Bash output redirection.
 For the first export, continue in the same `MG5_aMC>` session:
 
 ```text
@@ -514,6 +436,9 @@ ls Hvlvl_SM/Cards/param_card.dat Hvlvl_SM/Cards/run_card.dat
 If `Hvlvl_SM` already exists, skip `output`, enter only `quit`, and continue with card configuration or a new run name. Preserve the existing process.
 
 ### 8.2 Configure the cards
+
+The exported process defines **which matrix element** to evaluate. These cards define **with which numerical inputs and sampling settings**.
+Copy the supplied templates so the mass, width and cut conventions match the reference exercise:
 
 **Linux Bash | one command at a time:** each line is one complete command. Press Enter once, wait for it to finish, then enter the next line.
 
@@ -544,6 +469,14 @@ Check that you are editing the Linux working copy. To change the event count, ed
 Naming a run `...2000` does not make the generator produce 2,000 events automatically.
 Cards commonly use `value = parameter_name` or `index value # parameter comment`; preserve the original file's format.
 
+For example, the `Block smeft` entry `22 0.000000e+00 # cHl3` sets this independent coefficient to zero; `Block smeftcutoff` sets `LambdaSMEFT` to 1,000 GeV.
+`nevents` controls the requested sample size, while `iseed` controls pseudo-random sampling. Neither changes the interaction model.
+The decay calculation has no proton beams, even though the generic card contains beam/PDF fields; do not infer a 13 TeV collision from those unused entries.
+Leave the supplied cuts unchanged: here `ptl=0` sets no positive minimum and `ptlmax=-1` means no upper cut. Do not import the detector tutorial's `ptl=10` into this reference decay.
+This exercise has no parton shower and no matching/merging step; these words need not appear as literal card entries.
+
+Checkpoint: find `cHl3`, `LambdaSMEFT`, `nevents` and `iseed`, and identify which file contains each. Editing a card alone does not create any events.
+
 ### 8.3 Generate a run with its own name
 
 **Linux Bash, current directory `work/Material`:**
@@ -553,6 +486,10 @@ Cards commonly use `value = parameter_name` or `index value # parameter comment`
 ```bash
 ./Hvlvl_SM/bin/generate_events training_sm_2000
 ```
+
+`generate_events` runs the numerical code exported in Section 8.1, reading the two cards you just saved.
+Compilation produces an executable, integration estimates the partial width, and event sampling writes particle momenta and weights to LHE.
+`training_sm_2000` chooses the result directory; it is not an input filename or an event-count option.
 
 After pressing Enter, you enter MadGraph's tool menu; **you are no longer at an ordinary Bash prompt**.
 Follow this sequence, without pasting later analysis commands into the menu:
@@ -573,6 +510,13 @@ The output should be under `Hvlvl_SM/Events/training_sm_2000`, including the LHE
 
 ### 8.4 Check what you generated
 
+The important outputs under `Hvlvl_SM/Events/training_sm_2000/` are:
+
+| File | What to inspect | Next use |
+|---|---|---|
+| `unweighted_events.lhe.gz` | LHE header, final-state particle records and event weights | Decompress an analysis copy in Section 8.5; keep the compressed original for Section 9 |
+| `training_sm_2000_tag_1_banner.txt` | Snapshot of process definition, cards and integration information | Record the configuration actually used, rather than a card edited later |
+
 Check the following:
 
 1. The process is the intended Higgs decay, and the model and restriction have not changed to another version.
@@ -585,183 +529,68 @@ For research records, preserve the full configuration and statistical results; m
 
 ### 8.5 Create a ROOT file for the SM distributions
 
-This section produces four histograms **containing only the SM baseline**.
-Section 9 uses the original compressed events to calculate additional contributions; the two sections use different analysis inputs.
-
-The authors' analyzer reads declarations of additional weights from the LHE header.
-To plot only the SM, remove these declarations and additional-weight blocks from a separate **analysis copy**, retaining the original SM events.
-Particle four-momenta, the original SM weights, and the event count remain unchanged. Keep the original `.lhe.gz`.
-
-**Starting point: Linux Bash with `.venv` activated. Enter each whole command, press Enter once, and wait for it to finish.**
-
-#### A. Prepare the directory and decompressed copy
-
-**Linux Bash | one command at a time:**
+**Linux Bash, `.venv` active; one complete command per Enter.** The input is your generated LHE, not the reference sample.
+Make a decompressed copy in the short analysis directory `outputs/sm`:
 
 ```bash
 cd ~/smeftsim
-mkdir -p outputs/my_sm_visual
-gzip -dc work/Material/Hvlvl_SM/Events/training_sm_2000/unweighted_events.lhe.gz > outputs/my_sm_visual/events_full.lhe
+mkdir -p outputs/sm
+gzip -dc work/Material/Hvlvl_SM/Events/training_sm_2000/unweighted_events.lhe.gz > outputs/sm/events_full.lhe
 ```
 
-The final command is one complete line: enter the compressed input path, `>`, and output path before pressing Enter.
-For another run, replace only `training_sm_2000`.
-`events_full.lhe` is a decompressed copy; the original compressed file is unaffected.
-
-#### B. Prepare the input used only for SM analysis
-
-**Linux Bash | enter the whole line, then press Enter once:**
+If your run has another name, replace `training_sm_2000` consistently.
+The tutorial analyzer allocates histograms from the LHE header's extra-weight declarations. Some SM files carry declarations without a complete set of event weights.
+For **SM-only analysis**, remove declarations and extra-weight blocks from a separate copy:
 
 ```bash
-sed -e '/<initrwgt>/,/<\/initrwgt>/d' -e '/<rwgt>/,/<\/rwgt>/d' outputs/my_sm_visual/events_full.lhe > outputs/my_sm_visual/events_sm.lhe
+sed -e '/<initrwgt>/,/<\/initrwgt>/d' -e '/<rwgt>/,/<\/rwgt>/d' outputs/sm/events_full.lhe > outputs/sm/events_sm.lhe
+ls -lh outputs/sm/events_sm.lhe
+head -n 1 outputs/sm/events_sm.lhe
 ```
 
-| Command part | Meaning |
-|---|---|
-| `sed` | Processes text according to rules, without editing the source file |
-| First `-e ...` | Removes the additional-weight declaration block `<initrwgt>... </initrwgt>` |
-| Second `-e ...` | Removes each event's additional-weight block `<rwgt>... </rwgt>` |
-| `events_full.lhe` | The complete decompressed input copy |
-| `> .../events_sm.lhe` | Saves the result as a separate SM analysis input |
-
-This step **does not fill missing EFT weights with zeros**. It selects the original SM weights for analysis
-without calculating additional contributions. Use `events_sm.lhe` only in this section; Section 9 reweights the original `.lhe.gz`.
-
-**Linux Bash | check each command separately:**
+The two `sed` rules remove `<initrwgt>...</initrwgt>` and `<rwgt>...</rwgt>` blocks. They do not recalculate weights or replace missing EFT contributions with zero.
+Particle momenta, original SM weights and event count are retained. Keep the original `.lhe.gz` for reweighting; do not use this stripped copy in Section 9.
+Expect a nonempty file starting with `<LesHouchesEvents ...>`, then run the same analyzer as in Section 6:
 
 ```bash
-ls -lh outputs/my_sm_visual/events_sm.lhe
-head -n 1 outputs/my_sm_visual/events_sm.lhe
+python work/Material/pyroot_python3/lhe_analyzer.py outputs/sm/events_sm.lhe outputs/sm/Hvlvl_SM.root
 ```
 
-Expect a nonempty file whose first line starts with `<LesHouchesEvents ...>`.
-
-#### C. Call the authors' analyzer
-
-**Linux Bash | enter the whole line, press Enter once, then wait for it to finish:**
-
-```bash
-python work/Material/pyroot_python3/lhe_analyzer.py outputs/my_sm_visual/events_sm.lhe outputs/my_sm_visual/Hvlvl_SM.root
-```
-
-`events_sm.lhe` is the first argument and `Hvlvl_SM.root` the second.
-Enter both together with the script path; do not press Enter early after the LHE path.
-
-With no additional weights, the analyzer may print `no new weights found`, which is expected here.
-At the end, expect `processed 2000 events` and `file ... produced`.
-If you requested another event count, use the actual number. Wait for the Bash prompt before Section 8.6.
-
-The ROOT file should contain four histograms:
-`mll_direct_sim`, `mmv_direct_sim`, `pTl1_direct_sim`, and `pTmu_direct_sim`.
-The authors' analyzer has already normalized by the event count; do not divide again.
+The **first argument** is input, the **second** is output. Wait for `processed 2000 events` and `file ... produced`; use the actual count if you requested another size.
+`no new weights found` is expected for this SM-only copy. The ROOT file contains four histograms: `mll_direct_sim`, `mmv_direct_sim`, `pTl1_direct_sim` and `pTmu_direct_sim`.
+The analyzer already divides by the event count. The next command will draw these stored bins without rereading the LHE.
 
 ### 8.6 Use ROOT to plot your own SM distributions
 
-Here you call ROOT's existing `TFile`, `TCanvas`, `Draw`, and `SaveAs` interfaces.
-The authors' analyzer has filled the histograms, so there is no need to rewrite the event analysis.
-
-#### A. Enter Python from Bash
-
-**Linux Bash | one command at a time:** run `cd` first, then `python`.
+Use the **same existing `plot_histos.py`** as for the reference; no interactive Python loop is needed.
+In Linux Bash, enter each whole line and press Enter once:
 
 ```bash
-cd ~/smeftsim/outputs/my_sm_visual
-python
+cd ~/smeftsim/outputs/sm
+python ../../work/Material/pyroot_python3/plot_histos.py Hvlvl_SM.root
+ls -lh plot_mll.pdf plot_mmv.pdf plot_pTl1.pdf plot_pTmu.pdf
 ```
 
-After the second command, Python displays `>>>`. From this point, enter only Python code.
+Input: the four SM histograms from Section 8.5. Output: four PDFs in `outputs/sm`.
+The upper panel contains the SM curve; the lower panel is empty because this file contains no EFT correction histograms.
+An empty lower panel is expected here. It will contain comparison curves after Section 9.
+In WSL, `explorer.exe .` opens this directory from Bash.
 
-#### B. Open the ROOT file and prepare a canvas
-
-**Interactive Python | enter each complete line and press Enter once. Wait for `>>>` before the next line.**
-The long `labels = ...` line is also one statement; enter the whole line before pressing Enter.
-
-```python
-import ROOT
-ROOT.gROOT.SetBatch(True)
-file = ROOT.TFile.Open("Hvlvl_SM.root")
-canvas = ROOT.TCanvas("sm", "SM distributions", 800, 600)
-canvas.SetLogy()
-observables = ["mll", "mmv", "pTl1", "pTmu"]
-labels = {"mll": "m_{e#mu} [GeV]", "mmv": "m_{#mu#nu_{#mu}} [GeV]", "pTl1": "p_{T}^{leading lepton} [GeV]", "pTmu": "p_{T}^{#mu} [GeV]"}
-```
-
-`SetBatch(True)` enables saving plots without requiring an Ubuntu graphical desktop.
-`TFile.Open` reads the histograms, `TCanvas` creates a canvas, and `SetLogy` gives a logarithmic vertical axis.
-`labels` uses ROOT's axis-title syntax; for example, `#mu` represents the Greek letter μ.
-
-#### C. Plot and save the four existing histograms
-
-**Interactive Python loop | press Enter after each line, preserve indentation, then finish with one additional blank Enter.**
-
-1. Enter `for obs in observables:` and press Enter; Python displays `...`.
-2. Preserve **4 spaces** at the beginning of each of the next seven lines, pressing Enter after each.
-3. After the final `canvas.SaveAs(...)` line, Python still displays `...`.
-4. **Type nothing and press Enter once more** to execute the entire loop.
-5. Wait for four sets of file-saving messages and for `>>>` to return.
-
-```python
-for obs in observables:
-    hist = file.Get(obs + "_direct_sim")
-    hist.SetTitle("SM: " + obs)
-    hist.GetXaxis().SetTitle(labels[obs])
-    hist.GetYaxis().SetTitle("Partial width per bin [GeV]")
-    hist.Draw("hist")
-    canvas.SaveAs("SM_" + obs + ".pdf")
-    canvas.SaveAs("SM_" + obs + ".png")
-
-```
-
-`Get` retrieves a histogram; `Draw("hist")` plots its bin contents.
-`SaveAs` saves a PDF or PNG according to the extension. Title changes occur only in memory and are not written back to the ROOT file.
-The vertical axis is the **partial-width contribution per bin, in GeV**, rather than a differential density divided by bin width.
-
-#### D. Close the file and return to Bash
-
-**Interactive Python | press Enter once after each line:**
-
-```python
-file.Close()
-exit()
-```
-
-After `exit()`, the Bash `$` prompt should return. Check the results:
-
-**Linux Bash | enter the whole line, then press Enter once:**
-
-```bash
-ls -lh SM_*.pdf SM_*.png
-```
-
-Expect four PDFs and four PNGs: one of each for `mll`, `mmv`, `pTl1`, and `pTmu`.
-
-In **Linux Bash under WSL**, enter one complete command at a time:
-
-```bash
-cd ~/smeftsim/outputs/my_sm_visual
-explorer.exe .
-```
-
-Double-click a PNG or PDF. Start by examining the peak positions, distribution tails, and overall scale.
-The SM partial width in this example is approximately `1e-5 GeV`; different random seeds produce statistical fluctuations.
-
-Below is this project's 2,000-event SM example. Your result need not match it bin by bin:
+The script retains the supplied `pb` axis labels. For this **decay**, the stored bin contents are partial-width contributions in **GeV**, not cross sections; see Section 6.2 and the [figure guide](docs/figures/README.md).
+Do not infer the physical units from that inherited plot label. The separately supplied single-panel example below uses explicit width labels:
 
 ![SM electron–muon invariant-mass distribution](docs/figures/sm_mll.png)
 
-Other examples: [muon–neutrino invariant mass](docs/figures/sm_mmv.png),
-[leading-lepton transverse momentum](docs/figures/sm_pTl1.png),
-and [muon transverse momentum](docs/figures/sm_pTmu.png).
-
-**Section complete:** you have converted your own SM LHE sample into ROOT, PDF, and PNG files.
-Continue to Section 9 to calculate EFT contributions on the same original SM events.
+Checkpoint: the integrated width is of order `1e-5 GeV`. Identify which panel shows your SM and why no ratio curve has appeared yet.
+You have now followed your own events through **generation → SM-only analysis copy → ROOT → PDFs**.
+Continue to Section 9 using the original compressed events.
 
 ## 9. Reweighting and ROOT plots
 
 This section uses the original SM LHE from Section 8 to calculate the additional contributions defined by the authors' cards on the same events.
 The SM analysis copy in Section 8.5 is only for plotting the SM alone; it is not the reweighting input here.
 Sections 9.1–9.2 explain the principles and card contents; the actual operations start in Section 9.3.
-Section 9.4 produces `outputs/my_pyroot_reweighted/Hvlvl_SM.root` and four comparison plots.
+Section 9.4 produces `outputs/rw/Hvlvl_SM.root` and four comparison plots.
 
 ### 9.1 What does reweighting do?
 
@@ -795,7 +624,9 @@ done
 ```
 
 The first line selects the interference process; `launch` names the output weight; the following lines set this point's coefficients.
-The LHE `<rwgt>` block stores the weights. The original SM weight and additional weights have different meanings and must be distinguished in analysis.
+MadGraph reads this card in `madevent reweight`; it does not run the generation menu again.
+`change process` defines the matrix-element contribution used in the numerator, `--rwgt_name` defines its LHE label, and the `set` lines choose the parameter point.
+The filename of the card is not the weight label. The LHE `<rwgt>` block stores the weights. The original SM weight and additional weights have different meanings and must be distinguished in analysis.
 Here, `cHl3` represents the selected linear interference contribution. Other cards select squared or propagator corrections.
 
 #### From a matrix-element ratio to the weights used in plotting
@@ -820,6 +651,9 @@ Weights on the same event are correlated, so combination uncertainties should be
 ### 9.3 Use the authors' reweight cards in MadGraph yourself
 
 The aim is to use the three supplied cards to calculate linear, squared, and propagator contributions for ROOT plotting.
+Every call below reads the selected run's **existing LHE** and the process copy's **current `Cards/reweight_card.dat`**.
+It compiles the target matrix element if needed, evaluates it at each existing event, and updates that run's compressed LHE with new labels and weights.
+It produces neither ROOT nor PDF files. Section 9.4 analyzes this updated LHE once all three calls are complete.
 The linear card calculates four single-coefficient linear contributions; the squared card calculates four squared contributions;
 the propagator card calculates three width/propagator contributions.
 **There is no need to regenerate events for each coefficient or to use the mixed-term card to draw the six reference correction curves.**
@@ -953,7 +787,13 @@ If the command returns to the terminal without the corresponding labels, inspect
 Do not continue straight to plotting after a failure. Confirming success also requires checking the actual per-event weights in the next section,
 not just the header labels or the process exit code.
 
-#### E. Continue to ROOT analysis
+#### E. Trace one coefficient before continuing
+
+For `cHl3`, trace these three independent labels: `cHl3` (ordinary linear), `cHl3_sq` (dimension-six squared), and `cHl3_propW` (propagator correction).
+The input phase-space points are identical; the target order selection and weights differ.
+When plotting, each selected label is added **separately** to the SM. Selecting three labels does not ask the plotter to add all three into one prediction.
+To study another parameter point later, first state which contribution and coefficient value you want, then edit a **separate card with a distinct weight label** and rerun reweighting.
+Changing only `weights_to_plot` selects existing histograms and cannot calculate new physics.
 
 After all three reweighting calls, the file remains in the Linux process directory.
 Continue with Section 9.4, calling the authors' analyzer and plotting script in the same `.venv`.
@@ -968,11 +808,9 @@ After Section 9.3, the file should contain the linear, squared, and propagator l
 
 ```bash
 cd ~/smeftsim
-mkdir -p outputs/my_pyroot_reweighted
-
-gzip -dc work/Material/Hvlvl_SM_manual/Events/training_sm_2000/unweighted_events.lhe.gz > outputs/my_pyroot_reweighted/events.lhe
-
-python work/Material/pyroot_python3/lhe_analyzer.py  outputs/my_pyroot_reweighted/events.lhe  outputs/my_pyroot_reweighted/Hvlvl_SM.root
+mkdir -p outputs/rw
+gzip -dc work/Material/Hvlvl_SM_manual/Events/training_sm_2000/unweighted_events.lhe.gz > outputs/rw/events.lhe
+python work/Material/pyroot_python3/lhe_analyzer.py outputs/rw/events.lhe outputs/rw/Hvlvl_SM.root
 ```
 
 **Check successful analysis before plotting:** expect `processed ... events`, the integrated values of the weights, and `file ... produced`,
@@ -982,26 +820,28 @@ For future runs, use their actual event count. If an error occurs, first check S
 **Linux Bash | one command at a time:** enter the whole line, press Enter once, and wait for the result.
 
 ```bash
-ls -lh outputs/my_pyroot_reweighted/Hvlvl_SM.root
+ls -lh outputs/rw/Hvlvl_SM.root
 ```
 
-Expect a nonempty ROOT file. `my_pyroot_reweighted` is the directory and `Hvlvl_SM.root` the file.
+Expect a nonempty ROOT file. `rw` is the directory and `Hvlvl_SM.root` the file.
 It comes from the reweighted SM copy and contains the SM baseline plus additional contributions. The ROOT file from Section 8.5 contains only the SM baseline.
 
 **Linux Bash | one command at a time:** first change directories and press Enter; then enter the complete plotting command, press Enter, and wait for it to finish.
 
 ```bash
-cd outputs/my_pyroot_reweighted
+cd outputs/rw
 python ../../work/Material/pyroot_python3/plot_histos.py Hvlvl_SM.root
 ```
 
-The first Python command analyzes the LHE file; the second plots the histograms. Both call compatible copies of the authors' scripts.
+The analyzer reads the updated LHE, including its original SM weights and all additional labels, and stores the four distributions for each weight.
+The plotter reads those binned results and writes the comparisons. It does not open several independent SM/EFT simulation directories or calculate a new `cHl3=1` point.
+For this exercise, one reweighted event sample contains everything needed to draw the reference contributions.
 Expect four `plot_*.pdf` files. In WSL, open the output directory from Linux Bash:
 
 **Linux Bash / WSL | enter each complete command and press Enter:**
 
 ```bash
-cd ~/smeftsim/outputs/my_pyroot_reweighted
+cd ~/smeftsim/outputs/rw
 explorer.exe .
 ```
 
@@ -1055,7 +895,7 @@ The main work can be split into four sessions; computational waiting time is add
 | Session | Active learning time | Task | What you should be able to explain |
 |---|---:|---|---|
 | 1 | 30–40 minutes | Sections 2–3: physics and the software chain | How SMEFTsim describes new interactions |
-| 2 | 30–40 minutes | Section 6: call the authors' scripts and read the reference plots | Weight labels, rate, shape, and bins |
+| 2 | 20–30 minutes | Section 6: trace the two analysis calls and read reference plots | Which file contains particles, weights or binned summaries |
 | 3 | 30–45 minutes | Sections 7–8: generate and plot your own SM sample | The roles of the model, the two cards, LHE, and ROOT |
 | 4 | 30–45 minutes | Section 9: reweight and plot comparisons | How different contributions come from the same base events |
 

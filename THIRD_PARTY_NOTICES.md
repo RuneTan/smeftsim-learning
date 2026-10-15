@@ -2,7 +2,7 @@
 
 [English](THIRD_PARTY_NOTICES.md) | [简体中文](THIRD_PARTY_NOTICES.zh-CN.md)
 
-Checked on 2026-10-14. This file records component sources and license information;
+Checked on 2026-10-15. This file records component sources and license information;
 it does not replace an upstream license.
 
 ## SMEFTsim model and parameter material
@@ -33,7 +33,7 @@ and the Python 3 interpreter line. Restoration instructions are shared in the
 ## MadGraph and ROOT
 
 MadGraph5_aMC@NLO 2.9.27, MadTeam:
-the local core `madgraph/LICENSE` is adapted from Illinois/NCSA.
+the pinned source root `LICENSE` is adapted from Illinois/NCSA.
 Its unmodified text is retained in [licenses/MadGraph-NCSA.txt](licenses/MadGraph-NCSA.txt).
 Vendor components may use other licenses. Generator source and binaries are not distributed here.
 

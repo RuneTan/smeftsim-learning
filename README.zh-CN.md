@@ -7,13 +7,15 @@
 
 **第一次使用：先看 [安装指南](docs/setup/README.zh-CN.md)，再跟随 [handbook](handbook.zh-CN.md)。**
 安装指南从创建专用 WSL2/Ubuntu 开始，将软件下载、单一 `.venv`、分析脚本准备和安装校验串在一起。
+手册在调用旁解释读取、改变和写出的内容；分析与画图直接调用本地准备的教程脚本，无需手打画图程序。
 所有操作在同一个 Linux 项目目录完成；无需逐个寻找运行目录的说明，也无需 Windows 项目副本。
 
 | 阅读入口 | 用途 |
 |---|---|
 | [安装指南](docs/setup/README.zh-CN.md) | 创建 Linux 环境，获取固定版本软件并检验示例 |
-| [handbook](handbook.zh-CN.md) | 参考图 → 生成自己的 SM → ROOT → 重加权对比 |
+| [handbook](handbook.zh-CN.md) | 模型与卡 → 生成自己的 SM → 重加权 → 分析和画图 |
 | [知识附录](docs/README.zh-CN.md) | 需要时查物理、模型、阶数、参数、图或 Linux 入门 |
+| [探测器链练习](https://github.com/RuneTan/detector-learning) | 继续学习独立的 Pythia → Delphes / Parnassus 教程 |
 | [示例结果](examples/reweighted/README.zh-CN.md) | 2,000 个事件、11 个额外权重、ROOT 直方图与 PDF |
 | [来源与许可证](THIRD_PARTY_NOTICES.zh-CN.md) | 软件、教程和本仓库材料的来源及许可范围 |
 
