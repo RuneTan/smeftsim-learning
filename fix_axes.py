@@ -14,6 +14,7 @@ LABELS = {
 
 
 def finish_display(source):
+    source = source.replace("#Delta#Gamma_{bin} [GeV]", "#Gamma_{bin} [GeV]")
     source = source.replace('canvas.SaveAs("plot_" + histo_key + ".pdf")',
                             'canvas.Print("plot_" + histo_key + ".pdf", "EmbedFonts")')
     source = source.replace("pad1.SetBottomMargin(0 if _has_ratio else 0.16)",
@@ -40,7 +41,7 @@ def main():
         else:
             ast.parse(updated)
             target.write_text(updated)
-            print("Enabled embedded PDF fonts in the local plotter.")
+            print("Updated local plot labels, layout and embedded PDF fonts.")
         return
     tree = ast.parse(source)
     settings = next(node.value for node in ast.walk(tree)
@@ -51,8 +52,8 @@ def main():
         oldx, oldy = original[name][:2]
         source = source.replace(repr(oldx), repr(xlabel))
         source = source.replace('"' + oldx + '"', repr(xlabel))
-        source = source.replace(repr(oldy), repr("#Delta#Gamma_{bin} [GeV]"))
-        source = source.replace('"' + oldy + '"', repr("#Delta#Gamma_{bin} [GeV]"))
+        source = source.replace(repr(oldy), repr("#Gamma_{bin} [GeV]"))
+        source = source.replace('"' + oldy + '"', repr("#Gamma_{bin} [GeV]"))
 
     def replace_once(old, new):
         nonlocal source

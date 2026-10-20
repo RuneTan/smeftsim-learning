@@ -15,7 +15,7 @@ The setup guide applies `fix_axes.py` to correct local labels and layout; histog
 | `pTmu` | $p_T(\mu)$ | Muon transverse momentum |
 
 `sm_*.png` show the SM alone in one panel. `rw_*.png` compare the SM with individual EFT corrections and include a ratio panel.
-The vertical label is $\Delta\Gamma_{\mathrm{bin}}$ [GeV]: the bin content is `sum(weights)/N`, not a cross section in pb.
+The vertical label is $\Gamma_{\mathrm{bin}}$ [GeV]: the bin content is `sum(weights)/N`, not a cross section in pb.
 The bin widths are 5 GeV for `mll` and `mmv`, and 4 GeV for the two transverse-momentum distributions.
 Divide by the bin width to obtain a differential width. The lower panels show dimensionless ratios to the SM.
 

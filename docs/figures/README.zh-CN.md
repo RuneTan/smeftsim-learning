@@ -15,7 +15,7 @@
 | `pTmu` | $p_T(\mu)$ | muon 的横动量 |
 
 `sm_*.png` 用单面板显示纯 SM；`rw_*.png` 比较 SM 与各项 EFT 修正，并附相对 SM 的比值面板。
-纵轴标签为 $\Delta\Gamma_{\mathrm{bin}}$ [GeV]：bin 内容是 `sum(weights)/N`，表示部分衰变宽度贡献，不是以 pb 为单位的截面。
+纵轴标签为 $\Gamma_{\mathrm{bin}}$ [GeV]：bin 内容是 `sum(weights)/N`，表示部分衰变宽度贡献，不是以 pb 为单位的截面。
 `mll`、`mmv` 的 bin 宽为 5 GeV，两个横动量分布的 bin 宽为 4 GeV。
 除以 bin 宽才得到微分宽度；下半图是相对 SM 的无量纲比值。
 

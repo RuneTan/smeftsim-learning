@@ -215,7 +215,7 @@ The four-body final-state kinematics let us compare EFT effects in different reg
 These are generator-level variables. Using the true neutrino momentum does not imply that a detector can directly measure the same quantity.
 
 This process is a Higgs **decay**: the integrated result is a partial width $\Gamma$ in GeV.
-The local plotting copy labels the bin contributions as $\Delta\Gamma_{\mathrm{bin}}$ [GeV]; dividing by the bin width gives a differential width.
+The local plotting copy labels the bin contributions as $\Gamma_{\mathrm{bin}}$ [GeV]; dividing by the bin width gives a differential width.
 For a scattering process, quantities such as cross sections must follow the generator's conventions; do not copy the units of this decay example.
 
 ### 6.2 Reading the upper and lower panels

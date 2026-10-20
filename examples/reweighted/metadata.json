@@ -51,20 +51,20 @@
       "sha256": "f7706027afc7e1c6ee5cc8757112b9773488683da2511aca7e6aaebcc0ce3419"
     },
     "plot_mll.pdf": {
-      "bytes": 14835,
-      "sha256": "9733183be252ea58058b6e8647fade12599c7cd2a68ea599f3343cc6252e8a21"
+      "bytes": 14749,
+      "sha256": "f7ba0eac857ef44ae340fe875befce6520ea608ee789153e9132563ba3d987f0"
     },
     "plot_mmv.pdf": {
-      "bytes": 15190,
-      "sha256": "675b2e7f116eaef4b76b451b76344ad3e644b8866a0aca051581b72a1ca0e1c9"
+      "bytes": 15109,
+      "sha256": "99a1fd1c782876702ec4817ed097ca255a529126c1b36ee1893b77485c13822d"
     },
     "plot_pTl1.pdf": {
-      "bytes": 14307,
-      "sha256": "7ab27786ed0b7d109cf45cf2091c380ce689c6e714d833231816c0ee1c93c30e"
+      "bytes": 14231,
+      "sha256": "712bcd2655aee056293876421f401fcc74c30f76f43803996af0909f6b7ea87d"
     },
     "plot_pTmu.pdf": {
-      "bytes": 14439,
-      "sha256": "ec7261bd8abcc0ca34dae75fb76259a51a75c1b4dcac89b519f42b3bbc33b117"
+      "bytes": 14354,
+      "sha256": "2bd762074e8bd50a1eb652de852d19e86ea694c06884bdb5494da0eb69caf8f2"
     }
   },
   "public_LHE_format": "Analysis-only LHE export; generator banner and embedded card templates omitted; init and event records unchanged",
@@ -201,7 +201,7 @@
   "plotting_display": {
     "script": "Python 3 copy of the pinned tutorial plot_histos.py, with fix_axes.py",
     "updated": "2026-10-20",
-    "y_axis": "bin partial decay width in GeV (not divided by bin width)",
+    "y_axis": "Gamma_bin: bin partial decay width in GeV (not divided by bin width)",
     "validation": "plotted histogram contents and errors unchanged; LHE and ROOT checksums unchanged",
     "pdf_fonts": "embedded by ROOT Print with EmbedFonts / Ghostscript 9.55.0; checked with MuPDF and Poppler"
   }
