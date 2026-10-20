@@ -86,12 +86,12 @@ System packages below are installed only in this dedicated Linux environment. Py
 
 ```bash
 sudo apt-get update
-sudo apt-get install -y --no-install-recommends python3 python3-venv python3-dev build-essential gfortran git perl ca-certificates coreutils sed gzip unzip nano libsm6 libice6 libx11-6 libxext6 libxrender1 libxft2 libglu1-mesa
+sudo apt-get install -y --no-install-recommends python3 python3-venv python3-dev build-essential gfortran git perl ca-certificates coreutils sed gzip unzip nano ghostscript libsm6 libice6 libx11-6 libxext6 libxrender1 libxft2 libglu1-mesa
 python3 -c "import sys; print(sys.version); assert sys.version_info[:2] == (3, 10), 'Use Ubuntu 22.04 / Python 3.10 for this lesson'"
 ```
 
 Enter your Linux password if `sudo` asks. The Python check must finish without an assertion error.
-`build-essential` supplies GCC and Make; `gfortran` compiles the generator's Fortran code. The `lib...` packages supply ROOT graphics libraries. `nano` is a terminal text editor.
+`build-essential` supplies GCC and Make; `gfortran` compiles the generator's Fortran code. The `lib...` packages supply ROOT graphics libraries; Ghostscript embeds PDF fonts. `nano` is a terminal text editor.
 
 ## 3. Obtain the teaching notes and pinned software
 
@@ -158,7 +158,7 @@ python fix_axes.py
 python -m py_compile work/Material/pyroot_python3/lhe_analyzer.py work/Material/pyroot_python3/plot_histos.py
 ```
 
-The conversion expands tabs, updates Python 2 syntax and the interpreter line, and replaces `file()` with `open()`. `fix_axes.py` corrects the local plot labels and uses a single panel for SM-only files; it preserves histogram calculations and upstream originals. Python 3.10 supplies `lib2to3`; Python 3.14 does not.
+The conversion expands tabs, updates Python 2 syntax and the interpreter line, and replaces `file()` with `open()`. `fix_axes.py` corrects local labels and panel spacing, uses a single panel for SM-only files, and enables embedded PDF fonts through ROOT/Ghostscript; it preserves histogram calculations and upstream originals. Python 3.10 supplies `lib2to3`; Python 3.14 does not.
 The final command checks syntax and normally returns quietly.
 
 | Script | Complete call from the project root | Function |

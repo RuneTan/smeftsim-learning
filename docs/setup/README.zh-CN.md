@@ -86,12 +86,12 @@ whoami
 
 ```bash
 sudo apt-get update
-sudo apt-get install -y --no-install-recommends python3 python3-venv python3-dev build-essential gfortran git perl ca-certificates coreutils sed gzip unzip nano libsm6 libice6 libx11-6 libxext6 libxrender1 libxft2 libglu1-mesa
+sudo apt-get install -y --no-install-recommends python3 python3-venv python3-dev build-essential gfortran git perl ca-certificates coreutils sed gzip unzip nano ghostscript libsm6 libice6 libx11-6 libxext6 libxrender1 libxft2 libglu1-mesa
 python3 -c "import sys; print(sys.version); assert sys.version_info[:2] == (3, 10), 'Use Ubuntu 22.04 / Python 3.10 for this lesson'"
 ```
 
 `sudo` 要求密码时输入 Linux 密码。Python 检查应结束且没有断言错误。
-`build-essential` 提供 GCC 和 Make；`gfortran` 编译生成器的 Fortran 代码；`lib...` 软件包提供 ROOT 图形库；`nano` 是终端文本编辑器。
+`build-essential` 提供 GCC 和 Make；`gfortran` 编译生成器的 Fortran 代码；`lib...` 软件包提供 ROOT 图形库；Ghostscript 用于嵌入 PDF 字体；`nano` 是终端文本编辑器。
 
 ## 3. 获取教学文档与固定版本的软件
 
@@ -159,7 +159,7 @@ python fix_axes.py
 python -m py_compile work/Material/pyroot_python3/lhe_analyzer.py work/Material/pyroot_python3/plot_histos.py
 ```
 
-兼容转换展开 tab、更新 Python 2 语法和解释器行，将 `file()` 换成 `open()`。`fix_axes.py` 修正本地绘图标签，并让纯 SM 文件使用单面板；直方图计算和上游原文件保持不变。
+兼容转换展开 tab、更新 Python 2 语法和解释器行，将 `file()` 换成 `open()`。`fix_axes.py` 修正本地标签与面板间距，让纯 SM 文件使用单面板，并通过 ROOT/Ghostscript 嵌入 PDF 字体；直方图计算和上游原文件保持不变。
 Python 3.10 带有 `lib2to3`，Python 3.14 没有。最后一条命令检查语法，正常时安静结束。
 
 | 脚本 | 从项目根目录调用的完整形式 | 功能 |

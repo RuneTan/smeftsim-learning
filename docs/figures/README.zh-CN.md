@@ -5,7 +5,7 @@
 这些图使用本项目在本地生成的 2,000 个 SM 基础事件及其额外权重。
 直方图由 `lhe_analyzer.py` 生成；纯 SM 与重加权图都调用 Ilaria Brivio
 [2023 年 6 月教程的 `plot_histos.py`](https://github.com/IlariaBrivio/SMEFTsim_tutorial_June23/blob/92ffde994d7c0d90554ee629cc477ee171c76b84/Material/plot_histos.py) 的 Python 3 副本。
-安装步骤通过 `fix_axes.py` 修正本地标签与纯 SM 布局，直方图计算保持不变。PNG 与 PDF 导出自同一张 ROOT 画布。
+安装步骤通过 `fix_axes.py` 修正本地标签与布局，直方图计算保持不变。PDF 通过 ROOT 的 `Print(..., "EmbedFonts")` 与 Ghostscript 嵌入字体，避免希腊字母依赖阅读器的替代字体；PNG 导出自同一张 ROOT 画布。
 
 | 文件名后缀 | 横轴 | 定义 |
 |---|---|---|

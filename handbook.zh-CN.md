@@ -251,7 +251,7 @@ $$R(X)=\frac{(\text{SM}+\text{一个指定贡献})(X)}{\text{SM}(X)}.$$
 实际调用 Linux 的 `work/Material/pyroot_python3/lhe_analyzer.py` 和 `plot_histos.py`。
 
 原件、两个脚本的参数及新机器转换方法见
-[安装指南第 5 节](docs/setup/README.zh-CN.md#5-准备两份-python-3-分析脚本)。已有安装可在 `~/smeftsim` 执行一次 `python fix_axes.py`，应用显示修正。
+[安装指南第 5 节](docs/setup/README.zh-CN.md#5-准备两份-python-3-分析脚本)。已有安装先在 Linux 执行 `sudo apt-get install -y --no-install-recommends ghostscript`，再从 `~/smeftsim` 执行 `python fix_axes.py` 并重新绘图。
 许可未明确的教程代码只在本地使用；公开仓库包含转换说明，不包含这些副本。
 
 **Linux Bash，项目根目录，逐条回车：**

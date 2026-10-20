@@ -13,14 +13,34 @@ LABELS = {
 }
 
 
+def finish_display(source):
+    source = source.replace('canvas.SaveAs("plot_" + histo_key + ".pdf")',
+                            'canvas.Print("plot_" + histo_key + ".pdf", "EmbedFonts")')
+    source = source.replace("pad1.SetBottomMargin(0 if _has_ratio else 0.16)",
+                            "pad1.SetBottomMargin(0.035 if _has_ratio else 0.16)")
+    source = source.replace("pad2.SetTopMargin(0.0)", "pad2.SetTopMargin(0.04)")
+    source = source.replace("h_toPlot[hk].GetXaxis().SetTitleSize(0.05)",
+                            "h_toPlot[hk].GetXaxis().SetTitleSize(0 if _has_ratio else 0.05)\n"
+                            "                   h_toPlot[hk].GetXaxis().SetLabelSize(0 if _has_ratio else 0.035)")
+    return source
+
+
 def main():
     root = Path(__file__).resolve().parent
     target = root / "work/Material/pyroot_python3/plot_histos.py"
     if not target.is_file():
         raise SystemExit("Prepare the Python 3 plotting copy using docs/setup first.")
     source = target.read_text()
+    if not shutil.which("gs"):
+        raise SystemExit("Install Ghostscript in the Linux environment first; see docs/setup. No file was changed.")
     if MARKER in source:
-        print("Local plotting labels and SM-only layout are already fixed.")
+        updated = finish_display(source)
+        if updated == source:
+            print("Local plot labels, SM-only layout and PDF font embedding are already fixed.")
+        else:
+            ast.parse(updated)
+            target.write_text(updated)
+            print("Enabled embedded PDF fonts in the local plotter.")
         return
     tree = ast.parse(source)
     settings = next(node.value for node in ast.walk(tree)
@@ -53,6 +73,7 @@ def main():
     replace_once("        ratio = {}", "        if not _has_ratio:\n"
                  '            canvas.SaveAs("plot_" + histo_key + ".pdf")\n'
                  "            continue\n\n        ratio = {}")
+    source = finish_display(source)
     ast.parse(source)
     backup = root / ".maintainer-notes/axes/plot_histos.before.py"
     backup.parent.mkdir(parents=True, exist_ok=True)
@@ -61,7 +82,7 @@ def main():
     first, separator, rest = source.partition("\n")
     source = first + separator + MARKER + "\n" + rest if first.startswith("#!") else MARKER + "\n" + source
     target.write_text(source)
-    print("Fixed local axis labels and SM-only layout; histogram values and upstream files are unchanged.")
+    print("Fixed local labels, SM-only layout and PDF font embedding; histogram values and upstream files are unchanged.")
 
 
 if __name__ == "__main__":

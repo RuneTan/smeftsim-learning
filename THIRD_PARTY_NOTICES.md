@@ -27,7 +27,7 @@ The MIT license of the SMEFTsim model is not assumed to license the independent 
 
 Local tutorial downloads and author-derived Python files under `work/Material` are excluded from Git.
 Compatibility changes consist of tab expansion, Python 2 syntax conversion, `file()` to `open()`
-and the Python 3 interpreter line. The project's `fix_axes.py` additionally corrects labels and the SM-only layout in the local plotter, without changing histogram calculations. Preparation instructions are in the
+and the Python 3 interpreter line. The project's `fix_axes.py` additionally corrects local labels and layout and enables embedded PDF fonts, without changing histogram calculations. Preparation instructions are in the
 [working-copy guide](docs/setup/README.md#5-prepare-the-two-python-3-analysis-scripts).
 
 ## MadGraph and ROOT
@@ -39,6 +39,9 @@ Vendor components may use other licenses. Generator source and binaries are not 
 
 ROOT/PyROOT uses [LGPL 2.1 or later](https://root.cern/about/license/).
 It is called in the local environment; ROOT installations and shared libraries are not bundled.
+
+PDF font embedding uses local [Ghostscript](https://www.ghostscript.com/licensing/) (AGPL-3.0-or-later); its executable is not bundled.
+Published PDFs embed subsets of [URW Base 35 fonts](https://github.com/ArtifexSoftware/urw-base35-fonts), licensed under AGPL-3.0 with an explicit document-embedding exception. The copyright, exception and license text are retained in [licenses/URW-fonts.txt](licenses/URW-fonts.txt).
 
 ## Locally generated example
 

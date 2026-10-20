@@ -25,7 +25,7 @@
 
 本地 `tutorial`、`work/Material` 的作者材料和两个 Python 3 兼容脚本被 Git 忽略。
 兼容转换包括 tab 展开、Python 2 语法转换、`file()` 到 `open()` 及解释器行更新。
-本项目的 `fix_axes.py` 另行修正本地绘图标签和纯 SM 布局，不改变直方图计算；准备方法见 [工作副本说明](docs/setup/README.zh-CN.md#5-准备两份-python-3-分析脚本)。
+本项目的 `fix_axes.py` 另行修正本地标签与布局并启用 PDF 字体嵌入，不改变直方图计算；准备方法见 [工作副本说明](docs/setup/README.zh-CN.md#5-准备两份-python-3-分析脚本)。
 
 ## MadGraph 与 ROOT
 
@@ -36,6 +36,9 @@ vendor 组件可能有其他许可。程序源码与二进制不纳入本项目�
 
 ROOT/PyROOT 采用 [LGPL 2.1 或更新版本](https://root.cern/about/license/)，
 本项目只在本地环境调用，不分发 ROOT 安装或共享库。
+
+PDF 字体嵌入使用本地 [Ghostscript](https://www.ghostscript.com/licensing/)（AGPL-3.0-or-later），不分发其可执行程序。
+公开 PDF 嵌入 [URW Base 35 字体](https://github.com/ArtifexSoftware/urw-base35-fonts) 的子集，其许可为附有明确文档嵌入例外的 AGPL-3.0；版权、例外条款与许可全文保存在 [licenses/URW-fonts.txt](licenses/URW-fonts.txt)。
 
 ## 本项目生成的示例
 

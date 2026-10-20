@@ -252,7 +252,7 @@ The shared `.venv` activated in Section 5 already contains ROOT. There is no nee
 The actual scripts called in Linux are `work/Material/pyroot_python3/lhe_analyzer.py` and `plot_histos.py`.
 
 The [installation guide, Section 5](docs/setup/README.md#5-prepare-the-two-python-3-analysis-scripts) describes the originals, the arguments required by both scripts,
-and how to prepare them on a new computer. Existing installations can run `python fix_axes.py` once from `~/smeftsim` to apply the display fixes.
+and how to prepare them on a new computer. For an existing installation, first run `sudo apt-get install -y --no-install-recommends ghostscript` in Linux, then `python fix_axes.py` from `~/smeftsim` before replotting.
 Tutorial code without a confirmed license is used only locally; the public repository includes conversion instructions rather than these copies.
 
 **Linux Bash, project root | one command at a time:**
