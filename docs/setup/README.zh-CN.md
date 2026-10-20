@@ -155,10 +155,11 @@ expand -t 8 tutorial/Material/plot_histos.py > work/Material/pyroot_python3/plot
 python -m lib2to3 -w -n work/Material/pyroot_python3/lhe_analyzer.py work/Material/pyroot_python3/plot_histos.py
 sed -i 's/\bfile[[:space:]]*(/open(/g' work/Material/pyroot_python3/lhe_analyzer.py
 sed -i '1s|^#!/usr/bin/env python$|#!/usr/bin/env python3|' work/Material/pyroot_python3/lhe_analyzer.py work/Material/pyroot_python3/plot_histos.py
+python fix_axes.py
 python -m py_compile work/Material/pyroot_python3/lhe_analyzer.py work/Material/pyroot_python3/plot_histos.py
 ```
 
-这些改动只展开 tab、转换 Python 2 语法、将 `file()` 换成 `open()` 并更新解释器行，保留算法和上游原文件。
+兼容转换展开 tab、更新 Python 2 语法和解释器行，将 `file()` 换成 `open()`。`fix_axes.py` 修正本地绘图标签，并让纯 SM 文件使用单面板；直方图计算和上游原文件保持不变。
 Python 3.10 带有 `lib2to3`，Python 3.14 没有。最后一条命令检查语法，正常时安静结束。
 
 | 脚本 | 从项目根目录调用的完整形式 | 功能 |

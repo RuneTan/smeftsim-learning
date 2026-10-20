@@ -154,10 +154,11 @@ expand -t 8 tutorial/Material/plot_histos.py > work/Material/pyroot_python3/plot
 python -m lib2to3 -w -n work/Material/pyroot_python3/lhe_analyzer.py work/Material/pyroot_python3/plot_histos.py
 sed -i 's/\bfile[[:space:]]*(/open(/g' work/Material/pyroot_python3/lhe_analyzer.py
 sed -i '1s|^#!/usr/bin/env python$|#!/usr/bin/env python3|' work/Material/pyroot_python3/lhe_analyzer.py work/Material/pyroot_python3/plot_histos.py
+python fix_axes.py
 python -m py_compile work/Material/pyroot_python3/lhe_analyzer.py work/Material/pyroot_python3/plot_histos.py
 ```
 
-These changes expand tabs, convert Python 2 syntax, replace `file()` with `open()`, and update the interpreter line. The algorithms and upstream originals are preserved. Python 3.10 supplies `lib2to3`; Python 3.14 does not.
+The conversion expands tabs, updates Python 2 syntax and the interpreter line, and replaces `file()` with `open()`. `fix_axes.py` corrects the local plot labels and uses a single panel for SM-only files; it preserves histogram calculations and upstream originals. Python 3.10 supplies `lib2to3`; Python 3.14 does not.
 The final command checks syntax and normally returns quietly.
 
 | Script | Complete call from the project root | Function |

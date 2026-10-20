@@ -9,7 +9,7 @@ This example comes from the `Hvlvl_SM_manual` run used in handbook Chapter 9:
 |---|---|
 | `events.lhe.gz` | Analysis-only LHE export with the original initialization values, event records, SM weights and 11 extra weights |
 | `histograms.root` | The 48 histograms produced by `lhe_analyzer.py` |
-| `plot_mll.pdf`, `plot_mmv.pdf`, `plot_pTl1.pdf`, `plot_pTmu.pdf` | Four PDFs produced using `plot_histos.py` |
+| `plot_mll.pdf`, `plot_mmv.pdf`, `plot_pTl1.pdf`, `plot_pTmu.pdf` | Four PDFs from the Python 3 `plot_histos.py` copy with local display fixes |
 | [metadata.json](metadata.json) | Actual event count, seed, versions, parameter values, run settings, mean weights and file checksums |
 
 The actual sample contains **2,000 events**, with seed **12363**.

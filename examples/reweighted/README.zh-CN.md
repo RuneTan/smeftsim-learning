@@ -9,7 +9,7 @@
 |---|---|
 | `events.lhe.gz` | 分析用 LHE 导出，保留原始初始化数值、事件、SM 权重和 11 个额外权重 |
 | `histograms.root` | `lhe_analyzer.py` 生成的 48 个直方图 |
-| `plot_mll.pdf`、`plot_mmv.pdf`、`plot_pTl1.pdf`、`plot_pTmu.pdf` | 调用 `plot_histos.py` 得到的四张 PDF |
+| `plot_mll.pdf`、`plot_mmv.pdf`、`plot_pTl1.pdf`、`plot_pTmu.pdf` | 调用已作本地显示修正的 Python 3 `plot_histos.py` 副本得到的四张 PDF |
 | [metadata.json](metadata.json) | 实际事件数、随机种子、版本、参数、运行设置、权重均值和文件哈希 |
 
 实际事件数是 **2,000**，实际种子是 **12363**。它们从原始 run card 读取，

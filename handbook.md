@@ -215,7 +215,7 @@ The four-body final-state kinematics let us compare EFT effects in different reg
 These are generator-level variables. Using the true neutrino momentum does not imply that a detector can directly measure the same quantity.
 
 This process is a Higgs **decay**: the integrated result is a partial width $\Gamma$ in GeV.
-The authors' older plotting script uses generic cross-section labels in `pb`; this handbook retains those labels and explains the actual units in Section 6.6.
+The local plotting copy labels the bin contributions as $\Delta\Gamma_{\mathrm{bin}}$ [GeV]; dividing by the bin width gives a differential width.
 For a scattering process, quantities such as cross sections must follow the generator's conventions; do not copy the units of this decay example.
 
 ### 6.2 Reading the upper and lower panels
@@ -252,7 +252,7 @@ The shared `.venv` activated in Section 5 already contains ROOT. There is no nee
 The actual scripts called in Linux are `work/Material/pyroot_python3/lhe_analyzer.py` and `plot_histos.py`.
 
 The [installation guide, Section 5](docs/setup/README.md#5-prepare-the-two-python-3-analysis-scripts) describes the originals, the arguments required by both scripts,
-and how to convert them on a new computer.
+and how to prepare them on a new computer. Existing installations can run `python fix_axes.py` once from `~/smeftsim` to apply the display fixes.
 Tutorial code without a confirmed license is used only locally; the public repository includes conversion instructions rather than these copies.
 
 **Linux Bash, project root | one command at a time:**
@@ -572,12 +572,10 @@ ls -lh plot_mll.pdf plot_mmv.pdf plot_pTl1.pdf plot_pTmu.pdf
 ```
 
 Input: the four SM histograms from Section 8.5. Output: four PDFs in `outputs/sm`.
-The upper panel contains the SM curve; the lower panel is empty because this file contains no EFT correction histograms.
-An empty lower panel is expected here. It will contain comparison curves after Section 9.
+The SM-only file produces a single panel. Section 9 adds EFT corrections and a ratio panel.
 In WSL, `explorer.exe .` opens this directory from Bash.
 
-The script retains the supplied `pb` axis labels. For this **decay**, the stored bin contents are partial-width contributions in **GeV**, not cross sections; see Section 6.2 and the [figure guide](docs/figures/README.md).
-Do not infer the physical units from that inherited plot label. The separately supplied single-panel example below uses explicit width labels:
+The vertical axis shows each bin's partial decay width in **GeV**; see Section 6.2 and the [figure guide](docs/figures/README.md). The same plotting call produces the example below:
 
 ![SM electron–muon invariant-mass distribution](docs/figures/sm_mll.png)
 
@@ -855,8 +853,7 @@ The plots retain the authors' central-value presentation without complete statis
 
 Check that the LHE weight declarations match the actual weights in every event. The analysis log should report the full event count and the integral of each contribution.
 
-Below is this project's reweighted example, based on 2,000 SM events and the authors' plotting-script settings.
-Axis labels are retained as supplied; Section 6.6 explains the width units and bin convention.
+Below is this project's reweighted example, based on 2,000 SM events and the tutorial plotting copy with corrected display labels. Section 6.6 explains the bin convention.
 
 ![Reweighted muon–neutrino invariant-mass distribution](docs/figures/rw_mmv.png)
 

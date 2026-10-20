@@ -21,8 +21,8 @@ All operations use one Linux project directory; no Windows project checkout or d
 
 ![Reweighted distribution from the locally generated sample](docs/figures/rw_mmv.png)
 
-The figure uses local events and `plot_histos.py` from Ilaria Brivio's 2023 tutorial, retaining the original axis labels.
-This process measures a decay width; the old `pb` label is explained in the [figure guide](docs/figures/README.md).
+The figure uses local events and a Python 3 copy of Ilaria Brivio's 2023 tutorial `plot_histos.py`, with local display fixes.
+The axes show kinematic variables and each bin's partial decay width; see the [figure guide](docs/figures/README.md).
 
 ## Sources and acknowledgments
 

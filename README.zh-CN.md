@@ -21,8 +21,8 @@
 
 ![本项目自行生成样本的重加权分布](docs/figures/rw_mmv.png)
 
-图由本地事件和 Ilaria Brivio 2023 教程的 `plot_histos.py` 生成，保留原轴标签。
-本例是衰变宽度，原脚本的 `pb` 标签解释见 [图的说明](docs/figures/README.zh-CN.md)。
+图使用本地事件和 Ilaria Brivio 2023 教程 `plot_histos.py` 的 Python 3 副本，并作了本地显示修正。
+坐标轴表示运动学变量和每 bin 的部分衰变宽度贡献，见 [图的说明](docs/figures/README.zh-CN.md)。
 
 ## 来源与致谢
 

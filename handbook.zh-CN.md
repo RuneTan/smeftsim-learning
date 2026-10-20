@@ -215,7 +215,7 @@ $m_h$ 小于两个 on-shell W 的质量之和，不能把两个 W 都当作 on-s
 这些是生成器级变量；使用 neutrino 真值动量不代表真实探测器能直接测量同一个量。
 
 这里是 Higgs **衰变**，积分结果是部分宽度 $\Gamma$，单位 GeV。
-作者旧绘图脚本用了通用的 `pb` 截面标签；本手册保留原标签并在第 6.6 节解释实际单位。
+本地绘图副本将每 bin 的贡献标为 $\Delta\Gamma_{\mathrm{bin}}$ [GeV]；除以 bin 宽才得到微分宽度。
 对散射过程才应根据生成器约定讨论截面等量，不能把此例的单位照搬过去。
 
 ### 6.2 看上半图还是下半图
@@ -251,7 +251,7 @@ $$R(X)=\frac{(\text{SM}+\text{一个指定贡献})(X)}{\text{SM}(X)}.$$
 实际调用 Linux 的 `work/Material/pyroot_python3/lhe_analyzer.py` 和 `plot_histos.py`。
 
 原件、两个脚本的参数及新机器转换方法见
-[安装指南第 5 节](docs/setup/README.zh-CN.md#5-准备两份-python-3-分析脚本)。
+[安装指南第 5 节](docs/setup/README.zh-CN.md#5-准备两份-python-3-分析脚本)。已有安装可在 `~/smeftsim` 执行一次 `python fix_axes.py`，应用显示修正。
 许可未明确的教程代码只在本地使用；公开仓库包含转换说明，不包含这些副本。
 
 **Linux Bash，项目根目录，逐条回车：**
@@ -572,11 +572,9 @@ ls -lh plot_mll.pdf plot_mmv.pdf plot_pTl1.pdf plot_pTmu.pdf
 ```
 
 输入是第 8.5 节的四个 SM 直方图，输出是 `outputs/sm` 中的四张 PDF。
-上半图只有 SM 曲线；这份文件没有 EFT 修正直方图，下半图为空属于预期情况。
-第 9 节加入额外贡献后才会出现比值曲线。WSL 用户可在 Bash 执行 `explorer.exe .` 打开当前目录。
+纯 SM 文件生成单面板图；第 9 节加入 EFT 修正后才出现比值面板。WSL 用户可在 Bash 执行 `explorer.exe .` 打开当前目录。
 
-脚本保留原有 `pb` 轴标签；但本例是**衰变**，bin 内容是以 **GeV** 为单位的部分宽度贡献，不是截面，详见第 6.2 节和[图的说明](docs/figures/README.zh-CN.md)。
-不要根据沿用的标签判断物理单位。下面另外提供的单面板示例使用了明确的宽度标签：
+纵轴表示以 **GeV** 为单位的每 bin 部分衰变宽度贡献，详见第 6.2 节和[图的说明](docs/figures/README.zh-CN.md)。下面的示例也由同一绘图命令生成：
 
 ![SM 的电子与 muon 不变质量分布](docs/figures/sm_mll.png)
 
@@ -854,8 +852,7 @@ LHE 中保存的额外权重已经包含生成器归一化，作者分析器再�
 
 检查输入 LHE 的权重声明与每个事件的实际权重一致，分析日志应显示完整事件数与各贡献积分值。
 
-下面是本项目 2,000 个基础 SM 事件的重加权示例，使用作者绘图脚本的设置。
-轴标签保留作者原样，宽度单位和 bin 约定按第 6.6 节解释。
+下面是本项目 2,000 个基础 SM 事件的重加权示例，使用已修正显示标签的教程绘图副本；bin 约定见第 6.6 节。
 
 ![重加权的 muon 与中微子不变质量分布](docs/figures/rw_mmv.png)
 
