@@ -4,9 +4,9 @@
 
 This optional guide introduces basic Linux commands and the terminal conventions used in this project: paths, Python prompts and MadGraph menus. Read the sections you need when an input step is unfamiliar.
 
-The examples use this project's WSL environment, Linux user `smeft` and runtime directory `/home/smeft/smeftsim`. Substitute your own username and paths where needed.
+The examples use `~/smeftsim`, a project directory inside your own Linux home directory. They apply to native Linux, virtual machines and WSL; your username can differ.
 
-Return to the [main handbook](../../handbook.md) for the SMEFTsim exercises. For installation on a new machine, use the [setup guide](../setup/README.md).
+Return to the [main handbook](../handbook.md) for the SMEFTsim exercises. For installation on a new machine, use the [setup guide](../setup/README.md).
 
 ## Contents
 
@@ -68,7 +68,7 @@ Run a block's commands one at a time, in order.
 | Prompt shown by the terminal | Current environment | What to enter |
 |---|---|---|
 | `PS C:\...>` | Windows PowerShell | Commands in `powershell` blocks |
-| `smeft@...:~/smeftsim$`, or similar | Linux Bash | Commands in `bash` blocks |
+| `your-user@host:~/smeftsim$`, or similar | Linux Bash | Commands in `bash` blocks |
 | `>>>` | Interactive Python interpreter | Code marked "interactive Python" |
 | `...` | Python is waiting for an unfinished statement or indented block | Continue the statement; finish a loop with one blank line |
 | `MG5_aMC>`, `MadEvent>`, or a tool-selection menu | MadGraph/MadEvent | The answer requested by the current menu, or a MadGraph command |
@@ -90,7 +90,7 @@ In Bash, type `exit` and press Enter to leave the Ubuntu terminal; this differs 
 
 - **Ordinary Python statements:** at `>>>`, enter one complete line and press Enter once; `>>>` should return when it finishes.
 - **Python loops:** enter each line and press Enter, preserving indentation. After the last line, Python still displays `...`.
-  **Type nothing and press Enter once more** to run the loop. [Handbook Section 8.6](../../handbook.md#86-use-root-to-plot-your-own-sm-distributions) gives line-by-line instructions.
+  **Type nothing and press Enter once more** to run the loop. [Handbook Section 8.6](../handbook.md#86-use-root-to-plot-your-own-sm-distributions) gives line-by-line instructions.
 - **Editing files:** code marked "file contents" belongs in the named file, opened in an editor.
   In the editor, Enter only inserts a new line. Press `Ctrl+S` to save your changes; do not execute these contents in the terminal.
 - **Names, logs, and illustrations:** `text` blocks, file listings, and diagrams are usually for reading,
@@ -106,7 +106,7 @@ These commands build on the basics in Section 1 and are used for environment act
 | Command | What it does | What you normally see after pressing Enter |
 |---|---|---|
 | `source .venv/bin/activate` | Makes this terminal use the project's Python and dependencies | Often `(.venv)` in the prompt; check with `which python` |
-| `which python` | Shows which Python interpreter is selected | Here, `/home/smeft/smeftsim/.venv/bin/python` |
+| `which python` | Shows which Python interpreter is selected | The absolute path corresponding to `$HOME/smeftsim/.venv/bin/python` |
 | `head -n 1 file` | Shows the first line | An LHE file should start with `<LesHouchesEvents ...>` |
 | `gzip -dc compressed_file > new_file` | Decompresses into a new file, keeping the compressed original | Usually no output on success; check with `ls` |
 | `python script.py arguments...` | Runs a script with the current interpreter | Script logs, results, or an error |
@@ -122,14 +122,15 @@ The script filename after `python` does not count as a script argument:
 
 ## 5. How to read paths
 
-The main Linux working directory is `/home/smeft/smeftsim`.
-Here, `~` means `/home/smeft`, so `~/smeftsim` identifies the same directory.
+The main Linux working directory is `~/smeftsim`.
+Bash expands `~` and `$HOME` to your current Linux user's home directory; `echo "$HOME"` shows its absolute path.
+For example, user `alex` may have `/home/alex/smeftsim`. Use your own home directory rather than copying an example username.
 `outputs/my_pyroot_reference/events.lhe` is a relative path, interpreted from the project root.
 `../../work/...` means go up two directory levels before locating the script.
-Use `/mnt/c/...` to access the Windows C drive from Linux.
+In WSL, `/mnt/c/...` accesses the Windows C drive; it is not the Linux project directory.
 
 Linux filenames are case-sensitive: `Material` and `material` are different directories.
 Copy quotes together with paths that are enclosed in single or double quotes.
 If a step first asks you to `cd` into a directory, execute that command and press Enter before copying the script command.
 
-Return to the [main handbook](../../handbook.md) for the SMEFTsim exercises. For installation on a new machine, use the [setup guide](../setup/README.md).
+Return to the [main handbook](../handbook.md) for the SMEFTsim exercises. For installation on a new machine, use the [setup guide](../setup/README.md).

@@ -2,7 +2,7 @@
 
 [English](README.md) | [简体中文](README.zh-CN.md)
 
-This is the only installation guide needed before the [handbook](../../handbook.md).
+This is the only installation guide needed before the [handbook](../handbook.md).
 The repository contains teaching notes and a locally generated example, rather than a preinstalled simulator.
 You will obtain the software directly from its upstream repositories and prepare **one project directory, `~/smeftsim`, with one Python environment, `.venv`**.
 
@@ -12,13 +12,47 @@ If your existing installation already passes Section 6, skip installation and co
 
 **Input rule:** each line in a PowerShell or Bash block is a complete command. Finish the line, press Enter once, and wait for the prompt before entering the next line. Do not type displayed prompts. If a command fails, resolve it before continuing.
 
-## 1. Create a dedicated Linux environment
+## 1. Choose your Linux environment
 
-Already using a dedicated x86-64 Ubuntu 22.04 virtual machine? Start at Section 2.
-For Windows 10/11, the following route creates a WSL2 distribution named `SMEFTsim`, separate from any other Ubuntu installation.
-WSL2 runs Linux in a lightweight virtual machine; its virtual disk remains on Windows, while calculations and project files live inside Linux.
+Use the route matching your current setup. The commands below target **x86-64 Ubuntu 22.04 and Python 3.10**; another distribution, release or architecture needs separate compatibility checks.
 
-**Windows PowerShell, run as administrator:**
+| Current setup | Where to continue |
+|---|---|
+| Native Ubuntu 22.04 or an Ubuntu 22.04 virtual machine | Section 1.1, then Section 2 |
+| An existing WSL2 Ubuntu 22.04 installation | Section 1.2, then Section 2 |
+| Windows without a suitable Linux installation, or you want a separate Linux environment | Section 1.3 |
+
+### 1.1 Native Linux or an existing virtual machine
+
+Open Bash as your ordinary Linux user and continue at Section 2. You do not need WSL or a user named `smeft`.
+The later project directory `~/smeftsim` is inside your own Linux home directory; `.venv` keeps this project's Python packages together.
+
+### 1.2 An existing WSL2 Ubuntu installation
+
+In **Windows PowerShell**, list your installations:
+
+```powershell
+wsl --list --verbose
+```
+
+Choose an existing Ubuntu 22.04 installation whose VERSION column is `2`.
+For example, if its name is `Ubuntu-22.04`, enter:
+
+```powershell
+wsl -d Ubuntu-22.04 --cd ~
+```
+
+Replace `Ubuntu-22.04` with the name listed on your machine. This uses that installation's default Linux user.
+Use an ordinary user with `sudo` access, then continue at Section 2 to check the Linux release and architecture.
+Keep this command for future sessions. If the selected installation does not match the required platform, use a separate compatible environment through Section 1.3.
+
+### 1.3 Create a dedicated WSL2 environment
+
+This optional route creates a separate Ubuntu 22.04 installation named `SMEFTsim` and an ordinary user named `smeft`.
+These names are used only in this route; Sections 2–7 use your own home directory and also apply to Sections 1.1–1.2.
+WSL2 runs Linux in a lightweight virtual machine. Its virtual disk is stored on Windows; keep the project and calculations inside Linux.
+
+**Open Windows PowerShell as administrator:**
 
 ```powershell
 wsl --install --no-distribution
@@ -81,8 +115,8 @@ cat /etc/os-release
 whoami
 ```
 
-Expect `x86_64`, Ubuntu `22.04`, and `smeft` (or your chosen normal username).
-System packages below are installed only in this dedicated Linux environment. Python packages will go into the project's `.venv`; Windows Python and Anaconda are not used.
+Expect `x86_64`, Ubuntu `22.04`, and your own ordinary Linux username; it should not be `root`.
+System packages below are installed in the Linux environment you selected. Python packages will go into the project's `.venv`; Windows Python and Anaconda are not used.
 
 ```bash
 sudo apt-get update
@@ -154,11 +188,11 @@ expand -t 8 tutorial/Material/plot_histos.py > work/Material/pyroot_python3/plot
 python -m lib2to3 -w -n work/Material/pyroot_python3/lhe_analyzer.py work/Material/pyroot_python3/plot_histos.py
 sed -i 's/\bfile[[:space:]]*(/open(/g' work/Material/pyroot_python3/lhe_analyzer.py
 sed -i '1s|^#!/usr/bin/env python$|#!/usr/bin/env python3|' work/Material/pyroot_python3/lhe_analyzer.py work/Material/pyroot_python3/plot_histos.py
-python fix_axes.py
+python scripts/fix_axes.py
 python -m py_compile work/Material/pyroot_python3/lhe_analyzer.py work/Material/pyroot_python3/plot_histos.py
 ```
 
-The conversion expands tabs, updates Python 2 syntax and the interpreter line, and replaces `file()` with `open()`. `fix_axes.py` corrects local labels and panel spacing, uses a single panel for SM-only files, and enables embedded PDF fonts through ROOT/Ghostscript; it preserves histogram calculations and upstream originals. Python 3.10 supplies `lib2to3`; Python 3.14 does not.
+The conversion expands tabs, updates Python 2 syntax and the interpreter line, and replaces `file()` with `open()`. `scripts/fix_axes.py` corrects local labels and panel spacing, uses a single panel for SM-only files, and enables embedded PDF fonts through ROOT/Ghostscript; it preserves histogram calculations and upstream originals. Python 3.10 supplies `lib2to3`; Python 3.14 does not.
 The final command checks syntax and normally returns quietly.
 
 | Script | Complete call from the project root | Function |
@@ -224,5 +258,5 @@ These directories are created during installation or use and are ignored by Git.
 The repository itself retains the handbook, topic notes, example results, and source/license records.
 No Windows source checkout or second Python environment is needed.
 
-Continue at [handbook Section 5](../../handbook.md#5-start-the-environment-and-check-dependencies), then follow Sections 6, 8 and 9.
+Continue at [handbook Section 5](../handbook.md#5-start-the-environment-and-check-dependencies), then follow Sections 6, 8 and 9.
 For the meaning and provenance of the included results, see the [example guide](../../examples/reweighted/README.md).

@@ -27,7 +27,7 @@ def finish_display(source):
 
 
 def main():
-    root = Path(__file__).resolve().parent
+    root = Path(__file__).resolve().parents[1]
     target = root / "work/Material/pyroot_python3/plot_histos.py"
     if not target.is_file():
         raise SystemExit("Prepare the Python 3 plotting copy using docs/setup first.")

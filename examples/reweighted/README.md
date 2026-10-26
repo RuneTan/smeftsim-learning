@@ -57,7 +57,7 @@ python work/Material/pyroot_python3/lhe_analyzer.py outputs/example_reweighted/e
 
 The analyzer requires two arguments: the input LHE and output ROOT paths.
 Include both before pressing Enter. The output should contain 48 histograms.
-See the [handbook](../../handbook.md) for weight and normalization conventions.
+See the [handbook](../../docs/handbook.md) for weight and normalization conventions.
 
 Source: [Ilaria Brivio's 2023 tutorial](https://github.com/IlariaBrivio/SMEFTsim_tutorial_June23).
 The sample was generated locally. Its input cards and plotting method follow the linked tutorial;

@@ -49,7 +49,7 @@ python work/Material/pyroot_python3/lhe_analyzer.py outputs/example_reweighted/e
 ```
 
 分析器要求输入 LHE 和输出 ROOT 两个参数；完整一行输入后才按回车。
-输出应有 48 个直方图；权重和归一化含义见 [主手册](../../handbook.zh-CN.md)。
+输出应有 48 个直方图；权重和归一化含义见 [主手册](../../docs/handbook.zh-CN.md)。
 
 来源：[Ilaria Brivio 的 2023 年教程](https://github.com/IlariaBrivio/SMEFTsim_tutorial_June23)。
 数据在本机生成；输入卡和绘图方法采用上述教程，模型与生成器的署名见 [项目 README](../../README.zh-CN.md#来源与致谢)。

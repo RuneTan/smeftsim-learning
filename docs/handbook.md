@@ -7,14 +7,14 @@ These practical notes follow [Ilaria Brivio's June 2023 SMEFTsim tutorial](https
 
 This handbook uses the Linux project's shared `.venv` environment and ROOT.
 The authors' original material remains in `tutorial`; local analysis and plotting use Python 3-compatible copies.
-The [root README](README.md) lists the sources and reading entry points; the [installation guide](docs/setup/README.md) explains the scripts and runtime directories.
+The [root README](../README.md) lists the sources and reading entry points; the [installation guide](setup/README.md) explains the scripts and runtime directories.
 Analysis and plotting use the two existing tutorial scripts in Sections 6, 8 and 9. You do not need to type a plotting program. The main exercise is to understand the model, configure cards, generate events, and calculate additional weights.
 
-For terminal prompts, paths or Enter-key conventions, see the optional [Linux and terminal basics guide](docs/linux-basics/README.md).
+For terminal prompts, paths or Enter-key conventions, see the optional [Linux and terminal basics guide](linux-basics/README.md).
 If you already have an SM sample, obtain your own plots in Sections 8.5–8.6, then complete Sections 9.3–9.4.
 Section 9 completes the main tutorial exercise.
 
-All working commands run in the Linux project `~/smeftsim`. The installation guide creates a dedicated WSL distribution named `SMEFTsim` and user `smeft`; substitute your own names if they differ.
+All working commands run in the Linux project `~/smeftsim`, under your own ordinary Linux user. The installation guide covers native Linux, existing WSL2 Ubuntu and an optional dedicated WSL2 installation.
 The public repository contains teaching notes and selected results. Software and environments are installed locally from upstream sources.
 
 ## Contents
@@ -45,59 +45,59 @@ The tutorial uses this fixed combination:
 
 | Component | Configuration used here | Purpose |
 |---|---|---|
-| Linux | Dedicated WSL2 Ubuntu 22.04 distribution named `SMEFTsim` | Runs the generator and compilers |
+| Linux | x86-64 Ubuntu 22.04 (native Linux, virtual machine or WSL2) | Runs the generator and compilers |
 | Python | 3.10, in the Linux project's `.venv` | Runs generation, reweighting, and ROOT in one environment |
 | MadGraph | 2.9.27 | Exports processes, integrates, generates events, and reweights |
 | SMEFTsim UFO | Tutorial v3.0.2, U35 / MwScheme | Defines interactions and input parameters |
 | NumPy / setuptools | 1.26.4 / 69.5.1 | Retains the build interfaces needed for this reweighting workflow |
 | ROOT | Official Python distribution 0.1a12, corresponding to 6.40.00 | Stores histograms and produces plots |
 
-This combination has passed local execution checks. Exact dependencies are listed in [the pinned requirements](docs/setup/requirements.txt). The pinned versions reproduce this tutorial; they are not a recommendation for the latest research setup.
+These software versions passed local execution checks in WSL2 Ubuntu 22.04. Exact dependencies are listed in [the pinned requirements](setup/requirements.txt). The pinned versions reproduce this tutorial; they are not a recommendation for the latest research setup.
 
-Terminal instructions start from an **already prepared dedicated Linux environment**.
-On a new computer, first prepare WSL2/Ubuntu, a Python virtual environment, compilers, and the third-party material.
-Follow the [installation guide](docs/setup/README.md) for the complete preparation sequence.
-Section 4 explains the directories; the [installation guide](docs/setup/README.md) covers all downloads and environment preparation.
+Before running the terminal instructions, complete the Linux installation and checks in the setup guide.
+Use its route for your existing Ubuntu environment or a new dedicated WSL2 installation, then prepare the project virtual environment, compilers and third-party material.
+Follow the [installation guide](setup/README.md) for the complete preparation sequence.
+Section 4 explains the directories; the [installation guide](setup/README.md) covers all downloads and environment preparation.
 
 ## 2. SMEFT background
 
-The full background is in [docs/physics/README.md](docs/physics/README.md). Refer to it as questions arise.
+The full background is in [docs/physics/README.md](physics/README.md). Refer to it as questions arise.
 
 ### 2.1 Why use an effective field theory?
 
 New physics at high energies can appear as additional interactions in low-energy processes.
-[Explanation and expansion](docs/physics/README.md#21-why-use-an-effective-field-theory).
+[Explanation and expansion](physics/README.md#21-why-use-an-effective-field-theory).
 
 ### 2.2 Wilson coefficients, energy scales, and units
 
 The tutorial's Wilson coefficients are dimensionless, while the scale is entered in GeV; record both.
-[Formula and units](docs/physics/README.md#22-wilson-coefficients-the-scale-and-units).
+[Formula and units](physics/README.md#22-wilson-coefficients-the-scale-and-units).
 
 ### 2.3 What is the Warsaw basis?
 
 It is a basis of independent operators after redundancies have been removed. Field strengths themselves contain derivatives.
-[Basis, derivatives, and how much theory to learn](docs/physics/README.md#23-what-is-the-warsaw-basis).
+[Basis, derivatives, and how much theory to learn](physics/README.md#23-what-is-the-warsaw-basis).
 
 ### 2.4 Why separate linear and quadratic terms?
 
 The SM term, interference, and dimension-six squared term are distinct contributions to the squared amplitude.
 The dimension-six squared term alone is not a complete higher-order EFT prediction.
-[Full explanation](docs/physics/README.md#24-why-distinguish-linear-and-quadratic-terms).
+[Full explanation](physics/README.md#24-why-distinguish-linear-and-quadratic-terms).
 
 ### 2.5 Flavor: how new interactions distinguish fermion generations
 
 This tutorial chooses U35. Different flavor assumptions impose different relationships between generations.
-[Physical meaning of the five choices](docs/physics/README.md#25-flavor-how-new-interactions-distinguish-fermion-generations).
+[Physical meaning of the five choices](physics/README.md#25-flavor-how-new-interactions-distinguish-fermion-generations).
 
 ### 2.6 Scheme: which measurements determine electroweak parameters?
 
 MwScheme uses mW, mZ, and GF as electroweak inputs.
-[Input schemes and derived parameters](docs/physics/README.md#26-scheme-which-measurements-determine-the-electroweak-parameters).
+[Input schemes and derived parameters](physics/README.md#26-scheme-which-measurements-determine-the-electroweak-parameters).
 
 ### 2.7 Differential width: distributing a decay rate over kinematic regions
 
 Here, the integrated quantity is a partial decay width in GeV. Histogram bin contents differ from a density obtained by dividing by the bin width.
-[Formulas, symbols, and histogram interpretation](docs/physics/README.md#27-differential-widths-distributing-a-decay-channels-rate-over-kinematic-regions).
+[Formulas, symbols, and histogram interpretation](physics/README.md#27-differential-widths-distributing-a-decay-channels-rate-over-kinematic-regions).
 
 ## 3. What SMEFTsim does and its limitations
 
@@ -121,49 +121,49 @@ Each arrow passes a file or directory to the next program:
 
 LHE stores individual particles and event weights. The analyzer's ROOT file stores **binned summaries**, not a new event sample.
 Changing a plot range does not rerun generation; changing a Wilson coefficient in a card does nothing until the relevant generator or reweighting command runs.
-Pythia, Delphes and detector effects are outside this Higgs-decay exercise. See the [software guide](docs/model/README.md) for the calculation's scope.
+Pythia, Delphes and detector effects are outside this Higgs-decay exercise. See the [software guide](model/README.md) for the calculation's scope.
 
 ### 3.3 Define the calculation's scope
 
 This example is a tree-level Higgs decay to four leptons. Successful execution does not by itself establish the calculation's full physical accuracy.
-See the [software guide](docs/model/README.md#33-state-the-calculations-scope-explicitly) for the model's scope and approximations.
+See the [software guide](model/README.md#33-state-the-calculations-scope-explicitly) for the model's scope and approximations.
 
 ### 3.4 What is the official Mathematica notebook for?
 
 The notebook is used to derive Feynman rules and develop the model. You do not need to run it first if you already have the UFO.
-[Notebook purpose and the two workflows](docs/model/README.md#34-what-the-smeftsim-mathematica-notebooks-do).
+[Notebook purpose and the two workflows](model/README.md#34-what-the-smeftsim-mathematica-notebooks-do).
 
 ## 4. Environment isolation and file locations
 
-Generation, reweighting and ROOT share the Linux project's `.venv`. Compilers and system libraries are installed inside the dedicated WSL/Ubuntu environment; Windows Python is not used.
+Generation, reweighting and ROOT share the Linux project's `.venv`. Compilers and system libraries are installed in your selected Ubuntu environment; Windows Python is not used.
 
 All operations use one Linux project directory, `~/smeftsim`. New analysis exercises use the short directories `outputs/ref`, `outputs/sm` and `outputs/rw`; older local output directories can remain where they are. There is no second Windows project checkout to keep synchronized.
-Windows starts Linux and stores the WSL virtual disk.
+When using WSL, Windows starts Linux and stores the WSL virtual disk. Native Linux and other virtual machines use their own terminal and storage.
 If you completed an earlier edition, keep your existing LHE and ROOT files: no regeneration is needed just because this edition uses shorter output names.
 Use their existing paths in the analyzer/plotter calls, or create the new analysis directories below.
 Before rerunning analysis, check the destination: shell `>` replaces the target LHE copy, the analyzer replaces its output ROOT file, and the plotter replaces same-named PDFs. Choose a different output directory to preserve an earlier exercise.
 
 | Contents | Location |
 |---|---|
-| This handbook and topic notes | `handbook.md`, [docs](docs/README.md) |
-| Supplied example results | [examples/reweighted](examples/reweighted/README.md) |
+| This handbook and topic notes | `docs/handbook.md`, [docs](README.md) |
+| Supplied example results | [examples/reweighted](../examples/reweighted/README.md) |
 | Python environment | `.venv`, created during local installation |
 | Original tutorial, MadGraph, working files, reference data and outputs | `tutorial`, `tools`, `work`, `reference`, `outputs`, created during installation or use |
 
-Software sources, script functions and working directories are explained together in the [installation guide](docs/setup/README.md).
+Software sources, script functions and working directories are explained together in the [installation guide](setup/README.md).
 
 ## 5. Start the environment and check dependencies
 
 ### 5.1 Enter the project's Linux environment
 
 If you are already in Linux Bash, continue at Section 5.2.
-On Windows, enter the complete command in **PowerShell** and press Enter once:
+On Windows, use the WSL entry command for the environment you selected during installation. For the dedicated environment from setup Section 1.3, enter in **PowerShell**:
 
 ```powershell
 wsl -d SMEFTsim -u smeft --cd ~
 ```
 
-These are the distribution and user names used in the installation guide; replace them if yours differ.
+For an existing WSL installation, use its own distribution and user instead; see [setup Section 1.2](setup/README.md#12-an-existing-wsl2-ubuntu-installation). Native Linux and virtual-machine users continue directly at Section 5.2.
 Wait for the Linux prompt before entering Bash commands.
 
 ### 5.2 Activate the shared environment
@@ -182,7 +182,7 @@ gfortran --version
 Check that:
 
 - `python --version` reports Python 3.10.
-- `which python` points to `/home/<your-user>/smeftsim/.venv/bin/python`.
+- `which python` points to the absolute path corresponding to `$HOME/smeftsim/.venv/bin/python`.
 - ROOT reports `6.40.00`, and the compiler displays its version.
 
 Then continue to Section 6. You can generate, reweight, and plot in the same terminal without switching environments.
@@ -244,15 +244,15 @@ Your smaller sample need not match its final digits; compare results together wi
 
 After the installation guide's extraction step, ROOT files are in the Linux project's `reference/Results/Root_files`, and LHE files in `reference/Results/Hvlvl_*/Events/run_01`.
 They come from the results archive supplied with Ilaria Brivio's tutorial; no separate ROOT download is needed.
-See the [extraction and file checks](docs/setup/README.md#7-extract-the-reference-results-and-continue).
+See the [extraction and file checks](setup/README.md#7-extract-the-reference-results-and-continue).
 
 ### 6.4 Activate PyROOT while preserving the authors' scripts
 
 The shared `.venv` activated in Section 5 already contains ROOT. There is no need to switch environments during normal use.
 The actual scripts called in Linux are `work/Material/pyroot_python3/lhe_analyzer.py` and `plot_histos.py`.
 
-The [installation guide, Section 5](docs/setup/README.md#5-prepare-the-two-python-3-analysis-scripts) describes the originals, the arguments required by both scripts,
-and how to prepare them on a new computer. For an existing installation, first run `sudo apt-get install -y --no-install-recommends ghostscript` in Linux, then `python fix_axes.py` from `~/smeftsim` before replotting.
+The [installation guide, Section 5](setup/README.md#5-prepare-the-two-python-3-analysis-scripts) describes the originals, the arguments required by both scripts,
+and how to prepare them on a new computer. For an existing installation, first run `sudo apt-get install -y --no-install-recommends ghostscript` in Linux, then `python scripts/fix_axes.py` from `~/smeftsim` before replotting.
 Tutorial code without a confirmed license is used only locally; the public repository includes conversion instructions rather than these copies.
 
 **Linux Bash, project root | one command at a time:**
@@ -268,7 +268,7 @@ Python should come from the project's `.venv`, and ROOT should report 6.40.00.
 ### 6.5 Complete LHE → ROOT → PDF with the tutorial sample
 
 **Linux Bash, `.venv` active.** Each line below is one complete command: enter the whole line, press Enter once, and wait for Bash to return. Keep `> OUTPUT` on the same line as `gzip`; terminal line wrapping does not require an extra Enter.
-Stop if a command fails. The optional [Linux guide](docs/linux-basics/README.md) explains the shell commands in more detail.
+Stop if a command fails. The optional [Linux guide](linux-basics/README.md) explains the shell commands in more detail.
 
 #### A. Prepare and inspect the LHE input
 
@@ -345,7 +345,7 @@ If curves extend beyond it, change those two limits to `.68, 1.25`, then rerun t
 Keep the other dictionaries and algorithms unchanged.
 The plotting script cannot calculate a contribution missing from the ROOT file. If a curve is absent, check the reweight labels first.
 
-The [figure README](docs/figures/README.md) explains the original plots' width units, bin widths, and curve meanings.
+The [figure README](figures/README.md) explains the original plots' width units, bin widths, and curve meanings.
 
 ## 7. Choose the model and understand process commands
 
@@ -353,13 +353,13 @@ The [figure README](docs/figures/README.md) explains the original plots' width u
 
 The model is `SMEFTsim_U35_MwScheme_UFO-massless_Hvlvl`:
 the U35 flavor assumption, MwScheme electroweak inputs, and the tutorial's custom restriction.
-[Model explanation](docs/processes/README.md#71-why-this-example-uses-this-model).
+[Model explanation](processes/README.md#71-why-this-example-uses-this-model).
 
 ### 7.2 A restriction differs from a parameter card
 
 A restriction simplifies the model at import time; the parameter card sets the adjustable inputs for a run.
 Vertices removed during import are not restored by subsequently editing the parameter card.
-[Full distinction](docs/processes/README.md#72-a-restriction-is-different-from-a-parameter-card).
+[Full distinction](processes/README.md#72-a-restriction-is-different-from-a-parameter-card).
 
 ### 7.3 Order options: select amplitudes, then select their products
 
@@ -373,14 +373,14 @@ Vertices removed during import are not restored by subsequently editing the para
 `NP=1` is an upper bound at amplitude level; `NP==1` selects an exact order.
 `NP^2` counts the sum of orders on the two sides of an amplitude product. The `NPprop` counting of dummy vertices is not the number of EFT insertions.
 The expanded formulas, two detailed tables, and dummy-vertex implementation are in
-[docs/processes/README.md](docs/processes/README.md#73-coupling-order-options-select-amplitudes-then-terms-in-their-square).
+[docs/processes/README.md](processes/README.md#73-coupling-order-options-select-amplitudes-then-terms-in-their-square).
 
 ### 7.4 Which UFO parameters exist, and which should you set?
 
 For this exercise, record the model, coefficients, `LambdaSMEFT`, widths, seed, and cuts.
 Internal parameters follow the model's formulas and are not all independent inputs.
-See [parameter categories and the basis for their values](docs/parameters/README.md)
-and the [complete parameter index](docs/parameters/model_parameter_reference.md).
+See [parameter categories and the basis for their values](parameters/README.md)
+and the [complete parameter index](parameters/model_parameter_reference.md).
 
 ## 8. Generate your own SM sample
 
@@ -575,9 +575,9 @@ Input: the four SM histograms from Section 8.5. Output: four PDFs in `outputs/sm
 The SM-only file produces a single panel. Section 9 adds EFT corrections and a ratio panel.
 In WSL, `explorer.exe .` opens this directory from Bash.
 
-The vertical axis shows each bin's partial decay width in **GeV**; see Section 6.2 and the [figure guide](docs/figures/README.md). The same plotting call produces the example below:
+The vertical axis shows each bin's partial decay width in **GeV**; see Section 6.2 and the [figure guide](figures/README.md). The same plotting call produces the example below:
 
-![SM electron–muon invariant-mass distribution](docs/figures/sm_mll.png)
+![SM electron–muon invariant-mass distribution](figures/sm_mll.png)
 
 Checkpoint: the integrated width is of order `1e-5 GeV`. Identify which panel shows your SM and why no ratio curve has appeared yet.
 You have now followed your own events through **generation → SM-only analysis copy → ROOT → PDFs**.
@@ -855,10 +855,10 @@ Check that the LHE weight declarations match the actual weights in every event. 
 
 Below is this project's reweighted example, based on 2,000 SM events and the tutorial plotting copy with corrected display labels. Section 6.6 explains the bin convention.
 
-![Reweighted muon–neutrino invariant-mass distribution](docs/figures/rw_mmv.png)
+![Reweighted muon–neutrino invariant-mass distribution](figures/rw_mmv.png)
 
-Other examples: [mll](docs/figures/rw_mll.png), [leading-lepton transverse momentum](docs/figures/rw_pTl1.png),
-and [muon transverse momentum](docs/figures/rw_pTmu.png).
+Other examples: [mll](figures/rw_mll.png), [leading-lepton transverse momentum](figures/rw_pTl1.png),
+and [muon transverse momentum](figures/rw_pTmu.png).
 
 **Section complete:** you have the multi-curve plots corresponding to the authors' cards. This completes the main tutorial workflow.
 
@@ -866,19 +866,19 @@ and [muon transverse momentum](docs/figures/rw_pTmu.png).
 
 ### 10.1 Quick reference for routine operations
 
-Installation and script inputs/outputs are in the [installation guide](docs/setup/README.md).
+Installation and script inputs/outputs are in the [installation guide](setup/README.md).
 Enter the environment in Section 5, generate in Section 8, and reweight in Section 9.
-To analyze and redraw the supplied results, follow [examples/reweighted](examples/reweighted/README.md).
+To analyze and redraw the supplied results, follow [examples/reweighted](../examples/reweighted/README.md).
 
 ### 10.2 Save an exercise
 
 Keep the original compressed LHE file, cards, banner, versions, parameters, seed, actual event count, and important plots.
-See [examples/reweighted/metadata.json](examples/reweighted/metadata.json) for the saved example's records.
+See [examples/reweighted/metadata.json](../examples/reweighted/metadata.json) for the saved example's records.
 
 ### 10.3 Share a reproducible result
 
 When sharing a plot, include its input data or acquisition instructions, cards and parameter settings, software versions, event count, seed, and analysis commands. State the units and normalization used for each plot.
-The [example metadata](examples/reweighted/metadata.json) illustrates these records, and the [example guide](examples/reweighted/README.md) shows how to reanalyze and replot the supplied files.
+The [example metadata](../examples/reweighted/metadata.json) illustrates these records, and the [example guide](../examples/reweighted/README.md) shows how to reanalyze and replot the supplied files.
 
 ### 10.4 Organize local outputs
 
@@ -911,8 +911,8 @@ Before using this workflow for research, check and document the model version, E
 ## 12. Versions and references
 
 This tutorial pins Python 3.10, MadGraph 2.9.27, SMEFTsim v3.0.2, and ROOT 6.40.00.
-Exact Python dependencies are in [docs/setup/requirements.txt](docs/setup/requirements.txt).
-See [metadata.json](examples/reweighted/metadata.json) for the actual versions used for this example.
+Exact Python dependencies are in [docs/setup/requirements.txt](setup/requirements.txt).
+See [metadata.json](../examples/reweighted/metadata.json) for the actual versions used for this example.
 
-The full tutorial list, authors, and papers are in the [root README](README.md#sources-and-acknowledgments).
-See [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) for third-party licensing and publication scope.
+The full tutorial list, authors, and papers are in the [root README](../README.md#sources-and-acknowledgments).
+See [THIRD_PARTY_NOTICES.md](../THIRD_PARTY_NOTICES.md) for third-party licensing and publication scope.

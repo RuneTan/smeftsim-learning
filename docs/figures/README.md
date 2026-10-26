@@ -5,7 +5,7 @@
 These plots use this project's locally generated 2,000-event SM sample and its additional weights.
 Histograms come from `lhe_analyzer.py`; both the SM-only and reweighted plots use a Python 3 copy of
 Ilaria Brivio's [June 2023 tutorial `plot_histos.py`](https://github.com/IlariaBrivio/SMEFTsim_tutorial_June23/blob/92ffde994d7c0d90554ee629cc477ee171c76b84/Material/plot_histos.py).
-The setup guide applies `fix_axes.py` to correct local labels and layout; histogram calculations are unchanged. PDFs embed fonts with ROOT's `Print(..., "EmbedFonts")` and Ghostscript, so Greek letters do not depend on a viewer's substitute fonts. PNGs export the same ROOT canvases.
+The setup guide applies `scripts/fix_axes.py` to correct local labels and layout; histogram calculations are unchanged. PDFs embed fonts with ROOT's `Print(..., "EmbedFonts")` and Ghostscript, so Greek letters do not depend on a viewer's substitute fonts. PNGs export the same ROOT canvases.
 
 | Filename suffix | Horizontal axis | Definition |
 |---|---|---|

@@ -8,10 +8,14 @@
 /reference/
 /outputs/
 /vm/
-/scripts/
 /cards/
 /requirements*.txt
 /py.py
+# Publish only the project-owned helper and its documentation.
+/scripts/*
+!/scripts/fix_axes.py
+!/scripts/README.md
+!/scripts/README.zh-CN.md
 # Private owner records, migration backups and credentials.
 /.maintainer-notes/
 /.local-secrets/

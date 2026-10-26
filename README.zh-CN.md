@@ -5,15 +5,15 @@
 这份独立的双语教程帮助读者用 SMEFTsim、MadGraph 和 ROOT，完成 Higgs 四轻子衰变的 SM 事件生成、分析及 SMEFT 重加权。
 仓库提供操作手册、必要知识附录和自己生成的示例结果；运行软件直接从上游获取，在 Linux 中安装。
 
-**第一次使用：先看 [安装指南](docs/setup/README.zh-CN.md)，再跟随 [handbook](handbook.zh-CN.md)。**
-安装指南从创建专用 WSL2/Ubuntu 开始，将软件下载、单一 `.venv`、分析脚本准备和安装校验串在一起。
+**第一次使用：先看 [安装指南](docs/setup/README.zh-CN.md)，再跟随 [handbook](docs/handbook.zh-CN.md)。**
+安装指南先按你的现有环境分流：原生 Linux 或虚拟机、已有 WSL2 Ubuntu，或新建专用 WSL2；再将固定版本下载、单一 `.venv`、分析脚本准备和安装校验串在一起。
 手册在调用旁解释读取、改变和写出的内容；分析与画图直接调用本地准备的教程脚本，无需手打画图程序。
 所有操作在同一个 Linux 项目目录完成；无需逐个寻找运行目录的说明，也无需 Windows 项目副本。
 
 | 阅读入口 | 用途 |
 |---|---|
-| [安装指南](docs/setup/README.zh-CN.md) | 创建 Linux 环境，获取固定版本软件并检验示例 |
-| [handbook](handbook.zh-CN.md) | 模型与卡 → 生成自己的 SM → 重加权 → 分析和画图 |
+| [安装指南](docs/setup/README.zh-CN.md) | 选择已有或新建 Linux 环境，获取固定版本软件并检验示例 |
+| [handbook](docs/handbook.zh-CN.md) | 模型与卡 → 生成自己的 SM → 重加权 → 分析和画图 |
 | [知识附录](docs/README.zh-CN.md) | 需要时查物理、模型、阶数、参数、图或 Linux 入门 |
 | [探测器链练习](https://github.com/RuneTan/detector-learning) | 继续学习独立的 Pythia → Delphes / Parnassus 教程 |
 | [示例结果](examples/reweighted/README.zh-CN.md) | 2,000 个事件、11 个额外权重、ROOT 直方图与 PDF |

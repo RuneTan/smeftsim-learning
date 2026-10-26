@@ -2,7 +2,7 @@
 
 [English](README.md) | [简体中文](README.zh-CN.md)
 
-Follow the [installation guide](setup/README.md) and [handbook](../handbook.md) in order. Consult these notes when a topic needs more explanation.
+Follow the [installation guide](setup/README.md) and [handbook](handbook.md) in order. Consult these notes when a topic needs more explanation.
 
 | Guide | Contents |
 |---|---|
@@ -13,3 +13,4 @@ Follow the [installation guide](setup/README.md) and [handbook](../handbook.md) 
 | [Parameters](parameters/README.md) | Input values, derived parameters and the complete static index |
 | [Figures](figures/README.md) | Locally generated SM and reweighting plots, units and interpretation |
 | [Linux basics (optional)](linux-basics/README.md) | Basic commands, prompts, paths and Enter-key conventions |
+| [Local helper script](../scripts/README.md) | Apply display fixes to the locally prepared tutorial plotter |

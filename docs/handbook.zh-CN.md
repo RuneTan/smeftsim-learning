@@ -2,21 +2,21 @@
 
 [English](handbook.md) | [简体中文](handbook.zh-CN.md)
 
-新电脑先完成 [安装指南](docs/setup/README.zh-CN.md)，再执行本手册的运行步骤。
+新电脑先完成 [安装指南](setup/README.zh-CN.md)，再执行本手册的运行步骤。
 
 这是一份基于[Ilaria Brivio 的 2023 年 6 月 SMEFTsim 教程](https://github.com/IlariaBrivio/SMEFTsim_tutorial_June23)的实践笔记，学习目标是：
 **理解 SMEFT → 读参考图 → 生成自己的 SM 样本并画图 → 用重加权比较 EFT 贡献。**
 
 本手册使用 Linux 项目的统一 `.venv` 环境和 ROOT。
 作者原始材料保留在 `tutorial`；本地分析和绘图使用 Python 3 兼容副本。
-来源与阅读入口见 [根 README](README.zh-CN.md)，脚本功能与运行目录见 [安装指南](docs/setup/README.zh-CN.md)。
+来源与阅读入口见 [根 README](../README.zh-CN.md)，脚本功能与运行目录见 [安装指南](setup/README.zh-CN.md)。
 第 6、8、9 节统一调用教程已有的分析与绘图脚本，不需要手打画图程序。主要练习是理解模型、配置卡、生成事件和计算额外权重。
 
-如果你不熟悉 Linux 或终端操作，可查阅可选的 [Linux 与终端入门手册](docs/linux-basics/README.zh-CN.md)。
+如果你不熟悉 Linux 或终端操作，可查阅可选的 [Linux 与终端入门手册](linux-basics/README.zh-CN.md)。
 已有 SM 样本时，从第 8.5–8.6 节得到自己的图，再完成第 9.3–9.4 节。
 完成第 9 节即可结束这一轮教学练习。
 
-所有工作命令都在 Linux 项目 `~/smeftsim` 中执行。安装指南创建名为 `SMEFTsim` 的 WSL 发行版和用户 `smeft`；名称不同时请替换。
+所有工作命令都由自己的普通 Linux 用户在项目 `~/smeftsim` 中执行。安装指南分别说明原生 Linux、已有 WSL2 Ubuntu 和可选的新建专用 WSL2 路线。
 公开仓库保留教学资料与选定结果，软件和环境在本地从上游获取并安装。
 
 ## 目录
@@ -47,57 +47,57 @@
 
 | 组件 | 本教程使用的配置 | 作用 |
 |---|---|---|
-| Linux | 项目专用 WSL2 Ubuntu 22.04，发行版名 `SMEFTsim` | 运行生成器与编译器 |
+| Linux | x86-64 Ubuntu 22.04（原生系统、虚拟机或 WSL2） | 运行生成器与编译工具 |
 | Python | 3.10，Linux 项目内的 `.venv` | 同时运行生成、重加权与 ROOT |
 | MadGraph | 2.9.27 | 生成过程、积分、事件和重加权 |
 | SMEFTsim UFO | 教程 v3.0.2，U35 / MwScheme | 定义相互作用和输入参数 |
 | NumPy / setuptools | 1.26.4 / 69.5.1 | 保留这条重加权路线所需的构建接口 |
 | ROOT | 官方 Python 分发 0.1a12，对应 6.40.00 | 保存直方图与画图 |
 
-这套配置已完成本地运行检查。精确依赖见 [docs/setup/requirements.txt](docs/setup/requirements.txt)。固定版本用于复现这份教程，不代表最新研究默认配置。
+这些软件版本已在 WSL2 Ubuntu 22.04 中完成本地运行检查。精确依赖见 [docs/setup/requirements.txt](setup/requirements.txt)。固定版本用于复现这份教程，不代表最新研究默认配置。
 
-本手册的终端操作从**已准备好专用 Linux 环境**开始。
-新电脑需先准备 WSL2/Ubuntu、Python 虚拟环境、编译器和第三方材料；
-第 4 节说明目录，下载与环境准备统一见 [安装指南](docs/setup/README.zh-CN.md)。
+执行终端操作前，请先完成安装指南中的 Linux 配置与校验。
+按自己的情况使用已有 Ubuntu 环境或新建专用 WSL2，再准备项目虚拟环境、编译器和第三方材料；
+第 4 节说明目录，下载与环境准备统一见 [安装指南](setup/README.zh-CN.md)。
 
 ## 2. SMEFT 的背景知识
 
-完整背景移到 [docs/physics/README.md](docs/physics/README.zh-CN.md)；操作时按问题查阅即可。
+完整背景移到 [docs/physics/README.md](physics/README.zh-CN.md)；操作时按问题查阅即可。
 
 ### 2.1 为什么需要有效场论
 
 高能新物理在低能过程里表现为额外相互作用。
-[解释与展开](docs/physics/README.zh-CN.md#21-为什么需要有效场论)。
+[解释与展开](physics/README.zh-CN.md#21-为什么需要有效场论)。
 
 ### 2.2 Wilson 系数、能标与单位
 
 本教程的 Wilson 系数无量纲，能标以 GeV 输入；二者必须一起记录。
-[公式与单位](docs/physics/README.zh-CN.md#22-wilson-系数能标与单位)。
+[公式与单位](physics/README.zh-CN.md#22-wilson-系数能标与单位)。
 
 ### 2.3 Warsaw basis 是什么
 
 它是消除冗余后的独立算子基底；场强本身包含导数。
-[基底、导数与学习范围](docs/physics/README.zh-CN.md#23-warsaw-basis-是什么)。
+[基底、导数与学习范围](physics/README.zh-CN.md#23-warsaw-basis-是什么)。
 
 ### 2.4 为什么要区分线性项和平方项
 
 SM、干涉、维六平方是振幅平方中的不同贡献，维六平方不构成完整的高阶 EFT 预测。
-[完整说明](docs/physics/README.zh-CN.md#24-为什么要区分线性项和平方项)。
+[完整说明](physics/README.zh-CN.md#24-为什么要区分线性项和平方项)。
 
 ### 2.5 Flavor：新相互作用怎样区分不同代的费米子
 
 本教程选 U35，不同 flavor 假设对应不同的代际关系。
-[五种选择的物理含义](docs/physics/README.zh-CN.md#25-flavor新相互作用怎样区分不同代的费米子)。
+[五种选择的物理含义](physics/README.zh-CN.md#25-flavor新相互作用怎样区分不同代的费米子)。
 
 ### 2.6 Scheme：用哪些测量值确定电弱参数
 
 MwScheme 使用 mW、mZ、GF 作为电弱输入。
-[输入方案与参数推导](docs/physics/README.zh-CN.md#26-scheme用哪些测量值确定电弱参数)。
+[输入方案与参数推导](physics/README.zh-CN.md#26-scheme用哪些测量值确定电弱参数)。
 
 ### 2.7 微分宽度：把一个衰变道的速率分配到运动学区域
 
 本例积分量是部分衰变宽度，单位 GeV。直方图 bin 内容与除以 bin 宽后的密度不同。
-[公式、符号与直方图解释](docs/physics/README.zh-CN.md#27-微分宽度把一个衰变道的速率分配到运动学区域)。
+[公式、符号与直方图解释](physics/README.zh-CN.md#27-微分宽度把一个衰变道的速率分配到运动学区域)。
 
 ## 3. SMEFTsim 的功能与边界
 
@@ -121,49 +121,49 @@ SMEFTsim 提供 FeynRules/UFO 模型，供生成器计算；它不独立产生�
 
 LHE 保存逐粒子的事件记录和权重；这里的 ROOT 文件保存**分 bin 的汇总**，不是新的一批事件。
 改显示范围不用重新生成事件；只在卡里改 Wilson 系数也不会自动改变结果，必须运行相应生成或重加权命令。
-本次 Higgs 衰变练习不包含 Pythia、Delphes 或探测器响应。计算边界见 [软件说明](docs/model/README.zh-CN.md)。
+本次 Higgs 衰变练习不包含 Pythia、Delphes 或探测器响应。计算边界见 [软件说明](model/README.zh-CN.md)。
 
 ### 3.3 计算范围要明确
 
 本例是树级 Higgs 四轻子衰变；运行成功不自动证明完整物理精度。
-模型和近似的边界见 [软件说明](docs/model/README.zh-CN.md#33-计算范围要明确)。
+模型和近似的边界见 [软件说明](model/README.zh-CN.md#33-计算范围要明确)。
 
 ### 3.4 官方 Mathematica Notebook 用来做什么
 
 Notebook 用于解析费曼规则和模型开发；已有 UFO 时不需要先运行它。
-[Notebook 用途与两条工作路径](docs/model/README.zh-CN.md#34-smeftsim-的-mathematica-notebook-用来做什么)。
+[Notebook 用途与两条工作路径](model/README.zh-CN.md#34-smeftsim-的-mathematica-notebook-用来做什么)。
 
 ## 4. 环境隔离与文件位置
 
-生成、重加权与 ROOT 共用 Linux 项目的 `.venv`。编译器及系统依赖安装在专用 WSL/Ubuntu 中，Windows Python 不参与计算。
+生成、重加权与 ROOT 共用 Linux 项目的 `.venv`。编译器及系统依赖安装在选定的 Ubuntu 环境中，Windows Python 不参与计算。
 
 所有操作都在一个 Linux 项目目录 `~/smeftsim` 中进行。新的分析练习使用短目录 `outputs/ref`、`outputs/sm`、`outputs/rw`，以前的本地输出可以留在原处；不再维护 Windows 与 Linux 两份项目副本。
-Windows 只负责启动 Linux，并保存 WSL 虚拟磁盘。
+采用 WSL 时，Windows 负责启动 Linux 并保存 WSL 虚拟磁盘；原生 Linux 和其他虚拟机使用各自的终端与存储。
 若已完成旧版教程，可以继续使用已有 LHE 和 ROOT：仅因新版缩短输出目录名，不需要重新生成事件。
 在分析和绘图命令中沿用已有路径，或按下文创建新的分析目录即可。
 重复分析前先检查目标位置：Shell 的 `>` 会替换目标 LHE 副本，分析器会替换输出 ROOT，绘图器会替换同名 PDF。希望保留上一次练习时，请选另一个输出目录。
 
 | 内容 | 位置 |
 |---|---|
-| 本手册与知识附录 | `handbook.zh-CN.md`、[docs](docs/README.zh-CN.md) |
-| 仓库示例结果 | [examples/reweighted](examples/reweighted/README.zh-CN.md) |
+| 本手册与知识附录 | `docs/handbook.zh-CN.md`、[docs](README.zh-CN.md) |
+| 仓库示例结果 | [examples/reweighted](../examples/reweighted/README.zh-CN.md) |
 | Python 环境 | `.venv`，本地安装时创建 |
 | 原教程、MadGraph、工作文件、参考数据与输出 | `tutorial`、`tools`、`work`、`reference`、`outputs`，本地安装或操作时创建 |
 
-软件获取、脚本功能和运行目录的说明集中在 [安装指南](docs/setup/README.zh-CN.md)。
+软件获取、脚本功能和运行目录的说明集中在 [安装指南](setup/README.zh-CN.md)。
 
 ## 5. 启动环境与核对依赖
 
 ### 5.1 进入项目 Linux
 
 如果已在 Linux Bash 中，直接进入第 5.2 节。
-Windows 用户在 **PowerShell** 中输入完整命令并回车一次：
+Windows 用户使用安装时选定环境的 WSL 进入命令。按安装指南第 1.3 节创建专用环境的读者，在 **PowerShell** 中输入：
 
 ```powershell
 wsl -d SMEFTsim -u smeft --cd ~
 ```
 
-这是安装指南采用的发行版与用户名；你使用其他名称时替换它们。
+已有 WSL 用户使用自己的发行版和用户，见 [安装指南第 1.2 节](setup/README.zh-CN.md#12-已有-wsl2-ubuntu)。原生 Linux 和虚拟机用户直接进入第 5.2 节。
 看到 Linux 提示符后才输入 Bash 命令。
 
 ### 5.2 激活统一环境
@@ -182,7 +182,7 @@ gfortran --version
 检查：
 
 - `python --version` 应为 Python 3.10。
-- `which python` 应指向 `/home/<your-user>/smeftsim/.venv/bin/python`。
+- `which python` 应指向 `$HOME/smeftsim/.venv/bin/python` 对应的绝对路径。
 - ROOT 应输出 `6.40.00`；编译器应能显示版本。
 
 成功后继续第 6 节。同一终端可以连续完成生成、重加权和绘图，不用切换环境。
@@ -243,7 +243,7 @@ $$R(X)=\frac{(\text{SM}+\text{一个指定贡献})(X)}{\text{SM}(X)}.$$
 
 按安装指南解压后，ROOT 文件在 Linux 项目内的 `reference/Results/Root_files`，LHE 文件在 `reference/Results/Hvlvl_*/Events/run_01`。
 数据来自 Ilaria Brivio 教程随附的结果压缩包，不需要另外寻找 ROOT 下载链接。
-[解压与文件检查步骤](docs/setup/README.zh-CN.md#7-解压参考结果并继续学习)。
+[解压与文件检查步骤](setup/README.zh-CN.md#7-解压参考结果并继续学习)。
 
 ### 6.4 激活 PyROOT，保留作者脚本
 
@@ -251,7 +251,7 @@ $$R(X)=\frac{(\text{SM}+\text{一个指定贡献})(X)}{\text{SM}(X)}.$$
 实际调用 Linux 的 `work/Material/pyroot_python3/lhe_analyzer.py` 和 `plot_histos.py`。
 
 原件、两个脚本的参数及新机器转换方法见
-[安装指南第 5 节](docs/setup/README.zh-CN.md#5-准备两份-python-3-分析脚本)。已有安装先在 Linux 执行 `sudo apt-get install -y --no-install-recommends ghostscript`，再从 `~/smeftsim` 执行 `python fix_axes.py` 并重新绘图。
+[安装指南第 5 节](setup/README.zh-CN.md#5-准备两份-python-3-分析脚本)。已有安装先在 Linux 执行 `sudo apt-get install -y --no-install-recommends ghostscript`，再从 `~/smeftsim` 执行 `python scripts/fix_axes.py` 并重新绘图。
 许可未明确的教程代码只在本地使用；公开仓库包含转换说明，不包含这些副本。
 
 **Linux Bash，项目根目录，逐条回车：**
@@ -267,7 +267,7 @@ Python 应来自项目 `.venv`，ROOT 应为 6.40.00。
 ### 6.5 先用教程样本完成 LHE → ROOT → PDF
 
 **Linux Bash，已激活 `.venv`。** 下方每一行都是一条完整命令：完整输入，回车一次，等 Bash 提示符回来再继续。`gzip` 与 `> 输出路径` 必须在同一条命令中，屏幕自动折行不需要额外回车。
-某条报错就停下来。更多终端操作解释见可选的 [Linux 入门](docs/linux-basics/README.zh-CN.md)。
+某条报错就停下来。更多终端操作解释见可选的 [Linux 入门](linux-basics/README.zh-CN.md)。
 
 #### A. 准备并检查 LHE 输入
 
@@ -345,7 +345,7 @@ weights_to_plot = [
 然后重新运行同一绘图命令。其他字典与算法保持原样。
 文件中缺少的贡献不会被绘图程序计算出来；若缺一条曲线，先核对重加权标签。
 
-作者原图的宽度单位、bin 宽和曲线含义见 [图的 README](docs/figures/README.zh-CN.md)。
+作者原图的宽度单位、bin 宽和曲线含义见 [图的 README](figures/README.zh-CN.md)。
 
 ## 7. 选择模型与理解过程命令
 
@@ -353,13 +353,13 @@ weights_to_plot = [
 
 模型为 `SMEFTsim_U35_MwScheme_UFO-massless_Hvlvl`：
 U35 flavor、MwScheme 电弱输入，以及教程自定义 restriction。
-[模型说明](docs/processes/README.zh-CN.md#71-本例为什么选这个模型)。
+[模型说明](processes/README.zh-CN.md#71-本例为什么选这个模型)。
 
 ### 7.2 Restriction 与参数卡不同
 
 restriction 在导入时简化模型；参数卡设置本次运行的可调输入。
 被导入时删除的顶点不会因为后来改参数卡就恢复。
-[完整区别](docs/processes/README.zh-CN.md#72-restriction-与参数卡不同)。
+[完整区别](processes/README.zh-CN.md#72-restriction-与参数卡不同)。
 
 ### 7.3 阶数选项：先筛选振幅，再筛选振幅平方
 
@@ -373,14 +373,14 @@ restriction 在导入时简化模型；参数卡设置本次运行的可调输�
 `NP=1` 是振幅层的上限，`NP==1` 是精确选择。
 `NP^2` 在振幅乘积两侧相加计数；dummy vertices 的 `NPprop` 计数不是 EFT 插入次数。
 展开公式、原来的两张详细表与 dummy 实现已移到
-[docs/processes/README.md](docs/processes/README.zh-CN.md#73-阶数选项先筛选振幅再筛选振幅平方)。
+[docs/processes/README.md](processes/README.zh-CN.md#73-阶数选项先筛选振幅再筛选振幅平方)。
 
 ### 7.4 UFO 中有哪些参数，哪些需要自己设置
 
 本次主要记录模型、系数、`LambdaSMEFT`、宽度、种子和切选；
 内部参数按模型公式计算，不能把它们都当成独立输入。
-[参数分类与取值依据](docs/parameters/README.zh-CN.md)，
-[完整参数索引](docs/parameters/model_parameter_reference.zh-CN.md)。
+[参数分类与取值依据](parameters/README.zh-CN.md)，
+[完整参数索引](parameters/model_parameter_reference.zh-CN.md)。
 
 ## 8. 亲手生成一个 SM 样本
 
@@ -574,9 +574,9 @@ ls -lh plot_mll.pdf plot_mmv.pdf plot_pTl1.pdf plot_pTmu.pdf
 输入是第 8.5 节的四个 SM 直方图，输出是 `outputs/sm` 中的四张 PDF。
 纯 SM 文件生成单面板图；第 9 节加入 EFT 修正后才出现比值面板。WSL 用户可在 Bash 执行 `explorer.exe .` 打开当前目录。
 
-纵轴表示以 **GeV** 为单位的每 bin 部分衰变宽度贡献，详见第 6.2 节和[图的说明](docs/figures/README.zh-CN.md)。下面的示例也由同一绘图命令生成：
+纵轴表示以 **GeV** 为单位的每 bin 部分衰变宽度贡献，详见第 6.2 节和[图的说明](figures/README.zh-CN.md)。下面的示例也由同一绘图命令生成：
 
-![SM 的电子与 muon 不变质量分布](docs/figures/sm_mll.png)
+![SM 的电子与 muon 不变质量分布](figures/sm_mll.png)
 
 检查点：积分宽度量级约为 `1e-5 GeV`。指出哪一面板画出了你的 SM，以及为什么此时没有比值曲线。
 你已沿着自己的事件走通**生成 → SM 分析副本 → ROOT → PDF**。
@@ -854,10 +854,10 @@ LHE 中保存的额外权重已经包含生成器归一化，作者分析器再�
 
 下面是本项目 2,000 个基础 SM 事件的重加权示例，使用已修正显示标签的教程绘图副本；bin 约定见第 6.6 节。
 
-![重加权的 muon 与中微子不变质量分布](docs/figures/rw_mmv.png)
+![重加权的 muon 与中微子不变质量分布](figures/rw_mmv.png)
 
-其他示例：[mll](docs/figures/rw_mll.png)、[leading lepton 横动量](docs/figures/rw_pTl1.png)、
-[muon 横动量](docs/figures/rw_pTmu.png)。
+其他示例：[mll](figures/rw_mll.png)、[leading lepton 横动量](figures/rw_pTl1.png)、
+[muon 横动量](figures/rw_pTmu.png)。
 
 **本章完成：** 已得到作者卡对应的多线图。完成这一节即可结束主要教学流程。
 
@@ -865,19 +865,19 @@ LHE 中保存的额外权重已经包含生成器归一化，作者分析器再�
 
 ### 10.1 日常操作速查
 
-安装与脚本输入输出见 [安装指南](docs/setup/README.zh-CN.md)。
+安装与脚本输入输出见 [安装指南](setup/README.zh-CN.md)。
 进入环境见第 5 节，生成见第 8 节，重加权见第 9 节。
-重新分析和绘图已有示例见 [examples/reweighted](examples/reweighted/README.zh-CN.md)。
+重新分析和绘图已有示例见 [examples/reweighted](../examples/reweighted/README.zh-CN.md)。
 
 ### 10.2 保存一次练习
 
 保存原始压缩 LHE、卡、banner、版本、参数、种子、实际事件数和重要图。
-本次已整理示例见 [examples/reweighted/metadata.json](examples/reweighted/metadata.json)。
+本次已整理示例见 [examples/reweighted/metadata.json](../examples/reweighted/metadata.json)。
 
 ### 10.3 分享可复现的结果
 
 分享一张图时，应同时提供输入数据或获取方式、卡片和参数设置、软件版本、事件数、随机种子与分析命令，并说明图的单位和归一化方式。
-[示例元数据](examples/reweighted/metadata.json) 展示这些记录；[示例说明](examples/reweighted/README.zh-CN.md) 给出了重新分析和绘图的步骤。
+[示例元数据](../examples/reweighted/metadata.json) 展示这些记录；[示例说明](../examples/reweighted/README.zh-CN.md) 给出了重新分析和绘图的步骤。
 
 ### 10.4 整理本地输出
 
@@ -910,8 +910,8 @@ LHE 中保存的额外权重已经包含生成器归一化，作者分析器再�
 ## 12. 版本与参考资料
 
 本教程固定 Python 3.10、MadGraph 2.9.27、SMEFTsim v3.0.2 和 ROOT 6.40.00。
-精确 Python 依赖见 [docs/setup/requirements.txt](docs/setup/requirements.txt)；
-本次示例实际版本见 [metadata.json](examples/reweighted/metadata.json)。
+精确 Python 依赖见 [docs/setup/requirements.txt](setup/requirements.txt)；
+本次示例实际版本见 [metadata.json](../examples/reweighted/metadata.json)。
 
-完整教程、作者和论文集中列在 [根 README](README.zh-CN.md#来源与致谢)。
-第三方许可与发布范围见 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.zh-CN.md)。
+完整教程、作者和论文集中列在 [根 README](../README.zh-CN.md#来源与致谢)。
+第三方许可与发布范围见 [THIRD_PARTY_NOTICES.md](../THIRD_PARTY_NOTICES.zh-CN.md)。

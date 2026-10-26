@@ -27,7 +27,7 @@ The MIT license of the SMEFTsim model is not assumed to license the independent 
 
 Local tutorial downloads and author-derived Python files under `work/Material` are excluded from Git.
 Compatibility changes consist of tab expansion, Python 2 syntax conversion, `file()` to `open()`
-and the Python 3 interpreter line. The project's `fix_axes.py` additionally corrects local labels and layout and enables embedded PDF fonts, without changing histogram calculations. Preparation instructions are in the
+and the Python 3 interpreter line. The project's `scripts/fix_axes.py` additionally corrects local labels and layout and enables embedded PDF fonts, without changing histogram calculations. Preparation instructions are in the
 [working-copy guide](docs/setup/README.md#5-prepare-the-two-python-3-analysis-scripts).
 
 ## MadGraph and ROOT

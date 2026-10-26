@@ -2,7 +2,7 @@
 
 [English](README.md) | [简体中文](README.zh-CN.md)
 
-开始阅读 [handbook](../../handbook.zh-CN.md) 前，安装只需看这一份指南。
+开始阅读 [handbook](../handbook.zh-CN.md) 前，安装只需看这一份指南。
 本仓库提供教学文档和本地生成的示例，不提供预装好的模拟器。
 下面会从上游直接获取软件，并在 **一个项目目录 `~/smeftsim` 中配置一个 Python 环境 `.venv`**。
 
@@ -12,10 +12,44 @@
 
 **输入规则：** PowerShell 或 Bash 代码块中每一行都是完整命令。输完一行，按一次 Enter，等提示符回来再输入下一行。不要输入终端显示的提示符。如果命令失败，先处理当前错误再继续。
 
-## 1. 创建专用 Linux 环境
+## 1. 选择 Linux 环境
 
-如果已有专用的 x86-64 Ubuntu 22.04 虚拟机，从第 2 节开始。
-Windows 10/11 用户可按下面的步骤创建名为 `SMEFTsim` 的 WSL2 发行版，与其他 Ubuntu 安装分开。
+按自己的现有环境选择入口。后续命令面向 **x86-64 Ubuntu 22.04 和 Python 3.10**；其他发行版、版本或架构需要另行检查兼容性。
+
+| 当前环境 | 从哪里继续 |
+|---|---|
+| 原生 Ubuntu 22.04 或已有 Ubuntu 22.04 虚拟机 | 第 1.1 节，再进入第 2 节 |
+| 已有 WSL2 Ubuntu 22.04 | 第 1.2 节，再进入第 2 节 |
+| Windows 尚无合适的 Linux，或希望单独隔离一个 Linux 环境 | 第 1.3 节 |
+
+### 1.1 原生 Linux 或已有虚拟机
+
+使用自己的普通 Linux 用户打开 Bash，从第 2 节继续。无需安装 WSL，也不要求用户名为 `smeft`。
+后续项目目录 `~/smeftsim` 位于你自己的 Linux 主目录中，项目 Python 包统一安装到 `.venv`。
+
+### 1.2 已有 WSL2 Ubuntu
+
+在 **Windows PowerShell** 中查看已安装的发行版：
+
+```powershell
+wsl --list --verbose
+```
+
+选择已有的 Ubuntu 22.04，确认 VERSION 列为 `2`。
+例如，它的名称为 `Ubuntu-22.04` 时，输入：
+
+```powershell
+wsl -d Ubuntu-22.04 --cd ~
+```
+
+把 `Ubuntu-22.04` 替换为列表中自己的发行版名称。该命令使用这个发行版的默认 Linux 用户。
+请使用有 `sudo` 权限的普通用户，再到第 2 节核对系统版本和架构。
+以后继续练习也使用自己的这条进入命令。已有环境不符合要求时，可按第 1.3 节另建兼容环境。
+
+### 1.3 新建专用 WSL2 环境
+
+这条可选路线创建独立的 Ubuntu 22.04，发行版命名为 `SMEFTsim`，普通用户命名为 `smeft`。
+这些名称只用于本小节；第 2–7 节都使用自己的主目录，同样适用于第 1.1–1.2 节。
 WSL2 在轻量虚拟机中运行 Linux；虚拟磁盘文件留在 Windows 上，计算和项目文件放在 Linux 内。
 
 **以管理员身份打开 Windows PowerShell：**
@@ -81,8 +115,8 @@ cat /etc/os-release
 whoami
 ```
 
-应看到 `x86_64`、Ubuntu `22.04` 和 `smeft`（或你选择的普通用户名）。
-以下系统软件包只安装到这个专用 Linux 环境。Python 包随后安装到项目 `.venv`，不使用 Windows Python 或 Anaconda。
+应看到 `x86_64`、Ubuntu `22.04` 和你自己的普通 Linux 用户名；不应为 `root`。
+以下系统软件包安装到你选定的 Linux 环境中。Python 包随后安装到项目 `.venv`，不使用 Windows Python 或 Anaconda。
 
 ```bash
 sudo apt-get update
@@ -155,11 +189,11 @@ expand -t 8 tutorial/Material/plot_histos.py > work/Material/pyroot_python3/plot
 python -m lib2to3 -w -n work/Material/pyroot_python3/lhe_analyzer.py work/Material/pyroot_python3/plot_histos.py
 sed -i 's/\bfile[[:space:]]*(/open(/g' work/Material/pyroot_python3/lhe_analyzer.py
 sed -i '1s|^#!/usr/bin/env python$|#!/usr/bin/env python3|' work/Material/pyroot_python3/lhe_analyzer.py work/Material/pyroot_python3/plot_histos.py
-python fix_axes.py
+python scripts/fix_axes.py
 python -m py_compile work/Material/pyroot_python3/lhe_analyzer.py work/Material/pyroot_python3/plot_histos.py
 ```
 
-兼容转换展开 tab、更新 Python 2 语法和解释器行，将 `file()` 换成 `open()`。`fix_axes.py` 修正本地标签与面板间距，让纯 SM 文件使用单面板，并通过 ROOT/Ghostscript 嵌入 PDF 字体；直方图计算和上游原文件保持不变。
+兼容转换展开 tab、更新 Python 2 语法和解释器行，将 `file()` 换成 `open()`。`scripts/fix_axes.py` 修正本地标签与面板间距，让纯 SM 文件使用单面板，并通过 ROOT/Ghostscript 嵌入 PDF 字体；直方图计算和上游原文件保持不变。
 Python 3.10 带有 `lib2to3`，Python 3.14 没有。最后一条命令检查语法，正常时安静结束。
 
 | 脚本 | 从项目根目录调用的完整形式 | 功能 |
@@ -225,5 +259,5 @@ handbook 的参考数据路径现在都指向这个 Linux 目录。
 仓库保留 handbook、知识附录、示例结果及来源和许可证记录。
 不需要 Windows 源码副本或第二份 Python 环境。
 
-从 [handbook 第 5 节](../../handbook.zh-CN.md#5-启动环境与核对依赖) 继续，再依次完成第 6、8、9 节。
+从 [handbook 第 5 节](../handbook.zh-CN.md#5-启动环境与核对依赖) 继续，再依次完成第 6、8、9 节。
 仓库示例的含义和来源见 [示例说明](../../examples/reweighted/README.zh-CN.md)。

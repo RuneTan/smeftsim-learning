@@ -25,7 +25,7 @@
 
 本地 `tutorial`、`work/Material` 的作者材料和两个 Python 3 兼容脚本被 Git 忽略。
 兼容转换包括 tab 展开、Python 2 语法转换、`file()` 到 `open()` 及解释器行更新。
-本项目的 `fix_axes.py` 另行修正本地标签与布局并启用 PDF 字体嵌入，不改变直方图计算；准备方法见 [工作副本说明](docs/setup/README.zh-CN.md#5-准备两份-python-3-分析脚本)。
+本项目的 `scripts/fix_axes.py` 另行修正本地标签与布局并启用 PDF 字体嵌入，不改变直方图计算；准备方法见 [工作副本说明](docs/setup/README.zh-CN.md#5-准备两份-python-3-分析脚本)。
 
 ## MadGraph 与 ROOT
 
